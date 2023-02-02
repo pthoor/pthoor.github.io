@@ -48,9 +48,9 @@ Here's the New-MsSentinelHuntingRule - **available at GitHub** - https://github.
 
 ## Entire New-MsSentinelHuntingRule script
 
-<details>
-  <summary>Click to expand</summary>
+{::options parse_block_html="true" /}
 
+<details><summary markdown="span">Let's see some code!</summary>
 ```powershell
 #requires -module @{ModuleName = 'Az.Accounts'; ModuleVersion = '1.5.2'}
 #requires -version 6.2
@@ -318,7 +318,9 @@ function New-MsSentinelHuntingRule {
 }
 ```
 </details>
+<br/>
 
+{::options parse_block_html="false" /}
 
 # Final word
 
