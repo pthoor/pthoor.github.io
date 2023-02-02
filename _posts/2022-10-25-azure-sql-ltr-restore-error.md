@@ -2,7 +2,7 @@
 title: Fixing Azure SQL long-term backup retention restore
 date: '2022-10-25T13:00:00+02:00'
 tags: 
-  -Azure
+  - Azure
 excerpt: "How you can fix the Azure SQL long-term backup retention restore error ✅"
 toc: true
 ---
