@@ -11,6 +11,7 @@ toc: true
 > Welcome to my home on the Internet!
 
 I'm working as a Trusted Microsoft Cloud Cybersecurity Advisor at [Onevinn AB](https://www.onevinn.com/) and living in the southern part of Sweden.
+
 ![](/assets/Onevinn.png)
 
 In this position, I'm having a laser eye focus on Microsoft Cloud security with technologies such as Microsoft Sentinel, Microsoft Defender, Azure Arc, Azure Network Security, XDR, Threat Protection, Azure Governance, and much more.
