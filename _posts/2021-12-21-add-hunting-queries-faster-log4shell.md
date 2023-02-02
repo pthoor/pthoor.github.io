@@ -28,7 +28,7 @@ Now, if you want to create a new hunting query:
 ```powershell
 New-MsSentinelHuntingRule -CreateNewOrImport CreateNew -DisplayName "NameOfYourQuery" -Query "InKqlFormat" -Description "WhatDoTheQueryDo" -Tactics <Choose from list, no ""> -Techniques <Add one or more T-number, no ""> -Category 'Hunting Queries' -SubscriptionId "LookInAzurePortal" -ResourceGroupName "WheresSentinel" -WorkspaceName "LogAnalyticsWorkspaceName" [-Verbose]
 ```
-![](./CreateNewQuery.jpg)
+![](/assets/CreateNewQuery.jpg)
 
 To import from GitHub, we are using the API URI and in that we can find the download_url, like raw.githubusercontent.com URL. So what I need in the PowerShell one-liner is:
 
@@ -39,17 +39,17 @@ New-MsSentinelHuntingRule -CreateNewOrImport Import -GitHubPath "https://api.git
 *For the GitHubPath, adjust it for your needs.*
 
 Now you will be prompted to select the YAML files you want to download and then import via Out-Gridview. 
-![](./GitHub_OutGridview.jpg)
+![](/assets/GitHub_OutGridview.jpg)
 
 After a short while, the queries will be uploaded via the cmdlet New-AzOperationalInsightsSavedSearch.
-![](./Uploaded_queries.jpg)
+![](/assets/Uploaded_queries.jpg)
 
 Here's the New-MsSentinelHuntingRule - **available at GitHub** - https://github.com/pthoor/MS_Sentinel/blob/main/New-MsSentinelHuntingRule.ps1 
 
 ## Entire New-MsSentinelHuntingRule script
 
 <details>
-  <summary>New-MsSentinelHuntingRule</summary>
+  <summary>Click to expand</summary>
 
 ```powershell
 #requires -module @{ModuleName = 'Az.Accounts'; ModuleVersion = '1.5.2'}
@@ -319,6 +319,7 @@ function New-MsSentinelHuntingRule {
 ```
 </details>
 
+
 # Final word
 
 Please let me know if the script don't work for you - I know it cannot update existing queries yet.
@@ -326,4 +327,4 @@ I see you at the next post!
 
 **Happy hunting!**
 
-![Ninja Cat](/ninja-cat.png)
+![Ninja Cat](/assets/ninja-cat.png)
