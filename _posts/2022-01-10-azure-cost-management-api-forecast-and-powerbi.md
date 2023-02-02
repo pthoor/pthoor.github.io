@@ -1,7 +1,8 @@
 ---
 title: Azure Cost Management API, Forecast and Power BI
 date: '2022-01-10T13:00:00+02:00'
-tags: ["CostManagement"]
+tags: 
+  - CostManagement
 excerpt: "How does Azure Cost Management API work with forecasts, and Power BI visualizations, and how can we find out more about those API's - Let's find out!"
 toc: true
 ---
@@ -145,6 +146,7 @@ Great! Now I want to make some visualizations and as I wrote in the beginning, P
 **For Actual Cost**
 
 In Power BI Advanced Editor, paste in (and change the Bearer token to your, and the BillingAccountId in the Web.Contents) following code:
+
 ```json
 let
     Source = let
@@ -264,6 +266,7 @@ in
 in
     #"Renamed Columns"
 ```
+
 Remove the Filter part in the Content if you want to get forecast for all customers. Change the scope if you want forecast on different scope and they all are provided in the beginning of this post.
 
 Find the documentation here: https://docs.microsoft.com/en-us/rest/api/cost-management/query/usage 
