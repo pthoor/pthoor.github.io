@@ -147,7 +147,7 @@ Great! Now I want to make some visualizations and as I wrote in the beginning, P
 
 In Power BI Advanced Editor, paste in (and change the Bearer token to your, and the BillingAccountId in the Web.Contents) following code:
 
-```json
+```sql
 let
     Source = let
 Source = Web.Contents(
@@ -205,7 +205,7 @@ in
 
 **Forecast Cost (targeting specific customers with filter)**
 
-```json
+```sql
 let
 Source = let
 Source = Web.Contents(
