@@ -148,6 +148,7 @@ Great! Now I want to make some visualizations and as I wrote in the beginning, P
 In Power BI Advanced Editor, paste in (and change the Bearer token to your, and the BillingAccountId in the Web.Contents) following code:
 
 ```sql
+{% raw %}
 let
     Source = let
 Source = Web.Contents(
@@ -201,11 +202,13 @@ in
     #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Column1.1", "Amount"}, {"Column1.2", "Date"}, {"Column1.3", "TenantId"}, {"Column1.4", "CustomerName"}, {"Column1.5", "Currency"}})
 in
     #"Renamed Columns"
+{% endraw %}
 ```
 
 **Forecast Cost (targeting specific customers with filter)**
 
 ```sql
+{% raw %}
 let
 Source = let
 Source = Web.Contents(
@@ -265,6 +268,7 @@ in
     #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Column1.1", "ForecastAmount"}, {"Column1.2", "ForecastDate"}, {"Column1.3", "ForecastActualAndForecast"}, {"Column1.4", "ForecastCurrency"}})
 in
     #"Renamed Columns"
+{% endraw %}
 ```
 
 Remove the Filter part in the Content if you want to get forecast for all customers. Change the scope if you want forecast on different scope and they all are provided in the beginning of this post.
