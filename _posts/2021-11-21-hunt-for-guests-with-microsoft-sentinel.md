@@ -19,13 +19,13 @@ This is why I think it's even more important to activate Microsoft Sentinel and 
 Another reason why we should have the sign-ins and audit logs can be that someone with malicious intent who have access to your Azure subscription uses the **Run Command** feature for virtual machines to run something... bad. So activate the **Azure Activity** data connector as well.
 
 I got inspired by Daniel Chronlund's post: *Scary Azure AD Tenant Enumeration… Using Regular B2B Guest Accounts* - check it out here:
-https://danielchronlund.com/2021/11/18/scary-azure-ad-tenant-enumeration-using-regular-b2b-guest-accounts/ 
+<https://danielchronlund.com/2021/11/18/scary-azure-ad-tenant-enumeration-using-regular-b2b-guest-accounts/>
 
 *Please do the mitigation part!*
 
 # Connect to another tenant as a guest
 To try this yourself in your own environment, use the AzureAD module.
-After you have installed the module, find the Tenant ID with for example https://www.whatismytenantid.com/ or in the Azure Portal, see Daniel's post.
+After you have installed the module, find the Tenant ID with for example <https://www.whatismytenantid.com/> or in the Azure Portal, see Daniel's post.
 
 ``` powershell
 # Install module if you don't have it, use AllowClobber if you have install other Azure module that have some of the AzureAD cmdlets already installed.
@@ -58,34 +58,34 @@ In Sentinel, go to Data Connectors, then find **Azure Active Directory** - open 
 
 Activate the log types you want to have.
 
-{% include alerts/important.html content="**Sign-in logs**, which contain information about interactive user sign-ins where a user provides an authentication factor. The Azure AD connector now includes the following three additional categories of sign-in logs, all currently in PREVIEW:<br/>
+{% include alerts/important.html content="**Sign-in logs**, which contain information about interactive user sign-ins where a user provides an authentication factor. The Azure AD connector now includes the following three additional categories of sign-in logs, all currently in PREVIEW:<br/><br/>
 
-**Non-interactive user sign-in logs**, which contain information about sign-ins performed by a client on behalf of a user without any interaction or authentication factor from the user.<br/>
+**Non-interactive user sign-in logs**, which contain information about sign-ins performed by a client on behalf of a user without any interaction or authentication factor from the user.<br/><br/>
 
-**Service principal sign-in logs**, which contain information about sign-ins by apps and service principals that do not involve any user. In these sign-ins, the app or service provides a credential on its own behalf to authenticate or access resources.<br/>
+**Service principal sign-in logs**, which contain information about sign-ins by apps and service principals that do not involve any user. In these sign-ins, the app or service provides a credential on its own behalf to authenticate or access resources.<br/><br/>
 
-**Managed Identity sign-in logs**, which contain information about sign-ins by Azure resources that have secrets managed by Azure. For more information, see What are managed identities for Azure resources?<br/>
+**Managed Identity sign-in logs**, which contain information about sign-ins by Azure resources that have secrets managed by Azure. For more information, see What are managed identities for Azure resources?<br/><br/>
 
-**Audit logs**, which contain information about system activity relating to user and group management, managed applications, and directory activities.<br/>
+**Audit logs**, which contain information about system activity relating to user and group management, managed applications, and directory activities.<br/><br/>
 
 **Provisioning logs** (also in PREVIEW), which contain system activity information about users, groups, and roles provisioned by the Azure AD provisioning service." %}
 
 <div style="padding: 15px; border: 1px solid transparent; border-color: transparent; margin-bottom: 20px; border-radius: 4px; color: #ffffff; background-color: #674ea7; border-color: #674ea7;">
-<b>Info</b></br></br>
-<b>Sign-in logs</b>, which contain information about interactive user sign-ins where a user provides an authentication factor. The Azure AD connector now includes the following three additional categories of sign-in logs, all currently in PREVIEW:</br></br>
+<b>Info</b><br/><br/>
+<b>Sign-in logs</b>, which contain information about interactive user sign-ins where a user provides an authentication factor. The Azure AD connector now includes the following three additional categories of sign-in logs, all currently in PREVIEW:<br/><br/>
 
-<b>Non-interactive user sign-in logs</b>, which contain information about sign-ins performed by a client on behalf of a user without any interaction or authentication factor from the user.
+<b>Non-interactive user sign-in logs</b>, which contain information about sign-ins performed by a client on behalf of a user without any interaction or authentication factor from the user.<br/><br/>
 
-<b>Service principal sign-in logs</b>, which contain information about sign-ins by apps and service principals that do not involve any user. In these sign-ins, the app or service provides a credential on its own behalf to authenticate or access resources.
+<b>Service principal sign-in logs</b>, which contain information about sign-ins by apps and service principals that do not involve any user. In these sign-ins, the app or service provides a credential on its own behalf to authenticate or access resources.<br/><br/>
 
-<b>Managed Identity sign-in logs</b>, which contain information about sign-ins by Azure resources that have secrets managed by Azure. For more information, see What are managed identities for Azure resources?
+<b>Managed Identity sign-in logs</b>, which contain information about sign-ins by Azure resources that have secrets managed by Azure. For more information, see What are managed identities for Azure resources?<br/><br/>
 
-<b>Audit logs</b>, which contain information about system activity relating to user and group management, managed applications, and directory activities.
+<b>Audit logs</b>, which contain information about system activity relating to user and group management, managed applications, and directory activities.<br/><br/>
 
 <b>Provisioning logs</b> (also in PREVIEW), which contain system activity information about users, groups, and roles provisioned by the Azure AD provisioning service.
 </div>
 
-https://docs.microsoft.com/en-us/azure/sentinel/connect-azure-active-directory 
+<https://docs.microsoft.com/en-us/azure/sentinel/connect-azure-active-directory>
 
 
 ![](/assets/Enable_AAD_DataConnector.jpg)
