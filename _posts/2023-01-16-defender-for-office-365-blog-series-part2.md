@@ -76,9 +76,9 @@ Email spam is basically junk emails that are mostly sent in bulk to many recipie
 
 I think it would be a great best practice to enable the Report Message and Report Phising add-in for Outlook. This will help the users to report spam emails to Microsoft. You as an admin can also send spam emails to Microsoft for analysis through the Submission tool in Microsoft 365 Defender portal. 
 
-User add-ins: https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/submissions-users-report-message-add-in-configure?view=o365-worldwide&WT.mc_id=AZ-MVP-5004683
+User add-ins: <https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/submissions-users-report-message-add-in-configure?view=o365-worldwide&WT.mc_id=AZ-MVP-5004683>
 
-Admin: https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/submissions-admin?view=o365-worldwide&WT.mc_id=AZ-MVP-5004683 or directly in the portal: https://security.microsoft.com/reportsubmission
+Admin: <https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/submissions-admin?view=o365-worldwide&WT.mc_id=AZ-MVP-5004683> or directly in the portal: <https://security.microsoft.com/reportsubmission>
 
 ## Anti-malware
 Malware, short for malicious software. Malware includes computer viruses, worms, Trojan horses, ransomware, spyware, adware, scareware, and other malicious programs. Malware is designed to infiltrate or damage without being caught. Ransomeware is a type of malware that encrypts your files and demands a ransom to decrypt your files and this type of attack is on the rise.

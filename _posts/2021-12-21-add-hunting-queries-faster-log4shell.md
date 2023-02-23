@@ -44,7 +44,7 @@ Now you will be prompted to select the YAML files you want to download and then 
 After a short while, the queries will be uploaded via the cmdlet New-AzOperationalInsightsSavedSearch.
 ![](/assets/Uploaded_queries.jpg)
 
-Here's the New-MsSentinelHuntingRule - **available at GitHub** - https://github.com/pthoor/MS_Sentinel/blob/main/New-MsSentinelHuntingRule.ps1 
+Here's the New-MsSentinelHuntingRule - **available at GitHub** - <https://github.com/pthoor/MS_Sentinel/blob/main/New-MsSentinelHuntingRule.ps1> 
 
 ## Entire New-MsSentinelHuntingRule script
 

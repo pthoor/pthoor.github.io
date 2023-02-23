@@ -22,7 +22,7 @@ Enough with the old stuff. In this blog series about **Microsoft Defender for Of
 Microsoft Defender for Office 365 is a powerful security solution that helps protect your organization's email, documents, and other Office 365 assets from threats like malware, spam, and phishing attacks.
 
 ## Which license should I choose? Plan 1 vs. Plan 2
-Microsoft Official documentation: https://learn.microsoft.com/microsoft-365/security/office-365-security/microsoft-defender-for-office-365-product-overview?view=o365-worldwide&WT.mc_id=AZ-MVP-5004683#what-is-defender-for-office-365-security
+Microsoft Official documentation: <https://learn.microsoft.com/microsoft-365/security/office-365-security/microsoft-defender-for-office-365-product-overview?view=o365-worldwide&WT.mc_id=AZ-MVP-5004683#what-is-defender-for-office-365-security>
 
 We can put the security layers of the product into three different levels:
 1. Exchange Online Protection (EOP)
@@ -67,7 +67,7 @@ This second pillar of email authentication, DKIM, attaches like an ID to the ema
 
 In this case we will add another DNS-record to our public DNS, and this time we will add a new CNAME-record. 
 
-In the DKIM page, https://security.microsoft.com/dkimv2, you will have the alternative to enable DKIM and get the DNS entry you need to publish in your DNS.
+In the DKIM page, <https://security.microsoft.com/dkimv2>, you will have the alternative to enable DKIM and get the DNS entry you need to publish in your DNS.
 
 ``` text
 CNAME
@@ -117,7 +117,7 @@ Failing reports - are sent to "ruf"
 
 I think it's important to have these reports to be able to know more and take action if necessary. 
 
-Microsoft are working on a new feature for EOP customers regarding DMARC - https://www.microsoft.com/en-us/microsoft-365/roadmap?filters=&searchterms=109535 
+Microsoft are working on a new feature for EOP customers regarding DMARC - <https://www.microsoft.com/en-us/microsoft-365/roadmap?filters=&searchterms=109535>
 
 {% include alerts/important.html content="*As part of the DMARC standard the owner of the domain can request reports about how receivers viewed their traffic which will help the domain owners adjust their sender authentication configurations so they can get to an actionable DMARC policy. This feature will be available for all EOP customers.*" %}
 
@@ -137,24 +137,24 @@ So SPF with DKIM and DMARC are working in conjunction to help verify that the se
 Trial or explore the interactive guide and evaluation environment?
 There are some different ways to get started with Defender for Office 365, depending on what your goal is. Do you already have the licenses required (I highly recommend the Plan 2 license) you can go ahead and start configure the product. Otherwise, take use of the 90-day free trial.
 
-Did you take a look at the above URL to see all portals? We will dive into the Microsoft 365 Defender portal, or https://security.microsoft.com/ where we will start our trial and start configuring the feature for our needs.
+Did you take a look at the above URL to see all portals? We will dive into the Microsoft 365 Defender portal, or <https://security.microsoft.com/> where we will start our trial and start configuring the feature for our needs.
 
 Once you are logged in with your Global Admin or Security Admin account go to the **Trials** menu on the left. 
 
 ![](/assets/MDO_trial.png)
 
-Press the **Try Now** button and go through the process. You will get unlimited number of licenses and can end the trial at any time. The time period you get is 90-days. You can see all the details of the license in the Microsoft 365 Admin Center (https://admin.microsoft.com/).
+Press the **Try Now** button and go through the process. You will get unlimited number of licenses and can end the trial at any time. The time period you get is 90-days. You can see all the details of the license in the Microsoft 365 Admin Center <https://admin.microsoft.com/>.
 
 ![](/assets/MDO_trial2.png)
 
 When you have the trial, start assigning the license to the users with your preferred method (groups, manually or with code). 
 
 ## How to start with the Interactive Guide for Microsoft Defender for Office 365
-https://mslearn.cloudguides.com/guides/Protect%20your%20organization%20with%20Microsoft%20365%20Defender
+<https://mslearn.cloudguides.com/guides/Protect%20your%20organization%20with%20Microsoft%20365%20Defender>
 
 
 # Roadmap for Defender for Office 365
-https://www.microsoft.com/en-us/microsoft-365/roadmap?filters=&searchterms=Microsoft%2CDefender%2Cfor%2COffice%2C365
+<https://www.microsoft.com/en-us/microsoft-365/roadmap?filters=&searchterms=Microsoft%2CDefender%2Cfor%2COffice%2C365>
 
 
 In the next post we will go deeper in the configuration of MDO.
