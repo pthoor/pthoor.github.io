@@ -3,15 +3,15 @@ title: Protect Teams with Microsoft Sentinel - Part 3
 date: '2021-11-09T21:00:00+02:00'
 tags: 
     - Sentinel
-excerpt: ""
+excerpt: "In this post we will look into some of the Sentinel Analytic Rules for Microsoft Teams"
 ---
 In the two first posts in this series we went over how to enabled Office 365 Audit Logs, how we enabled the Office 365 data connector and Microsoft Sentinel, to the second post that showed us how to enable the new Teams solution within Content Hub (currently in preview).
 
-**Read the posts in the series:**</br>
-[Part 1 - Enable logging for Teams](https://thoor.tech/blog/protect-teams-with-az-sentinel/)</br>
+**Read the posts in the series:**<br />
+[Part 1 - Enable logging for Teams](https://thoor.tech/blog/protect-teams-with-az-sentinel/)<br />
 [Part 2 - Install Teams Solution](https://thoor.tech/blog/protect-teams-with-ms-sentinel-part2/)
 
-In this post, part 3, we will look at some of the Analytic Rules, but first -</br> *What is analytic rules within Microsoft Sentinel?*
+In this post, part 3, we will look at some of the Analytic Rules, but first -<br /> *What is analytic rules within Microsoft Sentinel?*
 
 {% include alerts/important.html content="Analytics rules search for specific events or sets of events across your environment, alert you when certain event thresholds or conditions are reached, generate incidents for your SOC to triage and investigate, and respond to threats with automated tracking and remediation processes." %}
 

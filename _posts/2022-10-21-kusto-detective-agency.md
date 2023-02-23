@@ -28,12 +28,12 @@ What are the rules of the game?
 
 **Here's some additional hints to the Kusto Detective Agency Contest:**
 
-(https://github.com/pthoor/KustoDetectiveAgencyHints)
+<https://github.com/pthoor/KustoDetectiveAgencyHints>
 
 Don't forget to visit the 'Must Learn KQL' series by Rod Trent.
 
-- (https://aka.ms/MustLearnKQL)
-- (https://azurecloudai.blog/2021/11/17/must-learn-kql-part-1-tools-and-resources/)
+- <https://aka.ms/MustLearnKQL>
+- <https://azurecloudai.blog/2021/11/17/must-learn-kql-part-1-tools-and-resources/>
 
 I see you at the next post!
 
