@@ -12,7 +12,7 @@ Have had some fun with Microsoft Sentinel Threat Intelligence lately and when I 
 
 The URL to Stefans tool is <https://twitter.threatintel.rocks/> and he has an example in this blog post - <https://grimminck.medium.com/building-a-threat-intelligence-feed-using-the-twitter-api-and-a-bit-of-code-5787808e32ef> - to get the feed.
 
-```python title="python"
+```python
 curl <https://twitter.threatintel.rocks/> --silent | jq 
 ```
 
