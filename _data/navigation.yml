@@ -1,9 +1,11 @@
 # main links
 main:
-  - title: "About"
-    url: https://thoor.tech/about/
-  - title: "Posts by Tag"
+  - title: "🏷️ Posts by Tag"
     url: https://thoor.tech/tags/
+  - title: "🎙️ Security Dojo Podcast - Coming soon"
+    url: 
+  - title: "🤠 About"
+    url: https://thoor.tech/about/
   # - title: "Sample Posts"
   #   url: /year-archive/
   # - title: "Sample Collections"
