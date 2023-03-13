@@ -3,7 +3,6 @@ title: 'Direct Access and Azure Traffic Manager'
 date: '2018-09-04T10:09:52+02:00'
 tags: 
   - Azure
-images: ["cover.jpg"]
 excerpt: "I was setting up an Direct Access Multisite deployment and wanted to use Azure Traffic Manager as an GSLB solution. It should work and I was reading about it at Richard Hicks blog..."
 toc: true
 ---
