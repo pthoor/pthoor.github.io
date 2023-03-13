@@ -6,14 +6,17 @@ tags:
   - Sentinel
 toc: true
 ---
+# Introduction
 {% include alerts/important.html content="**Updated blog post 2022-07-23**" %}
 
 Have had some fun with Microsoft Sentinel Threat Intelligence lately and when I saw a tweet from [Stefan Grimminck](https://twitter.com/StefanGrimminck) about the tool he made to retrieve tweets, parses them and extract the malicious URLs and IPs, I had to start doing some PowerShell magic. Yes, of course you can use Python but I'm not there, yet.
 
+# Twitter Threat Intelligence
+
 The URL to Stefans tool is <https://twitter.threatintel.rocks/> and he has an example in this blog post - <https://grimminck.medium.com/building-a-threat-intelligence-feed-using-the-twitter-api-and-a-bit-of-code-5787808e32ef> - to get the feed.
 
 ```python
-curl <https://twitter.threatintel.rocks/> --silent | jq 
+curl https://twitter.threatintel.rocks/ --silent | jq 
 ```
 
 We all know that curl is an alias in PowerShell for Invoke-WebRequest 😉 but JQ was new to me. JQ is a JSON command-line processor. We have ConvertTo/ConvertFrom-Json in PowerShell but since the feed is not in JSON but JSON Lines (JSONL) format instead, I needed to dig down what PowerShell can or cannot do.
@@ -33,6 +36,8 @@ I simply tried to use the method ToString() and then used RegEx to match the con
 
 *I needed to update the script because the RegEx didn't work as expected. There was some tweets (text) that broke my RegEx because I was looking for curly brackets and when the tweet contained {}, well the PowerShell script terminated.*
 
+# Parse JSON
+
 **Updated:**
 I found a sweet function on GitHub that hopefully will be more stable when it comes to parse the content more correctly. I renamed it to Split-Json from Delimit-Json. See the function on original GitHub repo: <https://github.com/jpmikkers/Delimit-Json/blob/master/Delimit-Json.ps1>
 
@@ -45,7 +50,6 @@ But since the feed now includes over 24.000+ entries, it will take forever to ch
 {::options parse_block_html="true" /}
 
 <details><summary markdown="span">Let's see some code!</summary>
-  
 
 ```powershell
 function Split-Json {
@@ -174,7 +178,8 @@ New-AzureAdServiceAppRoleAssignment -ObjectId $MSI.ObjectId -PrincipalId $MSI.Ob
 -ResourceId $GraphServicePrincipal.ObjectId -Id $AppRole.Id
 ```
 
-**Script on Github: https://github.com/pthoor/MS_Sentinel/blob/main/Add-TwitterTIIndicators.ps1**
+## Script on Github
+<https://github.com/pthoor/MS_Sentinel/blob/main/Add-TwitterTIIndicators.ps1>
 
 ## Add-TwitterTIIndicators.ps1
 
@@ -685,6 +690,7 @@ $TWTR | Foreach-Object -ThrottleLimit 50 -Parallel {
 
 {::options parse_block_html="false" /}
 
+# Summary
 I see you at the next post!
 
 **Happy hunting!**
