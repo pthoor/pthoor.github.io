@@ -1,7 +1,9 @@
 # main links
 main:
   - title: "About"
-    url: https://pthoor.github.io/about/
+    url: https://thoor.tech/about/
+  - title: "Posts by Tag"
+    url: https://thoor.tech/tags/
   # - title: "Sample Posts"
   #   url: /year-archive/
   # - title: "Sample Collections"
