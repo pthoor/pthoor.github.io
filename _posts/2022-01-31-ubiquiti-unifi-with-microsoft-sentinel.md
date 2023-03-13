@@ -79,7 +79,8 @@ Copy the file or text and connect (SSH) with Putty, or your choice of tooling, t
 
 *Change the path to the workpace ID you have.*
 
-**Path:** /etc/opt/microsoft/omsagent/<workspace_id>/conf/omsagent.d/ <br/>
+**Path:** /etc/opt/microsoft/omsagent/<workspace_id>/conf/omsagent.d/
+
 **File Name:** Ubiquiti.conf
 
 After you have done above, you need to restart the service:
