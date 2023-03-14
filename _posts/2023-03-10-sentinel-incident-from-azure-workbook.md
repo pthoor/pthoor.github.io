@@ -42,7 +42,7 @@ The "owner" property have I only a value in the "userPrincipalName" because that
 
 
 ## Create the Azure Workbook
-[](/assets/Az_Workbook_Incident.png)
+![](/assets/Az_Workbook_Incident.png)
 
 To create the workbook, simply copy the code below or click the "Deploy to Azure" button.
 
@@ -51,7 +51,7 @@ To create the workbook, simply copy the code below or click the "Deploy to Azure
 
 If you deployed the workbook via the button, after successful deployment you will find the workbook within Azure Monitor -> Workbooks -> My templates.
 
-[](/assets/DeployedTemplates.png)
+![](/assets/DeployedTemplates.png)
 
 ### Code (manual deployment)
 Copy the code and paste it to your workbook via "Advanced Editor" and choose "Gallery Template" as "Template Type".
