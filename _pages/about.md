@@ -37,7 +37,9 @@ Besides my normal day job I'm trying to share my knowledge by speaking at podcas
 # View my verified achievements at [Credly](https://www.credly.com/users/pierre-thoor/badges?sort=-state_updated_at&page=1)
 [![Credly](/assets/Credly_Logo_White_3-Inch.png)](https://www.credly.com/users/pierre-thoor/badges?sort=-state_updated_at&page=1)
 
-# Azure & MS 365 PT-session podcast (Swedish)
-Find the podcast at [Spotify](https://open.spotify.com/show/5E3fARGuhtcC3RYbarXalT)
+# Security Dojo Podcast
+Coming soon
+[Security Dojo](https://securitydojo.ms)
 
-[![Azure & MS 365 PT-session podcast](/assets/Azure_MS365_podcast.png "Azure & MS 365 PT-session podcast")](https://open.spotify.com/show/5E3fARGuhtcC3RYbarXalT)
+# Old podcast - Azure & MS 365 PT-session podcast (Swedish)
+Find the podcast at [Spotify](https://open.spotify.com/show/5E3fARGuhtcC3RYbarXalT)
