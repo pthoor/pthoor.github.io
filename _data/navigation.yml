@@ -2,10 +2,12 @@
 main:
   - title: "🏷️ Posts by Tag"
     url: https://thoor.tech/tags/
-  - title: "🎙️ Security Dojo Podcast - Coming soon"
-    url: 
+  - title: "🎙️ Security Dojo Podcast"
+    url: https://securitydojo.ms
   - title: "🤠 About"
     url: https://thoor.tech/about/
+  - title: "Kusto Detective Agency"
+    url: https://thoor.tech/KDA/
   # - title: "Sample Posts"
   #   url: /year-archive/
   # - title: "Sample Collections"
