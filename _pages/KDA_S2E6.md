@@ -55,7 +55,7 @@ author_profile: true
 
 Import the data with:
 
-```kusto
+```sql
 .execute database script <|
 // The data was obtained from the repository of the National Gallery of Art:
 // https://github.com/NationalGalleryOfArt/opendata
@@ -73,7 +73,7 @@ Looking at the first hint from the case we can see that the code is a combinatio
 
 So we need to fill in the words above. We start of by seeing that the ObjectId 41701 is in the table and we can see that the word is located in the ProvenanceText column.
 
-```kusto
+```sql
 NationalGalleryArt
 | where ObjectId == 41701
 ```
@@ -86,7 +86,7 @@ So what's up with the number 11? I cannot see anything that have 11 and the only
 
 Looks good so far! 
 
-```kusto
+```sql
 NationalGalleryArt
 | where ObjectId in (41701,131736)
 ```
@@ -108,7 +108,7 @@ The RegExp **@'(\w+)'** will get all words in the ProvenanceText column.
 * **\w** means that we matches any word character, equivalent to [a-zA-Z0-9_]
 * **+** means that we matches between one and unlimited times, as many times as possible, giving back as needed (greedy)
 
-```kusto
+```sql
 NationalGalleryArt
 | where ObjectId in (41701,131736)
 | project ObjectId, WordToFind = extract_all(@'(\w+)', ProvenanceText), ProvenanceText
@@ -120,12 +120,12 @@ NationalGalleryArt
 
 Let's make it more interesting. We'll take the first hint and add it as an table with **.set-or-append**. We then join the two tables with **join** and **on**. We then project the **CodeHint** and **ProvenanceText** columns. 
 
-```kusto
+```sql
 .set-or-append Case6Hint1 <|
 print CodeHint = '41701/11 131736/0'
 ```
 
-```kusto
+```sql
 Case6Hint1
 | extend CodeToCrack = extract_all(@"(\d+/\d+)", CodeHint)
 | mv-expand CodeToCrack to typeof(string)
@@ -153,7 +153,7 @@ We continue with the **mv-expand** operator and now with the **to** operator. Th
 
 I do belive we can decode the instructions that we secretly got. Start by adding the instructions as a table with **.set-or-append**. Then we use the **print** operator to print the CodeToCrack column. 
 
-```kusto
+```sql
 .set-or-append SecretInstructions <|
 print CodeToCrack = 
 ```12204/497 62295/24 50883/678 47108/107 193867/3,
@@ -184,7 +184,7 @@ print CodeToCrack =
 
 After we added the table we just change some of the KQL to get the right table and change the name of the column to Instruction. 
 
-```kusto
+```sql
 SecretInstructions
 | extend CodeToCrack = extract_all(@"(\d+/\d+)", Instruction)
 | mv-expand CodeToCrack to typeof(string)
@@ -204,7 +204,7 @@ Cool, we are getting closer and closer!
 
 Now we need to make it more easy to read, wonder if the summarize operator can help us? We can use the **make_list()** function to create a list of the WordToFind column. We then project that column. 
 
-```kusto
+```sql
 SecretInstructions
 | extend CodeToCrack = extract_all(@"(\d+/\d+)", Instruction)
 | mv-expand CodeToCrack to typeof(string)
@@ -227,7 +227,7 @@ Okey, so not quite what we wanted. Now it's not in the order that we want. Wonde
     * rewrite: A list of strings to replace the lookups with, in this case our WordToFind column.
 
 
-```kusto
+```sql
 SecretInstructions
 | extend CodeToCrack=extract_all(@"(\d+/\d+)", Instruction)
 | mv-expand CodeToCrack to typeof(string)
@@ -293,14 +293,14 @@ To look for a three character word we can use the RegEx **@'(\w{3,})'**.
     * {3,} Quantifier — Matches between 3 and unlimited times, as many times as possible, giving back as needed (greedy)
 
 
-```kusto
+```sql
 NationalGalleryArt
 | extend FirstWord=extract_all(@"(\w{3,})", Title)
 ```
 
 Too much data... Let's see if we can optimize the query. 
 
-```kusto
+```sql
 NationalGalleryArt
 | extend FirstWord=extract_all(@"(\w{3,})", Title)
 | mv-expand FirstWord to typeof(string)
@@ -312,7 +312,7 @@ NationalGalleryArt
 
 Almost! Now we see that we need to merge lower case and upper case words. We can use the **tolower()** function to convert the FirstWord column to lower case. We then summarize the FirstWordCount column by FirstWord. We then sort the FirstWordCount column descending (are you like me that never reminds which way ascending and descending is? I always need to look it up...). 
 
-```kusto
+```sql
 NationalGalleryArt
 | extend FirstWord=extract_all(@"(\w{3,})", Title)
 | mv-expand FirstWord to typeof(string)
@@ -325,7 +325,7 @@ NationalGalleryArt
 
 Yes! Good job! Now let's make it more interesting by adding serialize and next() to the query.
 
-```kusto
+```sql
 NationalGalleryArt
 | extend FirstWord=extract_all(@"(\w{3,})", Title)
 | mv-expand FirstWord to typeof(string)
@@ -340,7 +340,7 @@ Now you see that we are getting a quite nice result. If we just take our **where
 
 <img src="https://github.com/pthoor/KustoDetectiveAgencyHints-Season2/raw/main/img/Case6/Art_FirstWordAfter.png">
 
-```kusto
+```sql
 NationalGalleryArt
 | extend FirstWord=extract_all(@"(\w{3,})", Title)
 | mv-expand FirstWord to typeof(string)
@@ -357,7 +357,7 @@ Second word. Have the same count as the word Third. Renaming the columns to make
 
 Back to **make_list** for all of the SecondWord column. We then summarize the **rowsWithSameCount** column by SecondWordCount. We then use the **has_any** function to check if the rowsWithSameCount column has the word "third". We then use **mv-expand** to expand the rowsWithSameCount column. 
 
-```kusto
+```sql
 NationalGalleryArt
 | extend SecondWord=extract_all(@"(\w{3,})", Title)
 | mv-expand SecondWord to typeof(string)
@@ -373,7 +373,7 @@ NationalGalleryArt
 
 Third word. *The first two letters from the word most sought.* Okey. *Into marked dozen, and change just one.* The twelfth word after that? Hmm... Looking at different [Window Functions](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/rownumberfunction?WT.mc_id=AZ-MVP-5004683) I think we can use **row_number**. We then use **where** to get the first and twelfth word. 
 
-```kusto
+```sql
 NationalGalleryArt
 | extend ThirdWord=extract_all(@"(\w{3,})", Title)
 | mv-expand ThirdWord to typeof(string)
@@ -390,7 +390,7 @@ Day, Year, Month? I do think so, because MANTH or THMAN is not quite correct. MO
 
 Now we need to find some Titles with all of those words, because they do build a timeline...
 
-```kusto
+```sql
 NationalGalleryArt
 | where Title has_all("year","month","day")
 ```
