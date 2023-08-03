@@ -1,8 +1,12 @@
 ---
 title: "Kusto Detective Agency - Season 2 Case 6"
+date: '2023-08-03T20:50:00+02:00'
 permalink: /KDA/S2E6
-layout: single
+layout: posts
+tags: 
+  - Kusto
 author_profile: true
+toc: true
 ---
 
 ## Case 6
@@ -10,6 +14,8 @@ author_profile: true
 **Hack this rack!**
 
 <img src="https://detective.kusto.io/_next/image?url=https://kda-webassets.azureedge.net/images/s2_case_006_e4e42ec5.png&w=750&q=75">
+
+# Riddle
 
 > Hey there! I've got some juicy details for you regarding the elusive https://kuanda.org
 
@@ -24,7 +30,7 @@ author_profile: true
 
 <img src="https://github.com/pthoor/KustoDetectiveAgencyHints-Season2/raw/main/img/KDA/Mayor_smile.png">
 
-**Instructions for the new recruiters**
+# Instructions for the new recruiters
 
 ```text
 12204/497 62295/24 50883/678 47108/107 193867/3,
@@ -53,6 +59,8 @@ author_profile: true
 40184/149 92994/63-71071/179 75093/7 211718/18 74211/5 46144/399.
 ```
 
+# Data import
+
 Import the data with:
 
 ```sql
@@ -64,6 +72,8 @@ Import the data with:
 .clear table NationalGalleryArt data
 .ingest into table NationalGalleryArt ('https://kustodetectiveagency.blob.core.windows.net/kda2c6art/artview.csv')
 ```
+
+# Getting help with first hint
 
 Okey, what's up with the instructions that we got... Look's like we need to decode something, but what's that for format?
 
@@ -150,6 +160,8 @@ What about the extract_all operator? You see now we want to extract the digits a
 We continue with the **mv-expand** operator and now with the **to** operator. The **to** operator will convert the CodeToCrack column to a string. Then going for the **join** operator so we can more easily join the two tables (you see why we wanted to add the hint as a table?). The **leftouter** kind of the [join operator](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/joinoperator?pivots=azuredataexplorer&WT.mc_id=AZ-MVP-5004683) will return all rows from the left table, and the matched rows from the right table. The **on** operator will join the two tables on the CodeToCrack column. 
 
 <img src="https://github.com/pthoor/KustoDetectiveAgencyHints-Season2/raw/main/img/Case6/Art_Hint1_Solved.png">
+
+# Crack the instructions
 
 I do belive we can decode the instructions that we secretly got. Start by adding the instructions as a table with **.set-or-append**. Then we use the **print** operator to print the CodeToCrack column. 
 
@@ -271,6 +283,8 @@ and when you find it, you'll know.
 you've picked the Image that revealed
 the pass-code to the World concealed.
 ```
+
+# Find more words
 
 Oh these riddeles... Let's see if we can solve them.
 
@@ -396,6 +410,8 @@ NationalGalleryArt
 ```
 
 <img src="https://api.nga.gov/iiif/64c9eb07-5e01-40fe-8fd0-886cfb4a70c7__640/full/!900,900/0/default.jpg" width=35% height=35%>
+
+# Closing the case
 
 Grabbing the ImageURL to the clipboard and pasting it in the kuanda.org site we do get the passcode - cool stuff!
 
