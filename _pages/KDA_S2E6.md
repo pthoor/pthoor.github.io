@@ -9,7 +9,7 @@ author_profile: true
 
 **Hack this rack!**
 
-<img src="https://detective.kusto.io/_next/image?url=https://kda-webassets.azureedge.net/images/s2_case_006_e4e42ec5.png&w=750&q=75" width=35% height=35%>
+<img src="https://detective.kusto.io/_next/image?url=https://kda-webassets.azureedge.net/images/s2_case_006_e4e42ec5.png&w=750&q=75">
 
 > Hey there! I've got some juicy details for you regarding the elusive https://kuanda.org
 
