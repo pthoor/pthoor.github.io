@@ -141,7 +141,7 @@ The API call will look like this:
 
 **URL:**
 
-https://<AzureOpenAIResourceName>.openai.azure.com/openai/deployments/<OpenAIDeploymentName>/chat/completions?api-version=2023-03-15-preview
+https://"AzureOpenAIResourceName".openai.azure.com/openai/deployments/"OpenAIDeploymentName"/chat/completions?api-version=2023-03-15-preview
 
 **Method:**
 
