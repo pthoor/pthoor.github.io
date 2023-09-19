@@ -1,6 +1,6 @@
 ---
 title: "Windows Server 2012/2012 R2 - End of support, what to do with Security Updates?"
-date: '2023-09-19T14:00:00+02:00'
+date: '2023-09-19T13:00:00+02:00'
 excerpt: 'Do you have Windows Server 2012/2012 R2 in your environment? If so, you need to read this post to understand what to do with security updates after the end of support date.'
 tags: 
   - Arc
@@ -52,11 +52,11 @@ Microsoft clarifies: "Each processor needs to be licensed with a minimum of eigh
 
 ## Price of ESU in Euro for Windows Server 2012/2012 R2
 
-| ESU      | Datacenter Edition price | Standard Edition price     |
-|  :----:  | :----: | :----: |
-| 16 core  | €403   | €70    |
-| 8 core   | €201   | €35    |
-| 2 core   | €51    | €8.74  |
+| ESU     | Datacenter Edition price | Standard Edition price |
+| :----:  | :----: | :----: |
+| 16 core | €403   | €70    |
+| 8 core  | €201   | €35    |
+| 2 core  | €51    | €8.74  |
 
 # Clarification
 
