@@ -17,7 +17,7 @@ header:
 
 Windows Server 2012 and Windows Server 2012 R2 will soon enter a phase called End of Support (EOS) and the date for that is on October 10, 2023. After this date, these products will no longer receive security updates, non-security updates, bug fixes, technical support, or online technical content updates. If you cannot upgrade to the next version, you will need to use Extended Security Updates (ESUs) for up to three years.
 
-This meeans that security updates via "Patch-Tuesday" will no longer be delivered within the operating system's mainstream support from Microsoft.
+This means that security updates via "Patch-Tuesday" will no longer be delivered within the operating system's mainstream support from Microsoft.
 
 # What does End of Support mean?
 
