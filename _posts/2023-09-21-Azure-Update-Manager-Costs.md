@@ -40,9 +40,9 @@ When determining the cost for using Azure Update Manager, it's essential to unde
 1. The machine shows a 'Connected' status for Arc during any operation (whether it's patching on-demand, through a scheduled task, or an assessment). This connection can be at any specific time of the day, especially if it's linked to a schedule, even if no tasks are carried out that day.
 
 2. Any of the following activities occur on that day:
-  1. A direct command to patch or assess is given.
-  2. The machine undergoes a routine check for outstanding patches.
-  3. The machine is linked to an active schedule, either in a fixed or flexible manner.
+  - A direct command to patch or assess is given.
+  - The machine undergoes a routine check for outstanding patches.
+  - The machine is linked to an active schedule, either in a fixed or flexible manner.
 
 ## Quick AUM pricing examples with Azure Arc-enabled servers
 
