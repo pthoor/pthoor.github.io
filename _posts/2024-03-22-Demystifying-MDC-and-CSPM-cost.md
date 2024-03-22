@@ -42,7 +42,7 @@ In bigger organizations we may structure the roles and responsibilities a bit di
 
 # DevSecOps
 ## Defender for DevOps
-Let's start with Defender for DevOps. Defender for DevOps is a set of security features and capabilities that help you secure your DevOps environment and protect your code, infrastructure as code, and cloud resources. Defender for DevOps is designed to help you find and fix security vulnerabilities in your code, infrastructure as code, and cloud resources, and to help you secure your DevOps environment.
+Let's start with Defender for DevOps. Defender for DevOps is a set of security features and capabilities that help you secure your DevOps environment and protect your code, infrastructure as code, and cloud resources. It's designed to help you find and fix security vulnerabilities in your code, infrastructure as code, and cloud resources, and to help you secure your DevOps environment.
 
 As of March 2024, you need to have Defender CSPM to activate the premium DevOps security value. 
 
@@ -129,7 +129,7 @@ For hybrid environments, I would activate Plan 2 on all Azure Arc-enabled server
 And all of the other features listed requires an Azure VM, and not an Arc-enabled server.
 
 ### Direct onboarding
-**"But, I don't want to install Azure Arc on my servers on-prem, can I use Defender for Servers then?"* 
+*"But, I don't want to install Azure Arc on my servers on-prem, can I use Defender for Servers then?"* 
 
 Yes, you can use Direct Onboarding. Direct Onboarding is a way to onboard servers to Defender for Servers without using Azure Arc. You can onboard servers running Windows or Linux operating systems, and you can onboard servers that are running in other clouds or on-premises.
 
@@ -206,6 +206,8 @@ And again, which Azure resources are billable for Defender CSPM?
 | Compute | Microsoft.Compute/virtualMachines<br/>Microsoft.Compute/virtualMachineScaleSets/virtualMachines<br/>Microsoft.ClassicCompute/virtualMachines | - Deallocated VMs<br/>- Databricks VMs |
 | Storage | Microsoft.Storage/storageAccounts | Storage accounts without blob containers or file shares |
 | DBs | Microsoft.Sql/servers<br/>Microsoft.DBforPostgreSQL/servers<br/>Microsoft.DBforMySQL/servers<br/>Microsoft.Sql/managedInstances<br/>Microsoft.DBforMariaDB/servers<br/>Microsoft.Synapse/workspaces | N/A |
+
+So keep that list in mind when you are activating Defender CSPM on your Azure subscriptions.
 
 # Defender for Cloud Coverage & Cost workbooks
 These two workbooks are great to use to get an overview of your Defender for Cloud coverage and cost. 
