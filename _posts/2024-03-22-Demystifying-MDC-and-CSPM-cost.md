@@ -48,7 +48,7 @@ As of March 2024, you need to have Defender CSPM to activate the premium DevOps 
 
 *If you have the Defender CSPM plan enabled on a cloud environment (Azure, AWS, GCP) within the same tenant your DevOps connectors are created in, you'll continue to receive premium DevOps capabilities at **no extra cost**.*
 
-[Enforcement of Defender CSPM for Premium DevOps Security Value](https://learn.microsoft.com/en-us/azure/defender-for-cloud/upcoming-changes#enforcement-of-defender-cspm-for-premium-devops-security-value)
+[Enforcement of Defender CSPM for Premium DevOps Security Value](https://learn.microsoft.com/azure/defender-for-cloud/upcoming-changes?WT.mc_id=AZ-MVP-5004683#enforcement-of-defender-cspm-for-premium-devops-security-value)
 
 Which DevOps capabilities are in-scope per CSPM plan? See the table below.
 
@@ -163,7 +163,7 @@ Defender Vulnerability Management (MDVM) is natively integrated into Defender fo
 | Hardware and firmware assessment |-|![Yes](../assets/yes-icon.png)|
 | Authenticated scan for Windows |-|![Yes](../assets/yes-icon.png)|
 
-Make sure to run [supported operating system](https://learn.microsoft.com/en-us/microsoft-365/security/defender-vulnerability-management/tvm-supported-os?view=o365-worldwide) for your servers (or clients) to be able to use the full potential of MDVM.
+Make sure to run [supported operating system](https://learn.microsoft.com/microsoft-365/security/defender-vulnerability-management/tvm-supported-os?view=o365-worldwide&WT.mc_id=AZ-MVP-5004683) for your servers (or clients) to be able to use the full potential of MDVM.
 
 # Defender CSPM vs Foundational CSPM
 
