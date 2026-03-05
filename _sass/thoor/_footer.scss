@@ -1,0 +1,52 @@
+// ============================================================
+// Site footer
+// ============================================================
+
+.site-footer {
+  margin-top: $space-3xl;
+  padding: $space-2xl $space-lg;
+  border-top: 1px solid $border-default;
+  background: $bg-secondary;
+}
+
+.footer-inner {
+  max-width: $site-width;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: $space-md;
+}
+
+.footer-copy {
+  color: $text-secondary;
+  font-size: $font-size-sm;
+
+  a {
+    color: $text-secondary;
+
+    &:hover {
+      color: $accent-blue;
+    }
+  }
+}
+
+.footer-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: $space-md;
+
+  a {
+    color: $text-secondary;
+    font-size: $font-size-sm;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: $accent-blue;
+      text-decoration: none;
+    }
+  }
+}

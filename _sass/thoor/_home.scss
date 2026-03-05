@@ -1,0 +1,225 @@
+// ============================================================
+// Homepage styles
+// ============================================================
+
+// --- Hero ---
+.hero {
+  padding: $space-3xl $space-lg;
+  text-align: center;
+  background: linear-gradient(180deg, $bg-secondary 0%, $bg-primary 100%);
+  border-bottom: 1px solid $border-default;
+}
+
+.hero-content {
+  max-width: $content-width;
+  margin: 0 auto;
+}
+
+.hero-avatar {
+  margin-bottom: $space-lg;
+
+  img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid $border-default;
+    object-fit: cover;
+  }
+}
+
+.hero-title {
+  font-size: 2.75rem;
+  margin: 0 0 $space-sm;
+  background: linear-gradient(135deg, $text-primary, $accent-blue);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: $font-size-lg;
+  color: $text-secondary;
+  margin: 0 0 $space-lg;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: $space-sm;
+
+  a {
+    padding: $space-xs $space-md;
+    background: $bg-elevated;
+    border: 1px solid $border-default;
+    border-radius: $radius-sm;
+    color: $text-secondary;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    transition: all $transition-fast;
+
+    &:hover {
+      color: $accent-blue;
+      border-color: $accent-blue-dim;
+      text-decoration: none;
+    }
+  }
+}
+
+// --- Section title ---
+.section-title {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: $space-xl;
+  padding-bottom: $space-sm;
+  border-bottom: 2px solid $accent-blue-dim;
+  display: inline-block;
+}
+
+// --- Post cards ---
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-lg;
+}
+
+.post-card {
+  display: flex;
+  gap: $space-lg;
+  padding: $space-lg;
+  background: $bg-secondary;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+
+  &:hover {
+    border-color: $accent-blue-dim;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.post-card-image {
+  flex-shrink: 0;
+  width: 200px;
+  overflow: hidden;
+  border-radius: $radius-sm;
+
+  img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: $radius-sm;
+    border: none;
+    transition: transform $transition-base;
+  }
+
+  &:hover img {
+    transform: scale(1.05);
+  }
+}
+
+.post-card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.post-card-title {
+  font-size: 1.25rem;
+  margin: 0 0 $space-sm;
+  line-height: $line-height-tight;
+
+  a {
+    color: $text-primary;
+
+    &:hover {
+      color: $accent-blue;
+      text-decoration: none;
+    }
+  }
+}
+
+.post-card-meta {
+  color: $text-secondary;
+  font-size: $font-size-xs;
+  margin-bottom: $space-sm;
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+}
+
+.post-card-meta-sep {
+  color: $text-muted;
+}
+
+.post-card-excerpt {
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  margin: 0 0 $space-sm;
+  line-height: 1.6;
+}
+
+.post-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-xs;
+}
+
+// --- Pagination ---
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: $space-lg;
+  margin-top: $space-2xl;
+  padding-top: $space-lg;
+  border-top: 1px solid $border-default;
+}
+
+.pagination-prev,
+.pagination-next {
+  padding: $space-xs $space-md;
+  background: $bg-elevated;
+  border: 1px solid $border-default;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: $accent-blue-dim;
+    text-decoration: none;
+  }
+}
+
+.pagination-disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.pagination-info {
+  color: $text-secondary;
+  font-size: $font-size-sm;
+}
+
+// --- Mobile responsive ---
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .post-card {
+    flex-direction: column;
+  }
+
+  .post-card-image {
+    width: 100%;
+
+    img {
+      height: 180px;
+    }
+  }
+}

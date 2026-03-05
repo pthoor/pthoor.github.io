@@ -1,0 +1,101 @@
+// ============================================================
+// Responsive breakpoints & print styles
+// ============================================================
+
+@media (max-width: 768px) {
+  .post-title {
+    font-size: 1.75rem;
+  }
+
+  .post,
+  .page,
+  .archive,
+  .posts-section {
+    padding-left: $space-md;
+    padding-right: $space-md;
+  }
+
+  .post-nav {
+    flex-direction: column;
+    padding-left: $space-md;
+    padding-right: $space-md;
+  }
+
+  .post-hero {
+    margin-left: -#{$space-md};
+    margin-right: -#{$space-md};
+  }
+
+  .header-inner {
+    padding: $space-sm $space-md;
+  }
+
+  .tag-posts li {
+    flex-direction: column;
+    gap: $space-xs;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.375rem; }
+  h3 { font-size: 1.125rem; }
+
+  .post-title {
+    font-size: 1.5rem;
+  }
+
+  .share-links {
+    flex-wrap: wrap;
+  }
+}
+
+// --- Print ---
+@media print {
+  body {
+    background: white;
+    color: #1a1a1a;
+    font-size: 12pt;
+  }
+
+  .site-header,
+  .site-footer,
+  .post-nav,
+  .share-links,
+  .toc,
+  .skip-link,
+  .nav-toggle {
+    display: none !important;
+  }
+
+  .post,
+  .page {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  a {
+    color: #1a1a1a;
+    text-decoration: underline;
+
+    &[href^="http"]::after {
+      content: " (" attr(href) ")";
+      font-size: 0.8em;
+      color: #666;
+    }
+  }
+
+  .highlight pre {
+    border: 1px solid #ccc;
+    background: #f5f5f5;
+  }
+
+  .alert-box {
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+  }
+
+  img {
+    max-width: 100% !important;
+  }
+}

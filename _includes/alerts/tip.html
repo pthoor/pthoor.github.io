@@ -1,13 +1,7 @@
-<style>
-    .tip {
-      padding: 20px;
-      background-color: #054b16;
-      color: white;
-      margin-bottom: 15px;
-    }
-</style>
-
-<div markdown="span" class="tip" role="alert">
-    <i class="fa fa-lightbulb"></i> <b>Tip</b><br>
-    {{ include.content }}
+<div class="alert-box tip" role="alert" aria-label="Tip">
+  <div class="alert-label">
+    <svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 00-2.344 12.568.75.75 0 01.543.724v.008a.75.75 0 00.75.75h2.102a.75.75 0 00.75-.75v-.008a.75.75 0 01.543-.724A6.5 6.5 0 008 1.5zM1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0z"/></svg>
+    Tip
+  </div>
+  <div markdown="span">{{ include.content }}</div>
 </div>

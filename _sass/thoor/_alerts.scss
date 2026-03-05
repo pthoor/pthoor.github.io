@@ -1,0 +1,139 @@
+// ============================================================
+// MS Learn-style info boxes / callouts
+// ============================================================
+
+// Shared base styles
+.alert-box {
+  position: relative;
+  margin: $space-lg 0;
+  padding: $space-md $space-lg;
+  border-left: 4px solid;
+  border-radius: 0 $radius-md $radius-md 0;
+  font-size: $font-size-sm;
+  line-height: 1.6;
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  strong:first-child {
+    display: block;
+    margin-bottom: $space-xs;
+    font-size: $font-size-base;
+  }
+}
+
+.alert-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: $space-sm;
+  vertical-align: text-bottom;
+}
+
+// --- Note (blue) ---
+.note, .important {
+  background: $note-bg;
+  border-left-color: $note-border;
+  color: $text-primary;
+
+  .alert-label {
+    color: $note-icon;
+    font-weight: 700;
+    margin-bottom: $space-xs;
+    display: flex;
+    align-items: center;
+    gap: $space-sm;
+  }
+
+  .alert-label svg {
+    fill: $note-icon;
+    flex-shrink: 0;
+  }
+}
+
+// --- Tip (green) ---
+.tip {
+  background: $tip-bg;
+  border-left-color: $tip-border;
+  color: $text-primary;
+
+  .alert-label {
+    color: $tip-icon;
+    font-weight: 700;
+    margin-bottom: $space-xs;
+    display: flex;
+    align-items: center;
+    gap: $space-sm;
+  }
+
+  .alert-label svg {
+    fill: $tip-icon;
+    flex-shrink: 0;
+  }
+}
+
+// --- Important (purple) ---
+// Note: .important shares styles with .note above for backward compat
+// You can also use .important-box for the purple variant
+.important-box {
+  background: $important-bg;
+  border-left-color: $important-border;
+  color: $text-primary;
+
+  .alert-label {
+    color: $important-icon;
+    font-weight: 700;
+    margin-bottom: $space-xs;
+    display: flex;
+    align-items: center;
+    gap: $space-sm;
+  }
+
+  .alert-label svg {
+    fill: $important-icon;
+    flex-shrink: 0;
+  }
+}
+
+// --- Caution (yellow) ---
+.caution {
+  background: $caution-bg;
+  border-left-color: $caution-border;
+  color: $text-primary;
+
+  .alert-label {
+    color: $caution-icon;
+    font-weight: 700;
+    margin-bottom: $space-xs;
+    display: flex;
+    align-items: center;
+    gap: $space-sm;
+  }
+
+  .alert-label svg {
+    fill: $caution-icon;
+    flex-shrink: 0;
+  }
+}
+
+// --- Warning (red) ---
+.warning {
+  background: $warning-bg;
+  border-left-color: $warning-border;
+  color: $text-primary;
+
+  .alert-label {
+    color: $warning-icon;
+    font-weight: 700;
+    margin-bottom: $space-xs;
+    display: flex;
+    align-items: center;
+    gap: $space-sm;
+  }
+
+  .alert-label svg {
+    fill: $warning-icon;
+    flex-shrink: 0;
+  }
+}

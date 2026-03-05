@@ -1,13 +1,7 @@
-<style>
-    .warning {
-      padding: 20px;
-      background-color: #f44336;
-      color: white;
-      margin-bottom: 15px;
-    }
-</style>
-
-<div markdown="span" class="warning" role="alert">
-    <i class="fa fa-exclamation-triangle"></i> <b>Warning</b><br>
-    {{ include.content }}
+<div class="alert-box warning" role="alert" aria-label="Warning">
+  <div class="alert-label">
+    <svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M6.457 1.047l-5.76 10.08a1.5 1.5 0 001.297 2.243h11.512a1.5 1.5 0 001.297-2.243l-5.76-10.08a1.5 1.5 0 00-2.586 0zM8 5a.75.75 0 01.75.75v2.5a.75.75 0 01-1.5 0v-2.5A.75.75 0 018 5zm0 7a1 1 0 100-2 1 1 0 000 2z"/></svg>
+    Warning
+  </div>
+  <div markdown="span">{{ include.content }}</div>
 </div>

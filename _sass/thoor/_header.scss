@@ -1,0 +1,127 @@
+// ============================================================
+// Site header / navigation
+// ============================================================
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba($bg-primary, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid $border-default;
+}
+
+.header-inner {
+  max-width: $site-width;
+  margin: 0 auto;
+  padding: $space-md $space-lg;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.site-brand {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  text-decoration: none;
+  color: $text-primary;
+  font-weight: 700;
+  font-size: 1.25rem;
+
+  &:hover {
+    color: $accent-blue;
+    text-decoration: none;
+  }
+}
+
+.site-brand-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, $accent-blue-dim, $accent-purple);
+  border-radius: $radius-sm;
+  font-size: 0.875rem;
+}
+
+// --- Navigation ---
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+}
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: $text-primary;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: $space-xs;
+  line-height: 1;
+
+  &:focus-visible {
+    outline: 2px solid $accent-blue;
+    outline-offset: 2px;
+    border-radius: $radius-sm;
+  }
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: $space-xs;
+}
+
+.nav-links a {
+  display: block;
+  padding: $space-xs $space-md;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  border-radius: $radius-sm;
+  transition: all $transition-fast;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    color: $text-primary;
+    background: $bg-elevated;
+    text-decoration: none;
+  }
+}
+
+// --- Mobile nav ---
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: $bg-secondary;
+    border-bottom: 1px solid $border-default;
+    padding: $space-md;
+    gap: 0;
+
+    &.is-open {
+      display: flex;
+    }
+
+    a {
+      padding: $space-sm $space-md;
+      border-radius: $radius-sm;
+    }
+  }
+}

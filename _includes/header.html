@@ -1,0 +1,31 @@
+<header class="site-header" role="banner">
+  <div class="header-inner">
+    <a href="{{ '/' | relative_url }}" class="site-brand" aria-label="{{ site.title }} - Home">
+      <span class="site-brand-icon" aria-hidden="true">&#x1F6E1;</span>
+      {{ site.title }}
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation menu">
+        &#9776;
+      </button>
+      <ul class="nav-links" id="nav-links">
+        {% for link in site.data.navigation.main %}
+        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+  </div>
+  <script>
+  (function(){
+    var toggle = document.querySelector('.nav-toggle');
+    var nav = document.getElementById('nav-links');
+    if(toggle && nav) {
+      toggle.addEventListener('click', function() {
+        var expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', !expanded);
+        nav.classList.toggle('is-open');
+      });
+    }
+  })();
+  </script>
+</header>

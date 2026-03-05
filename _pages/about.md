@@ -1,9 +1,7 @@
 ---
 permalink: /about/
 title: "About"
-layout: single
-author_profile: true
-toc: true
+layout: page
 ---
 
 # Hello world

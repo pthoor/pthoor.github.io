@@ -1,8 +1,7 @@
 ---
 title: "Kusto Detective Agency"
 permalink: /KDA/
-layout: single
-author_profile: true
+layout: page
 ---
 
 ![](/assets/KDA1.png)

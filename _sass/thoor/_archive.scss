@@ -1,0 +1,74 @@
+// ============================================================
+// Archive & tag pages
+// ============================================================
+
+.archive-title {
+  font-size: 2.25rem;
+  margin-top: 0;
+  margin-bottom: $space-xl;
+}
+
+// --- Tag cloud ---
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-sm;
+  margin-bottom: $space-2xl;
+  padding-bottom: $space-xl;
+  border-bottom: 1px solid $border-default;
+}
+
+// --- Tag groups ---
+.tag-group {
+  margin-bottom: $space-xl;
+}
+
+.tag-group-title {
+  font-size: 1.25rem;
+  margin-top: 0;
+  margin-bottom: $space-md;
+  padding-bottom: $space-sm;
+  border-bottom: 1px solid $border-muted;
+}
+
+.tag-posts {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: $space-sm 0;
+    border-bottom: 1px solid $border-muted;
+    gap: $space-md;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  a {
+    flex: 1;
+    font-weight: 500;
+  }
+
+  time {
+    color: $text-secondary;
+    font-size: $font-size-xs;
+    white-space: nowrap;
+  }
+}
+
+// --- 404 page ---
+.page-404 {
+  text-align: center;
+  padding: $space-3xl $space-lg;
+
+  h1 {
+    font-size: 4rem;
+    margin-bottom: $space-sm;
+    color: $text-muted;
+  }
+}

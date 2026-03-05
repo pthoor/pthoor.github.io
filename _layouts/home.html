@@ -1,22 +1,75 @@
 ---
-layout: archive
+layout: default
 ---
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-avatar">
+      <img src="{{ site.author.avatar }}" alt="{{ site.author.name }}" loading="eager" width="120" height="120">
+    </div>
+    <h1 class="hero-title">{{ site.title }}</h1>
+    <p class="hero-subtitle">{{ site.description }}</p>
+    <div class="hero-links">
+      {% for link in site.author.links %}
+        {% if link.url %}
+        <a href="{{ link.url }}" rel="noopener noreferrer" aria-label="{{ link.label }}">{{ link.label }}</a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
 
-{{ content }}
+<section class="posts-section">
+  <h2 class="section-title">Latest Posts</h2>
+  <div class="post-list">
+    {% if paginator %}
+      {% assign posts = paginator.posts %}
+    {% else %}
+      {% assign posts = site.posts %}
+    {% endif %}
+    {% for post in posts %}
+    <article class="post-card">
+      {% if post.header.og_image %}
+      <a href="{{ post.url | relative_url }}" class="post-card-image">
+        <img src="{{ post.header.og_image }}" alt="{{ post.title }}" loading="lazy">
+      </a>
+      {% endif %}
+      <div class="post-card-content">
+        <h3 class="post-card-title">
+          <a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+        </h3>
+        <div class="post-card-meta">
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %-d, %Y" }}</time>
+          <span class="post-card-meta-sep">&bull;</span>
+          <span>{% assign words = post.content | number_of_words %}{{ words | divided_by: 200 | plus: 1 }} min read</span>
+        </div>
+        {% if post.excerpt %}
+        <p class="post-card-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
+        {% endif %}
+        {% if post.tags.size > 0 %}
+        <div class="post-card-tags">
+          {% for tag in post.tags limit:3 %}
+          <span class="tag tag--small">{{ tag }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
 
-<h3 class="archive__subtitle">{{ site.data.ui-text[site.locale].recent_posts | default: "Recent Posts" }}</h3>
-
-{% if paginator %}
-  {% assign posts = paginator.posts %}
-{% else %}
-  {% assign posts = site.posts %}
-{% endif %}
-
-{% assign entries_layout = page.entries_layout | default: 'list' %}
-<div class="entries-{{ entries_layout }}">
-  {% for post in posts %}
-    {% include archive-single.html type=entries_layout %}
-  {% endfor %}
-</div>
-
-{% include paginator.html %}
+  {% if paginator.total_pages > 1 %}
+  <nav class="pagination" aria-label="Pagination">
+    {% if paginator.previous_page %}
+    <a href="{{ paginator.previous_page_path | relative_url }}" class="pagination-prev" rel="prev">&larr; Newer</a>
+    {% else %}
+    <span class="pagination-prev pagination-disabled">&larr; Newer</span>
+    {% endif %}
+    <span class="pagination-info">Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
+    {% if paginator.next_page %}
+    <a href="{{ paginator.next_page_path | relative_url }}" class="pagination-next" rel="next">Older &rarr;</a>
+    {% else %}
+    <span class="pagination-next pagination-disabled">Older &rarr;</span>
+    {% endif %}
+  </nav>
+  {% endif %}
+</section>
