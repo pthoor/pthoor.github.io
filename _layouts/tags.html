@@ -4,19 +4,30 @@ layout: default
 <section class="archive">
   <h1 class="archive-title">{{ page.title }}</h1>
 
+  {% assign sorted_tags = site.tags | sort %}
+  {% assign max_count = 1 %}
+  {% for tag in sorted_tags %}
+    {% if tag[1].size > max_count %}{% assign max_count = tag[1].size %}{% endif %}
+  {% endfor %}
+
   <div class="tag-cloud">
-    {% assign sorted_tags = site.tags | sort %}
     {% for tag in sorted_tags %}
-    <a href="#{{ tag[0] | slugify }}" class="tag">{{ tag[0] }} <span class="tag-count">{{ tag[1].size }}</span></a>
+    {% assign weight = tag[1].size | times: 100 | divided_by: max_count %}
+    <a href="#{{ tag[0] | slugify }}" class="tag-cloud-item{% if weight >= 80 %} tag-cloud--xl{% elsif weight >= 55 %} tag-cloud--lg{% elsif weight >= 30 %} tag-cloud--md{% else %} tag-cloud--sm{% endif %}">
+      {{ tag[0] }}<span class="tag-cloud-count">{{ tag[1].size }}</span>
+    </a>
     {% endfor %}
   </div>
 
-  {% assign sorted_tags = site.tags | sort %}
   {% for tag in sorted_tags %}
   <div class="tag-group" id="{{ tag[0] | slugify }}">
-    <h2 class="tag-group-title">{{ tag[0] }}</h2>
+    <h2 class="tag-group-title">
+      <span>{{ tag[0] }}</span>
+      <span class="tag-group-count">{{ tag[1].size }} post{% if tag[1].size != 1 %}s{% endif %}</span>
+    </h2>
     <ul class="tag-posts">
-      {% for post in tag[1] %}
+      {% assign sorted_posts = tag[1] | sort: "date" | reverse %}
+      {% for post in sorted_posts %}
       <li>
         <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
         <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>

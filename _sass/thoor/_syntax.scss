@@ -2,12 +2,14 @@
 // Syntax highlighting (Rouge - theme-aware)
 // ============================================================
 
+
 .highlight {
   margin: $space-lg 0;
   background: var(--bg-tertiary);
   border: 1px solid var(--border-default);
   border-radius: $radius-md;
   overflow: hidden;
+  position: relative;
 
   pre {
     margin: 0;
@@ -32,6 +34,55 @@
     user-select: none;
     border-right: 1px solid var(--border-default);
     margin-right: $space-md;
+  }
+}
+
+// --- Code toolbar (language label + copy button, injected by JS) ---
+.code-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-xs $space-sm;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-default);
+  min-height: 32px;
+}
+
+.code-lang {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+
+.code-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px $space-sm;
+  background: none;
+  border: 1px solid var(--border-default);
+  border-radius: $radius-sm;
+  color: var(--text-muted);
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all $transition-fast;
+  line-height: 1.5;
+
+  svg { flex-shrink: 0; }
+
+  &:hover {
+    color: var(--text-primary);
+    border-color: var(--accent-blue-dim);
+    background: var(--bg-tertiary);
+  }
+
+  &.is-copied {
+    color: var(--accent-green);
+    border-color: var(--accent-green);
   }
 }
 

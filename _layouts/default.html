@@ -4,12 +4,34 @@
   {% include head.html %}
 </head>
 <body>
+  <div id="reading-progress" aria-hidden="true"></div>
   <a class="skip-link" href="#main-content">Skip to main content</a>
   {% include header.html %}
   <main id="main-content" class="site-main" role="main">
     {{ content }}
   </main>
   {% include footer.html %}
+  <button id="back-to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+  </button>
+
+  <div id="search-overlay" class="search-overlay" role="dialog" aria-modal="true" aria-label="Search posts">
+    <div class="search-overlay-inner">
+      <div class="search-overlay-header">
+        <div class="search-input-wrap">
+          <svg class="search-input-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="search" id="search-input" class="search-input" placeholder="Search posts…" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="search-close" id="search-close" aria-label="Close search">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+      <div class="search-overlay-body">
+        <p class="search-hint" id="search-hint">Type to search across all posts. Press <kbd>Esc</kbd> to close.</p>
+        <div id="search-results"></div>
+      </div>
+    </div>
+  </div>
   <script>
   (function(){
     var btn = document.querySelector('.theme-toggle');
@@ -22,6 +44,207 @@
     });
   })();
   </script>
+  <script>
+  (function() {
+    // --- Code toolbars: language badge + copy button ---
+    var langNames = {
+      'powershell':'PowerShell','bicep':'Bicep','kql':'KQL','kusto':'KQL',
+      'bash':'Bash','shell':'Shell','sh':'Shell','json':'JSON','jsonc':'JSON',
+      'yaml':'YAML','python':'Python','javascript':'JavaScript','js':'JavaScript',
+      'typescript':'TypeScript','ts':'TypeScript','csharp':'C#','cs':'C#',
+      'sql':'SQL','xml':'XML','html':'HTML','css':'CSS','scss':'SCSS',
+      'terraform':'Terraform','hcl':'HCL','go':'Go','rust':'Rust','ruby':'Ruby',
+      'markdown':'Markdown','dockerfile':'Dockerfile','diff':'Diff','ini':'INI','toml':'TOML'
+    };
+    var copyIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+    var checkIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+
+    document.querySelectorAll('div.highlight').forEach(function(highlight) {
+      var outer = highlight.closest('.highlighter-rouge');
+      var lang = null;
+      if (outer) {
+        var m = outer.className.match(/language-(\w+)/);
+        if (m) lang = m[1].toLowerCase();
+      }
+      var toolbar = document.createElement('div');
+      toolbar.className = 'code-toolbar';
+
+      var label = document.createElement('span');
+      label.className = 'code-lang';
+      label.textContent = (lang && langNames[lang]) ? langNames[lang] : (lang || '');
+      toolbar.appendChild(label);
+
+      var btn = document.createElement('button');
+      btn.className = 'code-copy-btn';
+      btn.type = 'button';
+      btn.setAttribute('aria-label', 'Copy code to clipboard');
+      btn.innerHTML = copyIcon + '<span>Copy</span>';
+
+      btn.addEventListener('click', function() {
+        var code = highlight.querySelector('code');
+        if (!code) return;
+        var text = code.innerText;
+        var finish = function(ok) {
+          btn.innerHTML = (ok ? checkIcon : copyIcon) + '<span>' + (ok ? 'Copied!' : 'Copy') + '</span>';
+          if (ok) {
+            btn.classList.add('is-copied');
+            setTimeout(function() {
+              btn.innerHTML = copyIcon + '<span>Copy</span>';
+              btn.classList.remove('is-copied');
+            }, 2000);
+          }
+        };
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(function() { finish(true); }).catch(function() { finish(false); });
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+          document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+          document.body.removeChild(ta); finish(true);
+        }
+      });
+
+      toolbar.appendChild(btn);
+      highlight.insertBefore(toolbar, highlight.firstChild);
+    });
+
+    // --- Heading anchor links (post content only) ---
+    document.querySelectorAll('.post-content h2[id], .post-content h3[id], .post-content h4[id]').forEach(function(h) {
+      var a = document.createElement('a');
+      a.className = 'heading-anchor';
+      a.href = '#' + h.id;
+      a.setAttribute('aria-label', 'Permalink to this section');
+      a.textContent = '#';
+      h.appendChild(a);
+    });
+
+    // --- Reading progress bar (post pages only) ---
+    var bar = document.getElementById('reading-progress');
+    if (bar && document.querySelector('.post-content')) {
+      var onScroll = function() {
+        var h = document.documentElement;
+        var scrollable = h.scrollHeight - h.clientHeight;
+        bar.style.width = (scrollable > 0 ? Math.min((h.scrollTop / scrollable) * 100, 100) : 0) + '%';
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
+
+    // --- Back to top button ---
+    var topBtn = document.getElementById('back-to-top');
+    if (topBtn) {
+      window.addEventListener('scroll', function() {
+        topBtn.classList.toggle('is-visible', window.scrollY > 400);
+      }, { passive: true });
+      topBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // --- Search overlay ---
+    var searchOpenBtn  = document.getElementById('search-open');
+    var searchOverlay  = document.getElementById('search-overlay');
+    var searchCloseBtn = document.getElementById('search-close');
+    var searchInput    = document.getElementById('search-input');
+    var searchResults  = document.getElementById('search-results');
+    var searchHint     = document.getElementById('search-hint');
+    var lunrIdx, searchDocs, lunrReady = false, lunrLoading = false;
+
+    function escHtml(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function runSearch(query) {
+      query = (query || '').trim();
+      if (!query) { searchResults.innerHTML = ''; searchHint.textContent = 'Type to search across all posts. Press Esc to close.'; return; }
+      if (!lunrReady) { searchHint.textContent = 'Loading search index\u2026'; return; }
+      var hits;
+      try { hits = lunrIdx.search(query + '* ' + query); } catch(e) { hits = []; }
+      var seen = {};
+      hits = hits.filter(function(h) { if (seen[h.ref]) return false; seen[h.ref] = true; return true; });
+      if (!hits.length) {
+        searchHint.textContent = '';
+        searchResults.innerHTML = '<p class="search-no-results">No results for <strong>' + escHtml(query) + '</strong></p>';
+        return;
+      }
+      searchHint.textContent = hits.length + ' result' + (hits.length === 1 ? '' : 's') + ' for \u201c' + query + '\u201d';
+      var html = '<ul class="search-results-list">';
+      hits.slice(0, 8).forEach(function(hit) {
+        var doc = searchDocs.find(function(d) { return d.url === hit.ref; });
+        if (!doc) return;
+        html += '<li><a href="' + escHtml(doc.url) + '" class="search-result-card">';
+        html += '<span class="search-result-title">' + escHtml(doc.title) + '</span>';
+        if (doc.tags && doc.tags.length) {
+          html += '<span class="search-result-tags">';
+          doc.tags.forEach(function(t) { html += '<span class="tag tag--small">' + escHtml(t) + '</span>'; });
+          html += '</span>';
+        }
+        if (doc.excerpt) html += '<span class="search-result-excerpt">' + escHtml(doc.excerpt) + '</span>';
+        html += '<span class="search-result-date">' + escHtml(doc.date) + '</span>';
+        html += '</a></li>';
+      });
+      html += '</ul>';
+      searchResults.innerHTML = html;
+    }
+
+    function loadLunr() {
+      if (lunrLoading) return;
+      lunrLoading = true;
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js';
+      s.onload = function() {
+        fetch('{{ "/search.json" | relative_url }}')
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            searchDocs = data;
+            lunrIdx = lunr(function() {
+              this.ref('url');
+              this.field('title', { boost: 10 });
+              this.field('tags', { boost: 5 });
+              this.field('excerpt', { boost: 2 });
+              this.field('content');
+              data.forEach(function(doc) {
+                this.add({ url: doc.url, title: doc.title, tags: (doc.tags||[]).join(' '), excerpt: doc.excerpt, content: doc.content });
+              }, this);
+            });
+            lunrReady = true;
+            if (searchInput && searchInput.value) runSearch(searchInput.value);
+          });
+      };
+      document.head.appendChild(s);
+    }
+
+    function openSearch() {
+      if (!searchOverlay) return;
+      searchOverlay.classList.add('is-open');
+      document.body.classList.add('overlay-open');
+      if (searchOpenBtn) searchOpenBtn.setAttribute('aria-expanded', 'true');
+      if (searchInput) { searchInput.focus(); searchInput.select(); }
+      loadLunr();
+    }
+
+    function closeSearch() {
+      if (!searchOverlay) return;
+      searchOverlay.classList.remove('is-open');
+      document.body.classList.remove('overlay-open');
+      if (searchOpenBtn) searchOpenBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    if (searchOpenBtn)  searchOpenBtn.addEventListener('click', openSearch);
+    if (searchCloseBtn) searchCloseBtn.addEventListener('click', closeSearch);
+    if (searchOverlay)  searchOverlay.addEventListener('click', function(e) { if (e.target === searchOverlay) closeSearch(); });
+    if (searchInput)    searchInput.addEventListener('input', function() { runSearch(this.value); });
+
+    document.addEventListener('keydown', function(e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        searchOverlay && searchOverlay.classList.contains('is-open') ? closeSearch() : openSearch();
+      }
+      if (e.key === 'Escape' && searchOverlay && searchOverlay.classList.contains('is-open')) closeSearch();
+    });
+  })();
+  </script>
+
   {% if page.mermaid %}
   <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js" integrity="sha384-ZdL2yczGFPmFmvgeJk0pflXqCy61AlFbPR9gBjoDJVDYC0RMx2l9am0fGE40YnfI" crossorigin="anonymous"></script>
   <script>

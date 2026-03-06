@@ -1,9 +1,9 @@
 main:
   - title: "Posts by Tag"
     url: /tags/
-  - title: "Security Dojo Podcast"
-    url: https://securitydojo.ms
+  - title: "Talks"
+    url: /talks/
+  - title: "Resources"
+    url: /resources/
   - title: "About"
     url: /about/
-  - title: "Kusto Detective Agency"
-    url: /KDA/

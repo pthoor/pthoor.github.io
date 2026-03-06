@@ -213,6 +213,77 @@
   }
 }
 
+// --- Author bio ---
+.author-bio {
+  display: flex;
+  gap: $space-lg;
+  padding: $space-xl;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: $radius-lg;
+  margin-top: $space-2xl;
+  align-items: flex-start;
+}
+
+.author-bio-avatar {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border-default);
+}
+
+.author-bio-content { flex: 1; min-width: 0; }
+
+.author-bio-name {
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0 0 $space-xs;
+  color: var(--text-primary);
+}
+
+.author-bio-text {
+  color: var(--text-secondary);
+  font-size: $font-size-sm;
+  margin: 0 0 $space-md;
+  line-height: 1.6;
+}
+
+.author-bio-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-xs;
+
+  a {
+    display: inline-block;
+    padding: 2px $space-sm;
+    font-size: $font-size-xs;
+    font-weight: 500;
+    border: 1px solid var(--border-default);
+    border-radius: $radius-sm;
+    color: var(--text-secondary);
+    background: var(--bg-elevated);
+    transition: all $transition-fast;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--accent-blue);
+      border-color: var(--accent-blue-dim);
+      text-decoration: none;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .author-bio {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .author-bio-links { justify-content: center; }
+}
+
 // --- Post footer ---
 .post-footer {
   margin-top: $space-2xl;
@@ -304,4 +375,57 @@
     display: block;
     margin: $space-lg auto;
   }
+}
+
+// --- Related posts ---
+.related-posts {
+  max-width: $content-width;
+  margin: 0 auto;
+  padding: $space-lg $space-lg $space-3xl;
+  border-top: 1px solid var(--border-default);
+}
+
+.related-posts-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 $space-lg;
+}
+
+.related-posts-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: $space-md;
+}
+
+.related-post-card {
+  padding: $space-md;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: $radius-md;
+  text-decoration: none;
+  display: block;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: var(--accent-blue-dim);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-card);
+    text-decoration: none;
+  }
+}
+
+.related-post-title {
+  font-size: $font-size-sm;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 $space-xs;
+  line-height: $line-height-tight;
+}
+
+.related-post-date {
+  font-size: $font-size-xs;
+  color: var(--text-muted);
 }

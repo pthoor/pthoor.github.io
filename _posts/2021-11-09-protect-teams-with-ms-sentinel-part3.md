@@ -45,7 +45,7 @@ And if you followed part 2 in this series, we already have two analytic rules in
 
 <details><summary markdown="span">Let's see some code!</summary>
 
-```sql
+```kql
 // Adjust this value to change how many Teams should be deleted before including
 let max_delete_count = 3;
 // Adjust this value to change the timewindow the query runs over
@@ -67,7 +67,7 @@ OfficeActivity
 
 <details><summary markdown="span">Let's see some code!</summary>
 
-```sql
+```kql
 OfficeActivity
 | where OfficeWorkload =~ "MicrosoftTeams"
 | where Operation =~ "MemberAdded"
@@ -97,7 +97,7 @@ OfficeActivity
 
 <details><summary markdown="span">Let's see some code!</summary>
 
-```sql
+```kql
 // Adjust this value to change how many teams a user is made owner of before detecting
   let max_owner_count = 3;
   // Change this value to adjust how larger timeframe the query is run over.

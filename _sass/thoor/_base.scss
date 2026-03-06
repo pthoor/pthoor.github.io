@@ -164,3 +164,125 @@ tr:nth-child(even) {
   background: var(--accent-blue-alpha);
   color: var(--text-primary);
 }
+
+// --- Reading progress bar ---
+#reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+  z-index: 200;
+  transition: width 80ms linear;
+  pointer-events: none;
+}
+
+// --- Heading anchor links ---
+.heading-anchor {
+  margin-left: $space-sm;
+  color: var(--text-muted);
+  font-weight: 400;
+  opacity: 0;
+  transition: opacity $transition-fast;
+  text-decoration: none;
+  font-size: 0.85em;
+
+  &:hover {
+    color: var(--accent-blue);
+    text-decoration: none;
+  }
+}
+
+h2:hover .heading-anchor,
+h3:hover .heading-anchor,
+h4:hover .heading-anchor {
+  opacity: 1;
+}
+
+// --- Back to top button ---
+#back-to-top {
+  position: fixed;
+  bottom: $space-xl;
+  right: $space-xl;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: $radius-md;
+  color: var(--text-secondary);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity $transition-base, visibility $transition-base, transform $transition-base, border-color $transition-fast, color $transition-fast;
+  z-index: 90;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  &:hover {
+    border-color: var(--accent-blue-dim);
+    color: var(--accent-blue);
+  }
+
+  &.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+// --- 404 page ---
+.not-found {
+  max-width: 480px;
+  margin: $space-3xl auto;
+  padding: 0 $space-lg;
+  text-align: center;
+}
+
+.not-found-icon {
+  margin-bottom: $space-lg;
+
+  svg {
+    width: 72px;
+    height: 72px;
+    fill: var(--accent-blue-dim);
+  }
+}
+
+.not-found-code {
+  font-size: 6rem;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--text-primary), var(--accent-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.not-found-title {
+  font-size: 1.5rem;
+  margin: $space-sm 0 $space-md;
+  color: var(--text-primary);
+}
+
+.not-found-message {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: $space-xl;
+}
+
+.not-found-actions {
+  display: flex;
+  justify-content: center;
+  gap: $space-sm;
+  flex-wrap: wrap;
+}
