@@ -20,10 +20,11 @@ body {
   font-family: $font-body;
   font-size: $font-size-base;
   line-height: $line-height-base;
-  color: $text-primary;
-  background-color: $bg-primary;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: color $transition-base, background-color $transition-base;
 }
 
 // --- Skip link (accessibility) ---
@@ -32,8 +33,8 @@ body {
   top: -100%;
   left: $space-md;
   padding: $space-sm $space-md;
-  background: $accent-blue;
-  color: $bg-primary;
+  background: var(--accent-blue);
+  color: var(--bg-primary);
   font-weight: 600;
   border-radius: $radius-sm;
   z-index: 1000;
@@ -46,18 +47,18 @@ body {
 
 // --- Links ---
 a {
-  color: $accent-blue;
+  color: var(--accent-blue);
   text-decoration: none;
   transition: color $transition-fast;
 
   &:hover,
   &:focus {
-    color: lighten($accent-blue, 10%);
+    color: var(--accent-blue-hover);
     text-decoration: underline;
   }
 
   &:focus-visible {
-    outline: 2px solid $accent-blue;
+    outline: 2px solid var(--accent-blue);
     outline-offset: 2px;
     border-radius: $radius-sm;
   }
@@ -68,7 +69,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: $font-heading;
   font-weight: 700;
   line-height: $line-height-tight;
-  color: $text-primary;
+  color: var(--text-primary);
   margin-top: $space-2xl;
   margin-bottom: $space-md;
 }
@@ -88,7 +89,7 @@ p {
 
 strong {
   font-weight: 700;
-  color: $text-primary;
+  color: var(--text-primary);
 }
 
 em {
@@ -109,10 +110,10 @@ ul, ol {
 blockquote {
   margin: $space-lg 0;
   padding: $space-md $space-lg;
-  border-left: 4px solid $accent-blue-dim;
-  background: $bg-secondary;
+  border-left: 4px solid var(--accent-blue-dim);
+  background: var(--bg-secondary);
   border-radius: 0 $radius-sm $radius-sm 0;
-  color: $text-secondary;
+  color: var(--text-secondary);
   font-style: italic;
 
   p:last-child {
@@ -123,7 +124,7 @@ blockquote {
 // --- Horizontal rule ---
 hr {
   border: none;
-  border-top: 1px solid $border-default;
+  border-top: 1px solid var(--border-default);
   margin: $space-2xl 0;
 }
 
@@ -145,21 +146,21 @@ table {
 th, td {
   padding: $space-sm $space-md;
   text-align: left;
-  border: 1px solid $border-default;
+  border: 1px solid var(--border-default);
 }
 
 th {
-  background: $bg-elevated;
+  background: var(--bg-elevated);
   font-weight: 600;
-  color: $text-primary;
+  color: var(--text-primary);
 }
 
 tr:nth-child(even) {
-  background: $bg-secondary;
+  background: var(--bg-secondary);
 }
 
 // --- Selection ---
 ::selection {
-  background: rgba($accent-blue, 0.3);
-  color: $text-primary;
+  background: var(--accent-blue-alpha);
+  color: var(--text-primary);
 }

@@ -1,11 +1,11 @@
 // ============================================================
-// Syntax highlighting (Rouge / dark theme)
+// Syntax highlighting (Rouge - theme-aware)
 // ============================================================
 
 .highlight {
   margin: $space-lg 0;
-  background: $bg-tertiary;
-  border: 1px solid $border-default;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-default);
   border-radius: $radius-md;
   overflow: hidden;
 
@@ -22,62 +22,62 @@
     background: transparent;
     border: none;
     padding: 0;
-    color: $text-primary;
+    color: var(--text-primary);
   }
 
   // Line numbers
   .lineno {
-    color: $text-muted;
+    color: var(--text-muted);
     padding-right: $space-md;
     user-select: none;
-    border-right: 1px solid $border-default;
+    border-right: 1px solid var(--border-default);
     margin-right: $space-md;
   }
 }
 
-// --- Token colors ---
+// --- Token colors (theme-aware via CSS custom properties) ---
 .highlight {
-  .c, .cm, .c1, .cs  { color: #6e7681; font-style: italic; } // Comments
-  .cd                 { color: #6e7681; }                       // Comment doc
-  .cp                 { color: #d29922; }                       // Comment preproc
-  .err                { color: #f85149; }                       // Error
-  .k, .kd, .kn, .kp  { color: #ff7b72; }                       // Keywords
-  .kr                 { color: #ff7b72; font-weight: bold; }    // Keyword reserved
-  .kt                 { color: #ffa657; }                       // Keyword type
-  .o, .ow             { color: #ff7b72; }                       // Operators
-  .p                  { color: $text-primary; }                 // Punctuation
-  .n                  { color: $text-primary; }                 // Name
-  .na                 { color: #79c0ff; }                       // Name attribute
-  .nb                 { color: #ffa657; }                       // Name builtin
-  .nc                 { color: #ffa657; font-weight: bold; }    // Name class
-  .no                 { color: #79c0ff; }                       // Name constant
-  .nd                 { color: #d2a8ff; }                       // Name decorator
-  .ni                 { color: $text-primary; }                 // Name entity
-  .ne                 { color: #ffa657; font-weight: bold; }    // Name exception
-  .nf                 { color: #d2a8ff; }                       // Name function
-  .nl                 { color: #79c0ff; }                       // Name label
-  .nn                 { color: #ffa657; }                       // Name namespace
-  .nx                 { color: #d2a8ff; }                       // Name other (JSX etc)
-  .nt                 { color: #7ee787; }                       // Name tag (HTML/XML)
-  .nv, .vi, .vg, .vc  { color: #79c0ff; }                       // Variables
-  .s, .sb, .sc, .sd  { color: #a5d6ff; }                       // Strings
-  .s2                 { color: #a5d6ff; }                       // String double
-  .se                 { color: #79c0ff; }                       // String escape
-  .sh                 { color: #a5d6ff; }                       // String heredoc
-  .si                 { color: #a5d6ff; }                       // String interp
-  .sx                 { color: #a5d6ff; }                       // String regex
-  .sr                 { color: #7ee787; }                       // String regex
-  .s1                 { color: #a5d6ff; }                       // String single
-  .ss                 { color: #79c0ff; }                       // String symbol
-  .m, .mf, .mh       { color: #79c0ff; }                       // Numbers
-  .mi                 { color: #79c0ff; }                       // Number integer
-  .mo                 { color: #79c0ff; }                       // Number oct
-  .il                 { color: #79c0ff; }                       // Number int long
-  .ge                 { font-style: italic; }                   // Generic emphasis
-  .gs                 { font-weight: bold; }                    // Generic strong
-  .gd                 { color: #ffa198; background: #490202; }  // Diff deleted
-  .gi                 { color: #56d364; background: #0f5323; }  // Diff inserted
-  .gh                 { color: #79c0ff; font-weight: bold; }    // Diff heading
-  .gu                 { color: #79c0ff; }                       // Diff chunk
-  .w                  { color: $text-muted; }                   // Whitespace
+  .c, .cm, .c1, .cs  { color: var(--syn-comment); font-style: italic; } // Comments
+  .cd                 { color: var(--syn-comment); }                      // Comment doc
+  .cp                 { color: var(--syn-preproc); }                      // Comment preproc
+  .err                { color: var(--syn-error); }                        // Error
+  .k, .kd, .kn, .kp  { color: var(--syn-keyword); }                      // Keywords
+  .kr                 { color: var(--syn-keyword); font-weight: bold; }   // Keyword reserved
+  .kt                 { color: var(--syn-type); }                         // Keyword type
+  .o, .ow             { color: var(--syn-keyword); }                      // Operators
+  .p                  { color: var(--text-primary); }                     // Punctuation
+  .n                  { color: var(--text-primary); }                     // Name
+  .na                 { color: var(--syn-attr); }                         // Name attribute
+  .nb                 { color: var(--syn-builtin); }                      // Name builtin
+  .nc                 { color: var(--syn-builtin); font-weight: bold; }   // Name class
+  .no                 { color: var(--syn-attr); }                         // Name constant
+  .nd                 { color: var(--syn-decorator); }                    // Name decorator
+  .ni                 { color: var(--text-primary); }                     // Name entity
+  .ne                 { color: var(--syn-builtin); font-weight: bold; }   // Name exception
+  .nf                 { color: var(--syn-function); }                     // Name function
+  .nl                 { color: var(--syn-attr); }                         // Name label
+  .nn                 { color: var(--syn-builtin); }                      // Name namespace
+  .nx                 { color: var(--syn-function); }                     // Name other (JSX etc)
+  .nt                 { color: var(--syn-tag); }                          // Name tag (HTML/XML)
+  .nv, .vi, .vg, .vc  { color: var(--syn-variable); }                    // Variables
+  .s, .sb, .sc, .sd  { color: var(--syn-string); }                       // Strings
+  .s2                 { color: var(--syn-string); }                       // String double
+  .se                 { color: var(--syn-escape); }                       // String escape
+  .sh                 { color: var(--syn-string); }                       // String heredoc
+  .si                 { color: var(--syn-string); }                       // String interp
+  .sx                 { color: var(--syn-string); }                       // String regex
+  .sr                 { color: var(--syn-regex); }                        // String regex
+  .s1                 { color: var(--syn-string); }                       // String single
+  .ss                 { color: var(--syn-variable); }                     // String symbol
+  .m, .mf, .mh       { color: var(--syn-number); }                       // Numbers
+  .mi                 { color: var(--syn-number); }                       // Number integer
+  .mo                 { color: var(--syn-number); }                       // Number oct
+  .il                 { color: var(--syn-number); }                       // Number int long
+  .ge                 { font-style: italic; }                             // Generic emphasis
+  .gs                 { font-weight: bold; }                              // Generic strong
+  .gd                 { color: var(--syn-diff-del-fg); background: var(--syn-diff-del-bg); } // Diff deleted
+  .gi                 { color: var(--syn-diff-ins-fg); background: var(--syn-diff-ins-bg); } // Diff inserted
+  .gh                 { color: var(--syn-diff-head); font-weight: bold; } // Diff heading
+  .gu                 { color: var(--syn-diff-head); }                    // Diff chunk
+  .w                  { color: var(--text-muted); }                       // Whitespace
 }

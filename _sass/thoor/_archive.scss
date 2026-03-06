@@ -15,7 +15,7 @@
   gap: $space-sm;
   margin-bottom: $space-2xl;
   padding-bottom: $space-xl;
-  border-bottom: 1px solid $border-default;
+  border-bottom: 1px solid var(--border-default);
 }
 
 // --- Tag groups ---
@@ -28,7 +28,7 @@
   margin-top: 0;
   margin-bottom: $space-md;
   padding-bottom: $space-sm;
-  border-bottom: 1px solid $border-muted;
+  border-bottom: 1px solid var(--border-muted);
 }
 
 .tag-posts {
@@ -41,7 +41,7 @@
     justify-content: space-between;
     align-items: baseline;
     padding: $space-sm 0;
-    border-bottom: 1px solid $border-muted;
+    border-bottom: 1px solid var(--border-muted);
     gap: $space-md;
 
     &:last-child {
@@ -55,7 +55,7 @@
   }
 
   time {
-    color: $text-secondary;
+    color: var(--text-secondary);
     font-size: $font-size-xs;
     white-space: nowrap;
   }
@@ -69,6 +69,6 @@
   h1 {
     font-size: 4rem;
     margin-bottom: $space-sm;
-    color: $text-muted;
+    color: var(--text-muted);
   }
 }

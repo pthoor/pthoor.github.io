@@ -5,8 +5,8 @@
 .site-footer {
   margin-top: $space-3xl;
   padding: $space-2xl $space-lg;
-  border-top: 1px solid $border-default;
-  background: $bg-secondary;
+  border-top: 1px solid var(--border-default);
+  background: var(--bg-secondary);
 }
 
 .footer-inner {
@@ -20,14 +20,14 @@
 }
 
 .footer-copy {
-  color: $text-secondary;
+  color: var(--text-secondary);
   font-size: $font-size-sm;
 
   a {
-    color: $text-secondary;
+    color: var(--text-secondary);
 
     &:hover {
-      color: $accent-blue;
+      color: var(--accent-blue);
     }
   }
 }
@@ -40,12 +40,12 @@
   gap: $space-md;
 
   a {
-    color: $text-secondary;
+    color: var(--text-secondary);
     font-size: $font-size-sm;
     transition: color $transition-fast;
 
     &:hover {
-      color: $accent-blue;
+      color: var(--accent-blue);
       text-decoration: none;
     }
   }

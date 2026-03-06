@@ -38,7 +38,7 @@
 }
 
 .post-meta {
-  color: $text-secondary;
+  color: var(--text-secondary);
   font-size: $font-size-sm;
   display: flex;
   align-items: center;
@@ -47,11 +47,11 @@
 }
 
 .post-meta-sep {
-  color: $text-muted;
+  color: var(--text-muted);
 }
 
 .read-time {
-  color: $text-secondary;
+  color: var(--text-secondary);
 }
 
 // --- Tags ---
@@ -65,19 +65,19 @@
 .tag {
   display: inline-block;
   padding: 2px $space-sm;
-  background: $bg-elevated;
-  color: $accent-blue;
+  background: var(--bg-elevated);
+  color: var(--accent-blue);
   font-size: $font-size-xs;
   font-weight: 500;
   border-radius: 20px;
-  border: 1px solid $border-default;
+  border: 1px solid var(--border-default);
   text-decoration: none;
   transition: all $transition-fast;
 
   &:hover {
-    background: $accent-blue-dim;
-    color: $text-primary;
-    border-color: $accent-blue-dim;
+    background: var(--accent-blue-dim);
+    color: var(--text-primary);
+    border-color: var(--accent-blue-dim);
     text-decoration: none;
   }
 }
@@ -97,17 +97,17 @@
 .toc {
   margin-bottom: $space-2xl;
   padding: $space-md $space-lg;
-  background: $bg-secondary;
-  border: 1px solid $border-default;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
   border-radius: $radius-md;
 
   summary {
     cursor: pointer;
-    color: $text-primary;
+    color: var(--text-primary);
     user-select: none;
 
     &::-webkit-details-marker {
-      color: $text-muted;
+      color: var(--text-muted);
     }
   }
 
@@ -121,11 +121,11 @@
   }
 
   a {
-    color: $text-secondary;
+    color: var(--text-secondary);
     font-size: $font-size-sm;
 
     &:hover {
-      color: $accent-blue;
+      color: var(--accent-blue);
     }
   }
 }
@@ -138,13 +138,13 @@
 
   h2 {
     padding-bottom: $space-sm;
-    border-bottom: 1px solid $border-default;
+    border-bottom: 1px solid var(--border-default);
   }
 
   img {
     display: block;
     margin: $space-lg auto;
-    border: 1px solid $border-default;
+    border: 1px solid var(--border-default);
   }
 
   // Inline code
@@ -152,18 +152,18 @@
     font-family: $font-mono;
     font-size: 0.875em;
     padding: 0.15em 0.4em;
-    background: $bg-tertiary;
-    border: 1px solid $border-default;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
     border-radius: $radius-sm;
-    color: $accent-purple;
+    color: var(--accent-purple);
   }
 
   // Code blocks
   pre {
     margin: $space-lg 0;
     padding: $space-lg;
-    background: $bg-tertiary;
-    border: 1px solid $border-default;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
     border-radius: $radius-md;
     overflow-x: auto;
     font-size: $font-size-sm;
@@ -175,7 +175,7 @@
       background: none;
       border: none;
       border-radius: 0;
-      color: $text-primary;
+      color: var(--text-primary);
       font-size: inherit;
     }
   }
@@ -185,30 +185,30 @@
     margin: $space-lg 0;
 
     .gist-file {
-      border: 1px solid $border-default !important;
+      border: 1px solid var(--border-default) !important;
       border-radius: $radius-md;
     }
 
     .gist-data {
-      background: $bg-tertiary !important;
-      border-bottom: 1px solid $border-default !important;
+      background: var(--bg-tertiary) !important;
+      border-bottom: 1px solid var(--border-default) !important;
     }
 
     .gist-meta {
-      background: $bg-secondary !important;
-      color: $text-secondary !important;
+      background: var(--bg-secondary) !important;
+      color: var(--text-secondary) !important;
 
       a {
-        color: $accent-blue !important;
+        color: var(--accent-blue) !important;
       }
     }
 
     .blob-code {
-      color: $text-primary !important;
+      color: var(--text-primary) !important;
     }
 
     .blob-num {
-      color: $text-muted !important;
+      color: var(--text-muted) !important;
     }
   }
 }
@@ -217,7 +217,7 @@
 .post-footer {
   margin-top: $space-2xl;
   padding-top: $space-lg;
-  border-top: 1px solid $border-default;
+  border-top: 1px solid var(--border-default);
 }
 
 .share-links {
@@ -225,20 +225,20 @@
   align-items: center;
   gap: $space-md;
   font-size: $font-size-sm;
-  color: $text-secondary;
+  color: var(--text-secondary);
 
   a {
     padding: $space-xs $space-md;
-    background: $bg-elevated;
-    border: 1px solid $border-default;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
     border-radius: $radius-sm;
     font-weight: 500;
     transition: all $transition-fast;
 
     &:hover {
-      background: $accent-blue-dim;
-      border-color: $accent-blue-dim;
-      color: $text-primary;
+      background: var(--accent-blue-dim);
+      border-color: var(--accent-blue-dim);
+      color: var(--text-primary);
       text-decoration: none;
     }
   }
@@ -258,15 +258,15 @@
 .post-nav-next {
   flex: 1;
   padding: $space-md $space-lg;
-  background: $bg-secondary;
-  border: 1px solid $border-default;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
   border-radius: $radius-md;
   text-decoration: none;
   transition: all $transition-fast;
 
   &:hover {
-    border-color: $accent-blue-dim;
-    background: $bg-tertiary;
+    border-color: var(--accent-blue-dim);
+    background: var(--bg-tertiary);
     text-decoration: none;
   }
 }
@@ -278,14 +278,14 @@
 .post-nav-label {
   display: block;
   font-size: $font-size-xs;
-  color: $text-secondary;
+  color: var(--text-secondary);
   margin-bottom: $space-xs;
 }
 
 .post-nav-title {
   display: block;
   font-weight: 600;
-  color: $accent-blue;
+  color: var(--accent-blue);
   font-size: $font-size-sm;
 }
 

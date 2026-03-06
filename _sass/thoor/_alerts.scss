@@ -33,12 +33,12 @@
 
 // --- Note (blue) ---
 .note, .important {
-  background: $note-bg;
-  border-left-color: $note-border;
-  color: $text-primary;
+  background: var(--note-bg);
+  border-left-color: var(--note-border);
+  color: var(--text-primary);
 
   .alert-label {
-    color: $note-icon;
+    color: var(--note-icon);
     font-weight: 700;
     margin-bottom: $space-xs;
     display: flex;
@@ -47,19 +47,19 @@
   }
 
   .alert-label svg {
-    fill: $note-icon;
+    fill: var(--note-icon);
     flex-shrink: 0;
   }
 }
 
 // --- Tip (green) ---
 .tip {
-  background: $tip-bg;
-  border-left-color: $tip-border;
-  color: $text-primary;
+  background: var(--tip-bg);
+  border-left-color: var(--tip-border);
+  color: var(--text-primary);
 
   .alert-label {
-    color: $tip-icon;
+    color: var(--tip-icon);
     font-weight: 700;
     margin-bottom: $space-xs;
     display: flex;
@@ -68,21 +68,19 @@
   }
 
   .alert-label svg {
-    fill: $tip-icon;
+    fill: var(--tip-icon);
     flex-shrink: 0;
   }
 }
 
 // --- Important (purple) ---
-// Note: .important shares styles with .note above for backward compat
-// You can also use .important-box for the purple variant
 .important-box {
-  background: $important-bg;
-  border-left-color: $important-border;
-  color: $text-primary;
+  background: var(--important-bg);
+  border-left-color: var(--important-border);
+  color: var(--text-primary);
 
   .alert-label {
-    color: $important-icon;
+    color: var(--important-icon);
     font-weight: 700;
     margin-bottom: $space-xs;
     display: flex;
@@ -91,19 +89,19 @@
   }
 
   .alert-label svg {
-    fill: $important-icon;
+    fill: var(--important-icon);
     flex-shrink: 0;
   }
 }
 
 // --- Caution (yellow) ---
 .caution {
-  background: $caution-bg;
-  border-left-color: $caution-border;
-  color: $text-primary;
+  background: var(--caution-bg);
+  border-left-color: var(--caution-border);
+  color: var(--text-primary);
 
   .alert-label {
-    color: $caution-icon;
+    color: var(--caution-icon);
     font-weight: 700;
     margin-bottom: $space-xs;
     display: flex;
@@ -112,19 +110,19 @@
   }
 
   .alert-label svg {
-    fill: $caution-icon;
+    fill: var(--caution-icon);
     flex-shrink: 0;
   }
 }
 
 // --- Warning (red) ---
 .warning {
-  background: $warning-bg;
-  border-left-color: $warning-border;
-  color: $text-primary;
+  background: var(--warning-bg);
+  border-left-color: var(--warning-border);
+  color: var(--text-primary);
 
   .alert-label {
-    color: $warning-icon;
+    color: var(--warning-icon);
     font-weight: 700;
     margin-bottom: $space-xs;
     display: flex;
@@ -133,7 +131,7 @@
   }
 
   .alert-label svg {
-    fill: $warning-icon;
+    fill: var(--warning-icon);
     flex-shrink: 0;
   }
 }

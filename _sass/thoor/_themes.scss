@@ -1,0 +1,144 @@
+// ============================================================
+// Theme definitions (dark & light)
+// CSS custom properties enable runtime theme switching
+// ============================================================
+
+// --- Dark theme (default) ---
+[data-theme="dark"] {
+  --bg-primary:        #0d1117;
+  --bg-secondary:      #161b22;
+  --bg-tertiary:       #1c2128;
+  --bg-elevated:       #21262d;
+
+  --text-primary:      #e6edf3;
+  --text-secondary:    #8b949e;
+  --text-muted:        #6e7681;
+
+  --accent-blue:       #58a6ff;
+  --accent-blue-dim:   #1f6feb;
+  --accent-blue-hover: #89c4ff;
+  --accent-blue-alpha: rgba(88, 166, 255, 0.3);
+  --accent-green:      #3fb950;
+  --accent-purple:     #bc8cff;
+  --accent-orange:     #d29922;
+  --accent-red:        #f85149;
+
+  --border-default:    #30363d;
+  --border-muted:      #21262d;
+
+  --bg-primary-alpha:  rgba(13, 17, 23, 0.85);
+  --shadow-card:       rgba(0, 0, 0, 0.3);
+
+  // Info box colors
+  --note-bg:           #0d2240;
+  --note-border:       #1f6feb;
+  --note-icon:         #58a6ff;
+
+  --tip-bg:            #0d2d1b;
+  --tip-border:        #238636;
+  --tip-icon:          #3fb950;
+
+  --important-bg:      #1e1036;
+  --important-border:  #8957e5;
+  --important-icon:    #bc8cff;
+
+  --caution-bg:        #2d1c00;
+  --caution-border:    #d29922;
+  --caution-icon:      #e3b341;
+
+  --warning-bg:        #300808;
+  --warning-border:    #da3633;
+  --warning-icon:      #f85149;
+
+  // Syntax highlighting
+  --syn-comment:       #6e7681;
+  --syn-preproc:       #d29922;
+  --syn-error:         #f85149;
+  --syn-keyword:       #ff7b72;
+  --syn-type:          #ffa657;
+  --syn-attr:          #79c0ff;
+  --syn-builtin:       #ffa657;
+  --syn-decorator:     #d2a8ff;
+  --syn-function:      #d2a8ff;
+  --syn-tag:           #7ee787;
+  --syn-variable:      #79c0ff;
+  --syn-string:        #a5d6ff;
+  --syn-escape:        #79c0ff;
+  --syn-regex:         #7ee787;
+  --syn-number:        #79c0ff;
+  --syn-diff-del-fg:   #ffa198;
+  --syn-diff-del-bg:   #490202;
+  --syn-diff-ins-fg:   #56d364;
+  --syn-diff-ins-bg:   #0f5323;
+  --syn-diff-head:     #79c0ff;
+}
+
+// --- Light theme ---
+[data-theme="light"] {
+  --bg-primary:        #ffffff;
+  --bg-secondary:      #f6f8fa;
+  --bg-tertiary:       #f0f2f5;
+  --bg-elevated:       #e8ecf0;
+
+  --text-primary:      #1f2328;
+  --text-secondary:    #656d76;
+  --text-muted:        #8b949e;
+
+  --accent-blue:       #0969da;
+  --accent-blue-dim:   #0550ae;
+  --accent-blue-hover: #0550ae;
+  --accent-blue-alpha: rgba(9, 105, 218, 0.15);
+  --accent-green:      #1a7f37;
+  --accent-purple:     #8250df;
+  --accent-orange:     #9a6700;
+  --accent-red:        #cf222e;
+
+  --border-default:    #d0d7de;
+  --border-muted:      #d8dee4;
+
+  --bg-primary-alpha:  rgba(255, 255, 255, 0.85);
+  --shadow-card:       rgba(0, 0, 0, 0.08);
+
+  // Info box colors
+  --note-bg:           #ddf4ff;
+  --note-border:       #54aeff;
+  --note-icon:         #0969da;
+
+  --tip-bg:            #dafbe1;
+  --tip-border:        #4ac26b;
+  --tip-icon:          #1a7f37;
+
+  --important-bg:      #fbefff;
+  --important-border:  #a475f9;
+  --important-icon:    #8250df;
+
+  --caution-bg:        #fff8c5;
+  --caution-border:    #d4a72c;
+  --caution-icon:      #9a6700;
+
+  --warning-bg:        #ffebe9;
+  --warning-border:    #ff8182;
+  --warning-icon:      #cf222e;
+
+  // Syntax highlighting (GitHub light)
+  --syn-comment:       #6e7781;
+  --syn-preproc:       #cf222e;
+  --syn-error:         #cf222e;
+  --syn-keyword:       #cf222e;
+  --syn-type:          #953800;
+  --syn-attr:          #0550ae;
+  --syn-builtin:       #953800;
+  --syn-decorator:     #8250df;
+  --syn-function:      #8250df;
+  --syn-tag:           #116329;
+  --syn-variable:      #0550ae;
+  --syn-string:        #0a3069;
+  --syn-escape:        #0550ae;
+  --syn-regex:         #116329;
+  --syn-number:        #0550ae;
+  --syn-diff-del-fg:   #82071e;
+  --syn-diff-del-bg:   #ffebe9;
+  --syn-diff-ins-fg:   #116329;
+  --syn-diff-ins-bg:   #dafbe1;
+  --syn-diff-head:     #0550ae;
+}

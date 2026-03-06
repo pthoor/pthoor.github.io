@@ -6,8 +6,8 @@
 .hero {
   padding: $space-3xl $space-lg;
   text-align: center;
-  background: linear-gradient(180deg, $bg-secondary 0%, $bg-primary 100%);
-  border-bottom: 1px solid $border-default;
+  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  border-bottom: 1px solid var(--border-default);
 }
 
 .hero-content {
@@ -22,7 +22,7 @@
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    border: 3px solid $border-default;
+    border: 3px solid var(--border-default);
     object-fit: cover;
   }
 }
@@ -30,7 +30,7 @@
 .hero-title {
   font-size: 2.75rem;
   margin: 0 0 $space-sm;
-  background: linear-gradient(135deg, $text-primary, $accent-blue);
+  background: linear-gradient(135deg, var(--text-primary), var(--accent-blue));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -38,7 +38,7 @@
 
 .hero-subtitle {
   font-size: $font-size-lg;
-  color: $text-secondary;
+  color: var(--text-secondary);
   margin: 0 0 $space-lg;
   max-width: 600px;
   margin-left: auto;
@@ -53,17 +53,17 @@
 
   a {
     padding: $space-xs $space-md;
-    background: $bg-elevated;
-    border: 1px solid $border-default;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
     border-radius: $radius-sm;
-    color: $text-secondary;
+    color: var(--text-secondary);
     font-size: $font-size-sm;
     font-weight: 500;
     transition: all $transition-fast;
 
     &:hover {
-      color: $accent-blue;
-      border-color: $accent-blue-dim;
+      color: var(--accent-blue);
+      border-color: var(--accent-blue-dim);
       text-decoration: none;
     }
   }
@@ -75,7 +75,7 @@
   margin-top: 0;
   margin-bottom: $space-xl;
   padding-bottom: $space-sm;
-  border-bottom: 2px solid $accent-blue-dim;
+  border-bottom: 2px solid var(--accent-blue-dim);
   display: inline-block;
 }
 
@@ -90,15 +90,15 @@
   display: flex;
   gap: $space-lg;
   padding: $space-lg;
-  background: $bg-secondary;
-  border: 1px solid $border-default;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
   border-radius: $radius-md;
   transition: all $transition-base;
 
   &:hover {
-    border-color: $accent-blue-dim;
+    border-color: var(--accent-blue-dim);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 12px var(--shadow-card);
   }
 }
 
@@ -133,17 +133,17 @@
   line-height: $line-height-tight;
 
   a {
-    color: $text-primary;
+    color: var(--text-primary);
 
     &:hover {
-      color: $accent-blue;
+      color: var(--accent-blue);
       text-decoration: none;
     }
   }
 }
 
 .post-card-meta {
-  color: $text-secondary;
+  color: var(--text-secondary);
   font-size: $font-size-xs;
   margin-bottom: $space-sm;
   display: flex;
@@ -152,11 +152,11 @@
 }
 
 .post-card-meta-sep {
-  color: $text-muted;
+  color: var(--text-muted);
 }
 
 .post-card-excerpt {
-  color: $text-secondary;
+  color: var(--text-secondary);
   font-size: $font-size-sm;
   margin: 0 0 $space-sm;
   line-height: 1.6;
@@ -176,21 +176,21 @@
   gap: $space-lg;
   margin-top: $space-2xl;
   padding-top: $space-lg;
-  border-top: 1px solid $border-default;
+  border-top: 1px solid var(--border-default);
 }
 
 .pagination-prev,
 .pagination-next {
   padding: $space-xs $space-md;
-  background: $bg-elevated;
-  border: 1px solid $border-default;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
   border-radius: $radius-sm;
   font-size: $font-size-sm;
   font-weight: 500;
   transition: all $transition-fast;
 
   &:hover {
-    border-color: $accent-blue-dim;
+    border-color: var(--accent-blue-dim);
     text-decoration: none;
   }
 }
@@ -201,7 +201,7 @@
 }
 
 .pagination-info {
-  color: $text-secondary;
+  color: var(--text-secondary);
   font-size: $font-size-sm;
 }
 
