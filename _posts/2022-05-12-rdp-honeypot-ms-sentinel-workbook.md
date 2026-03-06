@@ -268,13 +268,13 @@ https://docs.microsoft.com/en-us/azure/azure-monitor/reference/tables/VMConnecti
 We can after some time look at the SecurityEvent table and the EventID 4625:
 https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4625 
 
-```sql
+```kql
 SecurityEvent 
 | where EventID == "4625"
 ```
 
 To find botnets you can use this KQL:
-```sql
+```kql
 (VMConnection
     | where Type == "VMConnection"
     | extend

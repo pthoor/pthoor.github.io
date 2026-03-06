@@ -1,0 +1,89 @@
+// ============================================================
+// MS Learn-style info boxes / callouts
+// ============================================================
+
+// Shared base styles
+.alert-box {
+  position: relative;
+  margin: $space-lg 0;
+  padding: $space-md $space-lg;
+  border-left: 4px solid;
+  border-radius: 0 $radius-md $radius-md 0;
+  font-size: $font-size-sm;
+  line-height: 1.6;
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  strong:first-child {
+    display: block;
+    margin-bottom: $space-xs;
+    font-size: $font-size-base;
+  }
+}
+
+.alert-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: $space-sm;
+  vertical-align: text-bottom;
+}
+
+// Shared label pattern
+@mixin alert-label($color-var) {
+  .alert-label {
+    color: $color-var;
+    font-weight: 700;
+    margin-bottom: $space-xs;
+    display: flex;
+    align-items: center;
+    gap: $space-sm;
+
+    svg {
+      fill: $color-var;
+      flex-shrink: 0;
+    }
+  }
+}
+
+// --- Note (blue) ---
+.note {
+  background: var(--note-bg);
+  border-left-color: var(--note-border);
+  color: var(--text-primary);
+  @include alert-label(var(--note-icon));
+}
+
+// --- Tip (green) ---
+.tip {
+  background: var(--tip-bg);
+  border-left-color: var(--tip-border);
+  color: var(--text-primary);
+  @include alert-label(var(--tip-icon));
+}
+
+// --- Important (purple) ---
+.important {
+  background: var(--important-bg);
+  border-left-color: var(--important-border);
+  color: var(--text-primary);
+  @include alert-label(var(--important-icon));
+}
+
+// --- Caution (yellow) ---
+.caution {
+  background: var(--caution-bg);
+  border-left-color: var(--caution-border);
+  color: var(--text-primary);
+  @include alert-label(var(--caution-icon));
+}
+
+// --- Warning (red) ---
+.warning {
+  background: var(--warning-bg);
+  border-left-color: var(--warning-border);
+  color: var(--text-primary);
+  @include alert-label(var(--warning-icon));
+}

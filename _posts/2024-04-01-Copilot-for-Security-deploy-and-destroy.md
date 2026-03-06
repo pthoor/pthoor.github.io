@@ -45,7 +45,7 @@ I've written to very simple bicep files for deployment of Copilot for Security.
 
 **main.bicep**
 
-```sql
+```bicep
 targetScope = 'resourceGroup'
 
 @minLength(3)
@@ -93,7 +93,7 @@ resource Copilot 'Microsoft.SecurityCopilot/capacities@2023-12-01-preview' = {
 
 **main.bicepparam**
 
-```sql
+```bicep
 using 'main.bicep'
 
 param capacityName = 'thoorcopilot'

@@ -1,0 +1,134 @@
+// ============================================================
+// Syntax highlighting (Rouge - theme-aware)
+// ============================================================
+
+
+.highlight {
+  margin: $space-lg 0;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-default);
+  border-radius: $radius-md;
+  overflow: hidden;
+  position: relative;
+
+  pre {
+    margin: 0;
+    padding: $space-lg;
+    overflow-x: auto;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+  }
+
+  code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: var(--text-primary);
+  }
+
+  // Line numbers
+  .lineno {
+    color: var(--text-muted);
+    padding-right: $space-md;
+    user-select: none;
+    border-right: 1px solid var(--border-default);
+    margin-right: $space-md;
+  }
+}
+
+// --- Code toolbar (language label + copy button, injected by JS) ---
+.code-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-xs $space-sm;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-default);
+  min-height: 32px;
+}
+
+.code-lang {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+
+.code-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px $space-sm;
+  background: none;
+  border: 1px solid var(--border-default);
+  border-radius: $radius-sm;
+  color: var(--text-muted);
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all $transition-fast;
+  line-height: 1.5;
+
+  svg { flex-shrink: 0; }
+
+  &:hover {
+    color: var(--text-primary);
+    border-color: var(--accent-blue-dim);
+    background: var(--bg-tertiary);
+  }
+
+  &.is-copied {
+    color: var(--accent-green);
+    border-color: var(--accent-green);
+  }
+}
+
+// --- Token colors (theme-aware via CSS custom properties) ---
+.highlight {
+  .c, .cm, .c1, .cs  { color: var(--syn-comment); font-style: italic; } // Comments
+  .cd                 { color: var(--syn-comment); }                      // Comment doc
+  .cp                 { color: var(--syn-preproc); }                      // Comment preproc
+  .err                { color: var(--syn-error); }                        // Error
+  .k, .kd, .kn, .kp  { color: var(--syn-keyword); }                      // Keywords
+  .kr                 { color: var(--syn-keyword); font-weight: bold; }   // Keyword reserved
+  .kt                 { color: var(--syn-type); }                         // Keyword type
+  .o, .ow             { color: var(--syn-keyword); }                      // Operators
+  .p                  { color: var(--text-primary); }                     // Punctuation
+  .n                  { color: var(--text-primary); }                     // Name
+  .na                 { color: var(--syn-attr); }                         // Name attribute
+  .nb                 { color: var(--syn-builtin); }                      // Name builtin
+  .nc                 { color: var(--syn-builtin); font-weight: bold; }   // Name class
+  .no                 { color: var(--syn-attr); }                         // Name constant
+  .nd                 { color: var(--syn-decorator); }                    // Name decorator
+  .ni                 { color: var(--text-primary); }                     // Name entity
+  .ne                 { color: var(--syn-builtin); font-weight: bold; }   // Name exception
+  .nf                 { color: var(--syn-function); }                     // Name function
+  .nl                 { color: var(--syn-attr); }                         // Name label
+  .nn                 { color: var(--syn-builtin); }                      // Name namespace
+  .nx                 { color: var(--syn-function); }                     // Name other (JSX etc)
+  .nt                 { color: var(--syn-tag); }                          // Name tag (HTML/XML)
+  .nv, .vi, .vg, .vc  { color: var(--syn-variable); }                    // Variables
+  .s, .sb, .sc, .sd  { color: var(--syn-string); }                       // Strings
+  .s2                 { color: var(--syn-string); }                       // String double
+  .se                 { color: var(--syn-escape); }                       // String escape
+  .sh                 { color: var(--syn-string); }                       // String heredoc
+  .si                 { color: var(--syn-string); }                       // String interp
+  .sx                 { color: var(--syn-string); }                       // String regex
+  .sr                 { color: var(--syn-regex); }                        // String regex
+  .s1                 { color: var(--syn-string); }                       // String single
+  .ss                 { color: var(--syn-variable); }                     // String symbol
+  .m, .mf, .mh       { color: var(--syn-number); }                       // Numbers
+  .mi                 { color: var(--syn-number); }                       // Number integer
+  .mo                 { color: var(--syn-number); }                       // Number oct
+  .il                 { color: var(--syn-number); }                       // Number int long
+  .ge                 { font-style: italic; }                             // Generic emphasis
+  .gs                 { font-weight: bold; }                              // Generic strong
+  .gd                 { color: var(--syn-diff-del-fg); background: var(--syn-diff-del-bg); } // Diff deleted
+  .gi                 { color: var(--syn-diff-ins-fg); background: var(--syn-diff-ins-bg); } // Diff inserted
+  .gh                 { color: var(--syn-diff-head); font-weight: bold; } // Diff heading
+  .gu                 { color: var(--syn-diff-head); }                    // Diff chunk
+  .w                  { color: var(--text-muted); }                       // Whitespace
+}

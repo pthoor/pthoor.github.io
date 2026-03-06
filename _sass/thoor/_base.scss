@@ -1,0 +1,288 @@
+// ============================================================
+// Base styles & resets
+// ============================================================
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100%;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: $font-body;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: color $transition-base, background-color $transition-base;
+}
+
+// --- Skip link (accessibility) ---
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: $space-md;
+  padding: $space-sm $space-md;
+  background: var(--accent-blue);
+  color: var(--bg-primary);
+  font-weight: 600;
+  border-radius: $radius-sm;
+  z-index: 1000;
+  text-decoration: none;
+
+  &:focus {
+    top: $space-md;
+  }
+}
+
+// --- Links ---
+a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  transition: color $transition-fast;
+
+  &:hover,
+  &:focus {
+    color: var(--accent-blue-hover);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: 2px;
+    border-radius: $radius-sm;
+  }
+}
+
+// --- Headings ---
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-heading;
+  font-weight: 700;
+  line-height: $line-height-tight;
+  color: var(--text-primary);
+  margin-top: $space-2xl;
+  margin-bottom: $space-md;
+}
+
+h1 { font-size: 2.25rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.375rem; }
+h4 { font-size: 1.125rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: $font-size-sm; text-transform: uppercase; letter-spacing: 0.05em; }
+
+// --- Body copy ---
+p {
+  margin-top: 0;
+  margin-bottom: $space-lg;
+}
+
+strong {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+em {
+  font-style: italic;
+}
+
+// --- Lists ---
+ul, ol {
+  padding-left: $space-xl;
+  margin-bottom: $space-lg;
+
+  li {
+    margin-bottom: $space-xs;
+  }
+}
+
+// --- Blockquote ---
+blockquote {
+  margin: $space-lg 0;
+  padding: $space-md $space-lg;
+  border-left: 4px solid var(--accent-blue-dim);
+  background: var(--bg-secondary);
+  border-radius: 0 $radius-sm $radius-sm 0;
+  color: var(--text-secondary);
+  font-style: italic;
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// --- Horizontal rule ---
+hr {
+  border: none;
+  border-top: 1px solid var(--border-default);
+  margin: $space-2xl 0;
+}
+
+// --- Images ---
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: $radius-md;
+}
+
+// --- Tables ---
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: $space-lg;
+  font-size: $font-size-sm;
+}
+
+th, td {
+  padding: $space-sm $space-md;
+  text-align: left;
+  border: 1px solid var(--border-default);
+}
+
+th {
+  background: var(--bg-elevated);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+tr:nth-child(even) {
+  background: var(--bg-secondary);
+}
+
+// --- Selection ---
+::selection {
+  background: var(--accent-blue-alpha);
+  color: var(--text-primary);
+}
+
+// --- Reading progress bar ---
+#reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+  z-index: 200;
+  transition: width 80ms linear;
+  pointer-events: none;
+}
+
+// --- Heading anchor links ---
+.heading-anchor {
+  margin-left: $space-sm;
+  color: var(--text-muted);
+  font-weight: 400;
+  opacity: 0;
+  transition: opacity $transition-fast;
+  text-decoration: none;
+  font-size: 0.85em;
+
+  &:hover {
+    color: var(--accent-blue);
+    text-decoration: none;
+  }
+}
+
+h2:hover .heading-anchor,
+h3:hover .heading-anchor,
+h4:hover .heading-anchor {
+  opacity: 1;
+}
+
+// --- Back to top button ---
+#back-to-top {
+  position: fixed;
+  bottom: $space-xl;
+  right: $space-xl;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: $radius-md;
+  color: var(--text-secondary);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity $transition-base, visibility $transition-base, transform $transition-base, border-color $transition-fast, color $transition-fast;
+  z-index: 90;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  &:hover {
+    border-color: var(--accent-blue-dim);
+    color: var(--accent-blue);
+  }
+
+  &.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+// --- 404 page ---
+.not-found {
+  max-width: 480px;
+  margin: $space-3xl auto;
+  padding: 0 $space-lg;
+  text-align: center;
+}
+
+.not-found-icon {
+  margin-bottom: $space-lg;
+
+  svg {
+    width: 72px;
+    height: 72px;
+    fill: var(--accent-blue-dim);
+  }
+}
+
+.not-found-code {
+  font-size: 6rem;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--text-primary), var(--accent-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.not-found-title {
+  font-size: 1.5rem;
+  margin: $space-sm 0 $space-md;
+  color: var(--text-primary);
+}
+
+.not-found-message {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: $space-xl;
+}
+
+.not-found-actions {
+  display: flex;
+  justify-content: center;
+  gap: $space-sm;
+  flex-wrap: wrap;
+}

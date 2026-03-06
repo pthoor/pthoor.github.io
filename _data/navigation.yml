@@ -1,16 +1,9 @@
-# main links
 main:
-  - title: "🏷️ Posts by Tag"
-    url: https://thoor.tech/tags/
-  - title: "🎙️ Security Dojo Podcast"
-    url: https://securitydojo.ms
-  - title: "🤠 About"
-    url: https://thoor.tech/about/
-  - title: "🕵️ Kusto Detective Agency"
-    url: https://thoor.tech/KDA/
-  # - title: "Sample Posts"
-  #   url: /year-archive/
-  # - title: "Sample Collections"
-  #   url: /collection-archive/
-  # - title: "Sitemap"
-  #   url: /sitemap/
+  - title: "Posts by Tag"
+    url: /tags/
+  - title: "Talks"
+    url: /talks/
+  - title: "Resources"
+    url: /resources/
+  - title: "About"
+    url: /about/

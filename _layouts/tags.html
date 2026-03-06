@@ -1,43 +1,39 @@
 ---
-layout: archive
+layout: default
 ---
+<section class="archive">
+  <h1 class="archive-title">{{ page.title }}</h1>
 
-{{ content }}
+  {% assign sorted_tags = site.tags | sort %}
+  {% assign max_count = 1 %}
+  {% for tag in sorted_tags %}
+    {% if tag[1].size > max_count %}{% assign max_count = tag[1].size %}{% endif %}
+  {% endfor %}
 
-{% assign tags_max = 0 %}
-{% for tag in site.tags %}
-  {% if tag[1].size > tags_max %}
-    {% assign tags_max = tag[1].size %}
-  {% endif %}
-{% endfor %}
-
-<ul class="taxonomy__index">
-  {% for i in (1..tags_max) reversed %}
-    {% for tag in site.tags %}
-      {% if tag[1].size == i %}
-        <li>
-          <a href="#{{ tag[0] | slugify }}">
-            <strong>{{ tag[0] }}</strong> <span class="taxonomy__count">{{ i }}</span>
-          </a>
-        </li>
-      {% endif %}
+  <div class="tag-cloud">
+    {% for tag in sorted_tags %}
+    {% assign weight = tag[1].size | times: 100 | divided_by: max_count %}
+    <a href="#{{ tag[0] | slugify }}" class="tag-cloud-item{% if weight >= 80 %} tag-cloud--xl{% elsif weight >= 55 %} tag-cloud--lg{% elsif weight >= 30 %} tag-cloud--md{% else %} tag-cloud--sm{% endif %}">
+      {{ tag[0] }}<span class="tag-cloud-count">{{ tag[1].size }}</span>
+    </a>
     {% endfor %}
-  {% endfor %}
-</ul>
+  </div>
 
-{% assign entries_layout = page.entries_layout | default: 'list' %}
-{% for i in (1..tags_max) reversed %}
-  {% for tag in site.tags %}
-    {% if tag[1].size == i %}
-      <section id="{{ tag[0] | slugify | downcase }}" class="taxonomy__section">
-        <h2 class="archive__subtitle">{{ tag[0] }}</h2>
-        <div class="entries-{{ entries_layout }}">
-          {% for post in tag.last %}
-            {% include archive-single.html type=entries_layout %}
-          {% endfor %}
-        </div>
-        <a href="#page-title" class="back-to-top">{{ site.data.ui-text[site.locale].back_to_top | default: 'Back to Top' }} &uarr;</a>
-      </section>
-    {% endif %}
+  {% for tag in sorted_tags %}
+  <div class="tag-group" id="{{ tag[0] | slugify }}">
+    <h2 class="tag-group-title">
+      <span>{{ tag[0] }}</span>
+      <span class="tag-group-count">{{ tag[1].size }} post{% if tag[1].size != 1 %}s{% endif %}</span>
+    </h2>
+    <ul class="tag-posts">
+      {% assign sorted_posts = tag[1] | sort: "date" | reverse %}
+      {% for post in sorted_posts %}
+      <li>
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
   {% endfor %}
-{% endfor %}
+</section>
