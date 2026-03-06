@@ -20,10 +20,8 @@ jobs:
         with:
           # Optional. Post an issue comment just before closing a pull request.
           comment: |
-            **You have created a Pull Request to the wrong repository.** This is the repository for [Minimal Mistakes][1], the free Jekyll theme. See [GitHub Docs: About pull requests][2] if you need help.
-
-              [1]: https://mmistakes.github.io/minimal-mistakes/
-              [2]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests
+            Thanks for the PR. This is the source repository for https://thoor.tech/.
+            For security reasons, I only merge changes after prior discussion. Please open an Issue explaining the change.
       - uses: sudo-bot/action-pull-request-lock@875cc6a949fa9de15563404110fff799d65d4ac9 # v1.0.5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
