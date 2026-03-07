@@ -2,7 +2,7 @@
 title: "Deploy and destroy Copilot for Security with Bicep and GitHub Actions"
 date: '2024-04-01T21:00:00+02:00'
 excerpt: 'Copilot for Security is now GA, how can we provision the service to save some money? Warning - Early Proof of Concept!'
-tags: 
+tags:
   - Bicep
   - GitHub
   - Copilot for Security
@@ -11,15 +11,13 @@ header:
   og_image: /assets/Deploy-CopilotSecurity.png
 ---
 
-![](/assets/Deploy-CopilotSecurity.png)
-
 # Introduction and pricing
 
 {% include alerts/important.html content="**Proof of Concept!**<br/>
 
 This is a very early proof of concept to save some bucks on Copilot for Security." %}
 
-1st of April and Copilot for Security is now in General Availability (GA). The cost for the service is no April fool joke. 
+1st of April and Copilot for Security is now in General Availability (GA). The cost for the service is no April fool joke.
 
 | SKU | Price per hour | Estimated price per month |
 |----------|----------|----------|
@@ -33,7 +31,7 @@ Pricing page - https://azure.microsoft.com/en-gb/pricing/details/microsoft-copil
 
 # Coding time
 
-Let's see what we can do with code! 
+Let's see what we can do with code!
 
 Take a look at my new repo in GitHub - [pthoor | Copilot for Security](https://github.com/pthoor/Copilot-for-Security)
 

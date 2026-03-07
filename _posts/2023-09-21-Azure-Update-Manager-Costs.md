@@ -2,7 +2,7 @@
 title: "New Patch Management tool in the cloud - Azure Update Manager (AUM) is now GA"
 date: '2023-09-21T09:00:00+02:00'
 excerpt: 'Azure Update Manager (AUM) is now GA and is a new Patch Management tool in Azure that can be used to patch Windows and Linux systems in Azure, on-premises, and other clouds. In this post we will look at the cost of AUM.'
-tags: 
+tags:
   - Arc
   - ESU
   - AzureUpdateManager
@@ -11,15 +11,13 @@ header:
   og_image: /assets/PatchSystems.png
 ---
 
-![](/assets/PatchSystems.png)
-
 # Azure Update Manager (AUM) is now GA
 Finally we have a more streamlined patch management tool in Azure, and it's called Azure Update Manager (AUM). It's now GA (Generally Available) from Microsoft. This is the new Patch Management tool in the cloud that can be used to patch Windows and Linux servers in Azure, on-premises, and other clouds. In this post we will look at the cost of AUM.
 
 During the preview, AUM was free to use, but now that it's GA, we have to pay for it - or do we? The cost of AUM is based on some logic behind the scene, and you will learn that in this post.
 
 # What is Azure Update Manager (AUM)?
-Have you used Automation Update management before? Azure Update Manager is the version 2 of that product, and now we don't need Log Analytics agent (MMA) to be installed on the servers we want to patch. We can patch Windows and Linux servers in Azure, on-premises, and other clouds. The good thing is that this is now a native Azure service. 
+Have you used Automation Update management before? Azure Update Manager is the version 2 of that product, and now we don't need Log Analytics agent (MMA) to be installed on the servers we want to patch. We can patch Windows and Linux servers in Azure, on-premises, and other clouds. The good thing is that this is now a native Azure service.
 
 # Price for AUM
 

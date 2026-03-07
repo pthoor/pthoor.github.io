@@ -4,15 +4,15 @@
 @charset "utf-8";
 
 // Thoor.tech custom theme
-@import "thoor/fonts";
-@import "thoor/variables";
-@import "thoor/themes";
-@import "thoor/base";
-@import "thoor/header";
-@import "thoor/footer";
-@import "thoor/post";
-@import "thoor/home";
-@import "thoor/archive";
-@import "thoor/alerts";
-@import "thoor/syntax";
-@import "thoor/responsive";
+@use "thoor/fonts";
+@use "thoor/variables" as *;
+@use "thoor/themes";
+@use "thoor/base";
+@use "thoor/header";
+@use "thoor/footer";
+@use "thoor/post";
+@use "thoor/home";
+@use "thoor/archive";
+@use "thoor/alerts";
+@use "thoor/syntax";
+@use "thoor/responsive";

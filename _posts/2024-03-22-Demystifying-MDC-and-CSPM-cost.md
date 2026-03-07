@@ -2,7 +2,7 @@
 title: "Demystifying Microsoft Defender for Cloud and Defender CSPM cost"
 date: '2024-03-22T09:00:00+02:00'
 excerpt: 'Do you find it hard to understand the mapping of features and capabilities Microsoft Defender for Cloud and Defender CSPM can offer? And which features are in-scope for e.g. Azure VMs and Azure Arc-enabled servers, or direct onboarding? And what is the cost of these services? In this blog post, I will try to make it a bit more clear for you.'
-tags: 
+tags:
   - MDC
   - DefenderforCloud
   - CSPM
@@ -12,14 +12,12 @@ header:
   og_image: /assets/MDC-CSPM-cost.jpg
 ---
 
-![](/assets/MDC-CSPM-cost.jpg)
-
 # Introduction
 Microsoft Defender for Cloud (MDC) is a cloud-native security solution that helps you prevent, detect, and respond to security threats across your cloud workloads. It provides a comprehensive set of security capabilities that are designed to help you secure your cloud resources and workloads. Defender for Cloud is a part of the Microsoft Defender suite of security products, which also includes Defender for Endpoint, Defender for Identity, and Defender for Office 365.
 
 Defender for Cloud is a massive product with a lot of features and capabilities. It can be a bit overwhelming to understand the cost of Defender for Cloud and how to save money on it. If we are looking at both Cloud Adoption Framework and Well-Architected Framework, we need to make sure that we are using the right services and features to secure our cloud resources and workloads. We also need to make sure that we are not spending more money than we need to.
 
-In this post we will focus on virtual machines, so both Azure VMs and on-premise servers - in short Azure Arc-enabled servers and how we map those workloads to the different plans within Defender for Cloud and CSPM. 
+In this post we will focus on virtual machines, so both Azure VMs and on-premise servers - in short Azure Arc-enabled servers and how we map those workloads to the different plans within Defender for Cloud and CSPM.
 
 # What is Defender for Cloud?
 First, welcome to the world of acronyms, because in Defender for Cloud we do have a lot of them. Defender for Cloud, which is CNAPP (Cloud Native Application Protection Platform), is currently divided into three main pillars, CSPM (Cloud Security Posture Management), CWPP (Cloud Workload Protection Platform), and DevSecOps (Development Security Operations).
@@ -44,7 +42,7 @@ In bigger organizations we may structure the roles and responsibilities a bit di
 ## Defender for DevOps
 Let's start with Defender for DevOps. Defender for DevOps is a set of security features and capabilities that help you secure your DevOps environment and protect your code, infrastructure as code, and cloud resources. It's designed to help you find and fix security vulnerabilities in your code, infrastructure as code, and cloud resources, and to help you secure your DevOps environment.
 
-As of March 2024, you need to have Defender CSPM to activate the premium DevOps security value. 
+As of March 2024, you need to have Defender CSPM to activate the premium DevOps security value.
 
 *If you have the Defender CSPM plan enabled on a cloud environment (Azure, AWS, GCP) within the same tenant your DevOps connectors are created in, you'll continue to receive premium DevOps capabilities at **no extra cost**.*
 
@@ -90,9 +88,9 @@ The fundamental protection for your servers, whether they are on-premises, in th
 
 Defender for Servers plans is some different from the plans in Defender for Endpoint.
 
-Plan 1 - Is the entry level and servers can be onboarded either by Direct Onboarding or by Azure Arc. 
+Plan 1 - Is the entry level and servers can be onboarded either by Direct Onboarding or by Azure Arc.
 
-Plan 2 - The premium plan, everything included. 
+Plan 2 - The premium plan, everything included.
 
 
 | Feature | Details | Plan 1 | Plan 2 |
@@ -116,7 +114,7 @@ Plan 2 - The premium plan, everything included.
 | **Agentless scanning** | Scans **Azure virtual machines** by using cloud APIs to collect data. | Not supported in Plan 1 | ![Yes](../assets/yes-icon.png) |
 
 ### Azure VMs
-My take on it is to activate Plan 2 on all Azure VMs. 
+My take on it is to activate Plan 2 on all Azure VMs.
 
 ### Azure Arc-enabled servers
 For hybrid environments, I would activate Plan 2 on all Azure Arc-enabled servers, just because you will get more features, but not all because some of the features requires an Azure VM. You will get features like:
@@ -129,11 +127,11 @@ For hybrid environments, I would activate Plan 2 on all Azure Arc-enabled server
 And all of the other features listed requires an Azure VM, and not an Arc-enabled server.
 
 ### Direct onboarding
-*"But, I don't want to install Azure Arc on my servers on-prem, can I use Defender for Servers then?"* 
+*"But, I don't want to install Azure Arc on my servers on-prem, can I use Defender for Servers then?"*
 
 Yes, you can use Direct Onboarding. Direct Onboarding is a way to onboard servers to Defender for Servers without using Azure Arc. You can onboard servers running Windows or Linux operating systems, and you can onboard servers that are running in other clouds or on-premises.
 
-You take the onboarding package from the Defender XDR portal (security.microsoft.com) which have the tenant ID already filled in, in the onboarding package. 
+You take the onboarding package from the Defender XDR portal (security.microsoft.com) which have the tenant ID already filled in, in the onboarding package.
 
 You can choose between P1 and P2 for Direct Onboarding as well. But be aware that for the P2 plan you will get limited features. This is a good way if you don't want the server management capabilities that Azure Arc provides, such as Azure Update Manager, Extended Security Updates, Azure Policy and Guest Configuration, other Azure extensions and so on.
 
@@ -190,7 +188,7 @@ Make sure to run [supported operating system](https://learn.microsoft.com/micros
 | EASM insights in network exposure | - | ![Yes](../assets/yes-icon.png) | Azure | |
 | Permissions management (Preview) | - | ![Yes](../assets/yes-icon.png) | Azure | |
 
-The agentless capabilities are not "that" agentless as you might think. Microsoft is taking a snapshot of the disk and then analyzing it and then gives you the result in form of an report. This is happening every 24-hours. This is not a real-time protection, but it's a good start. 
+The agentless capabilities are not "that" agentless as you might think. Microsoft is taking a snapshot of the disk and then analyzing it and then gives you the result in form of an report. This is happening every 24-hours. This is not a real-time protection, but it's a good start.
 
 And if we circle back to the DevOps capabilities, we just need to activate Defender CSPM on one Azure subscription to be able to get those capabilities.
 For Defender EASM, or Defender External Attack Surface Management, it's basically the same thing. We need to activate Defender CSPM on one Azure subscription to be able to get those capabilities.
@@ -210,7 +208,7 @@ And again, which Azure resources are billable for Defender CSPM?
 So keep that list in mind when you are activating Defender CSPM on your Azure subscriptions.
 
 # Defender for Cloud Coverage & Cost workbooks
-These two workbooks are great to use to get an overview of your Defender for Cloud coverage and cost. 
+These two workbooks are great to use to get an overview of your Defender for Cloud coverage and cost.
 
 You will find these workbooks directly in the Defender for Cloud portal in the blade called 'Workbooks'. Take a look at them and see your current coverage and what the cost will be if you activate all the features and capabilities.
 

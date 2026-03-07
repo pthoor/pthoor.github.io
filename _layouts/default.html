@@ -118,6 +118,79 @@
       h.appendChild(a);
     });
 
+    // --- Sidebar TOC: active heading tracking ---
+    (function() {
+      var sidebar = document.querySelector('.toc-sidebar-nav');
+      if (!sidebar) return;
+      var links = sidebar.querySelectorAll('a[href^="#"]');
+      if (!links.length) return;
+
+      var headingMap = [];
+      links.forEach(function(link) {
+        var id = link.getAttribute('href').slice(1);
+        var el = document.getElementById(id);
+        if (el) headingMap.push({ id: id, el: el, link: link });
+      });
+
+      function setActive(id) {
+        links.forEach(function(l) { l.classList.remove('toc-active'); });
+        headingMap.forEach(function(item) {
+          if (item.id === id) {
+            item.link.classList.add('toc-active');
+            // Scroll the sidebar to keep active item visible
+            var sidebarEl = document.querySelector('.toc-sidebar');
+            if (sidebarEl && item.link.offsetTop > sidebarEl.clientHeight) {
+              sidebarEl.scrollTop = item.link.offsetTop - sidebarEl.clientHeight / 3;
+            }
+          }
+        });
+      }
+
+      if ('IntersectionObserver' in window) {
+        var currentId = null;
+        var observer = new IntersectionObserver(function(entries) {
+          // Find the topmost visible heading
+          var visible = [];
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              visible.push(entry);
+            }
+          });
+          if (visible.length > 0) {
+            // Pick the one closest to the top of the viewport
+            visible.sort(function(a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
+            currentId = visible[0].target.id;
+            setActive(currentId);
+          }
+        }, {
+          rootMargin: '-80px 0px -60% 0px',
+          threshold: 0
+        });
+
+        headingMap.forEach(function(item) { observer.observe(item.el); });
+
+        // Also track scroll for cases where no heading is intersecting
+        var scrollTimeout;
+        window.addEventListener('scroll', function() {
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(function() {
+            var found = null;
+            for (var i = headingMap.length - 1; i >= 0; i--) {
+              var rect = headingMap[i].el.getBoundingClientRect();
+              if (rect.top <= 120) {
+                found = headingMap[i].id;
+                break;
+              }
+            }
+            if (found && found !== currentId) {
+              currentId = found;
+              setActive(currentId);
+            }
+          }, 50);
+        }, { passive: true });
+      }
+    })();
+
     // --- Reading progress bar (post pages only) ---
     var bar = document.getElementById('reading-progress');
     if (bar && document.querySelector('.post-content')) {

@@ -1,6 +1,7 @@
 // ============================================================
 // Post & page styles
 // ============================================================
+@use 'variables' as *;
 
 // --- Wrapper ---
 .post,
@@ -18,9 +19,9 @@
 }
 
 .post-hero {
-  margin: -#{$space-lg} -#{$space-lg} $space-xl;
+  margin: $space-lg 0 0;
   overflow: hidden;
-  border-radius: 0 0 $radius-lg $radius-lg;
+  border-radius: $radius-lg;
 
   img {
     width: 100%;
@@ -93,13 +94,121 @@
   margin-left: 2px;
 }
 
-// --- TOC ---
-.toc {
+// --- Post layout with sidebar TOC ---
+.post-layout {
+  max-width: $content-width;
+  margin: 0 auto;
+  position: relative;
+}
+
+.post-layout.has-toc {
+  @media (min-width: 1280px) {
+    max-width: $content-width;
+  }
+}
+
+.post-layout-content {
+  max-width: $content-width;
+  width: 100%;
+}
+
+// --- Sidebar TOC (sticky, left side — visible on wide screens) ---
+.toc-sidebar {
+  display: none;
+
+  @media (min-width: 1280px) {
+    display: block;
+    position: fixed;
+    top: 80px;
+    width: 240px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    z-index: 10;
+
+    // Position to the left of the content area
+    // Calculate: center the content, then place sidebar to its left
+    left: calc((100vw - #{$content-width}) / 2 - 260px);
+
+    // Slim scrollbar
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-default) transparent;
+    &::-webkit-scrollbar { width: 3px; }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 3px; }
+  }
+}
+
+.toc-sidebar-nav {
+  padding-right: $space-md;
+}
+
+.toc-sidebar-title {
+  font-size: $font-size-xs;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin: 0 0 $space-md;
+  padding-bottom: $space-sm;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.toc-sidebar-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toc-sidebar-nav li {
+  margin-bottom: 2px;
+}
+
+.toc-sidebar-nav > ul > li > ul {
+  padding-left: $space-md;
+}
+
+.toc-sidebar-nav > ul > li > ul > li > ul {
+  padding-left: $space-md;
+}
+
+.toc-sidebar-nav a {
+  display: block;
+  padding: 4px $space-sm;
+  font-size: $font-size-xs;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  border-radius: 0 $radius-sm $radius-sm 0;
+  transition: all $transition-fast;
+
+  &:hover {
+    color: var(--accent-blue);
+    background: var(--bg-secondary);
+    border-left-color: var(--accent-blue-dim);
+    text-decoration: none;
+  }
+
+  &.toc-active {
+    color: var(--accent-blue);
+    font-weight: 600;
+    border-left-color: var(--accent-blue);
+    background: var(--accent-blue-dim);
+  }
+}
+
+// --- Inline TOC (visible on narrower screens) ---
+.toc-inline {
   margin-bottom: $space-2xl;
   padding: $space-md $space-lg;
   background: var(--bg-secondary);
   border: 1px solid var(--border-default);
   border-radius: $radius-md;
+
+  @media (min-width: 1280px) {
+    display: none;
+  }
 
   summary {
     cursor: pointer;
@@ -128,6 +237,11 @@
       color: var(--accent-blue);
     }
   }
+}
+
+// Legacy .toc class (keep for backward compatibility)
+.toc {
+  // base styles only used by .toc-inline now
 }
 
 // --- Post content ---

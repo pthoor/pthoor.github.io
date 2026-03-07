@@ -1,6 +1,7 @@
 // ============================================================
 // Responsive breakpoints & print styles
 // ============================================================
+@use 'variables' as *;
 
 @media (max-width: 768px) {
   .post-title {
@@ -63,6 +64,8 @@
   .post-nav,
   .share-links,
   .toc,
+  .toc-inline,
+  .toc-sidebar,
   .skip-link,
   .nav-toggle,
   .theme-toggle {

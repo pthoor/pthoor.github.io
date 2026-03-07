@@ -2,7 +2,7 @@
 title: "Windows Server 2012/2012 R2 - End of support, what to do with Security Updates?"
 date: '2023-09-19T13:00:00+02:00'
 excerpt: 'Do you have Windows Server 2012/2012 R2 in your environment? If so, you need to read this post to understand what to do with security updates after the end of support date.'
-tags: 
+tags:
   - Arc
   - ESU
   - AzureUpdateManager
@@ -10,8 +10,6 @@ toc: true
 header:
   og_image: /assets/PatchTuesday.png
 ---
-
-![](/assets/PatchTuesday.png)
 
 # End of Support for Windows Server 2012/2012 R2
 

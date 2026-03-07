@@ -1,44 +1,55 @@
 ---
 layout: default
 ---
-<article class="post h-entry" itemscope itemtype="https://schema.org/BlogPosting">
-  <header class="post-header">
-    {% if page.header.og_image %}
-    <div class="post-hero">
-      <img src="{{ page.header.og_image }}" alt="{{ page.title }}" loading="lazy">
-    </div>
-    {% endif %}
-    <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
-    <div class="post-meta">
-      <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
-        {{ page.date | date: "%B %-d, %Y" }}
-      </time>
-      {% if page.read_time != false %}
-      <span class="post-meta-sep">&bull;</span>
-      <span class="read-time">{% assign words = content | number_of_words %}{{ words | divided_by: 200 | plus: 1 }} min read</span>
-      {% endif %}
-    </div>
-    {% if page.tags.size > 0 %}
-    <div class="post-tags">
-      {% for tag in page.tags %}
-      <a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}" class="tag" rel="tag">{{ tag }}</a>
-      {% endfor %}
-    </div>
-    {% endif %}
-  </header>
-
+<div class="post-layout{% if page.toc %} has-toc{% endif %}">
   {% if page.toc %}
-  <nav class="toc" aria-label="Table of contents">
-    <details open>
-      <summary><strong>On this page</strong></summary>
+  <aside class="toc-sidebar" aria-label="Table of contents">
+    <nav class="toc-sidebar-nav">
+      <p class="toc-sidebar-title">On this page</p>
       {% include toc.html html=content h_min=1 h_max=3 %}
-    </details>
-  </nav>
+    </nav>
+  </aside>
   {% endif %}
 
-  <div class="post-content e-content" itemprop="articleBody">
-    {{ content }}
-  </div>
+  <div class="post-layout-content">
+    <article class="post h-entry" itemscope itemtype="https://schema.org/BlogPosting">
+      <header class="post-header">
+        <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
+        <div class="post-meta">
+          <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
+            {{ page.date | date: "%B %-d, %Y" }}
+          </time>
+          {% if page.read_time != false %}
+          <span class="post-meta-sep">&bull;</span>
+          <span class="read-time">{% assign words = content | number_of_words %}{{ words | divided_by: 200 | plus: 1 }} min read</span>
+          {% endif %}
+        </div>
+        {% if page.tags.size > 0 %}
+        <div class="post-tags">
+          {% for tag in page.tags %}
+          <a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}" class="tag" rel="tag">{{ tag }}</a>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if page.header.og_image %}
+        <div class="post-hero">
+          <img src="{{ page.header.og_image }}" alt="{{ page.title }}" loading="lazy">
+        </div>
+        {% endif %}
+      </header>
+
+      {% if page.toc %}
+      <nav class="toc toc-inline" aria-label="Table of contents">
+        <details open>
+          <summary><strong>On this page</strong></summary>
+          {% include toc.html html=content h_min=1 h_max=3 %}
+        </details>
+      </nav>
+      {% endif %}
+
+      <div class="post-content e-content" itemprop="articleBody">
+        {{ content }}
+      </div>
 
   <aside class="author-bio">
     <img src="{{ site.author.avatar }}" alt="{{ site.author.name }}" class="author-bio-avatar" width="72" height="72" loading="lazy">
@@ -62,7 +73,9 @@ layout: default
     </div>
     {% endif %}
   </footer>
-</article>
+    </article>
+  </div>
+</div>
 
 {% assign related_posts = "" | split: "" %}
 {% for post in site.posts %}

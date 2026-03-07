@@ -2,7 +2,7 @@
 title: "Configure Defender for Cloud workload protections with Azure Policy"
 date: '2024-03-29T09:00:00+02:00'
 excerpt: 'This Azure Policy initiative enables and configures Defender for Cloud workload protections, including Defender for Storage Classic (per transaction) plan with a Managed Identity for remediation.'
-tags: 
+tags:
   - MDC
   - DefenderforCloud
   - CSPM
@@ -11,8 +11,6 @@ toc: true
 header:
   og_image: /assets/MDC-Bicep-AzPolicy.png
 ---
-
-![](/assets/MDC-Bicep-AzPolicy.png)
 
 # Introduction
 Azure Policy is a really powerful tool for cloud governance. It allows you to create, assign, and manage policies that enforce different rules and effects over your resources. In this post, we will create an Azure Policy initiative that enables and configures Defender for Cloud workload protections, including Defender for Storage Classic (per transaction) plan. But as per my blog post before this one, it is recommended and so important to understand the Defender for Cloud workload protection plans and their differences. Go in to Defender for Cloud and take a look at the default Workbooks so you get a grasp and better understanding how much you will pay per subscription and what you will get in return.
@@ -168,7 +166,7 @@ resource policyInitiative 'Microsoft.Authorization/policySetDefinitions@2020-09-
         policyDefinitionId: definitionIdDefenderForServers
         parameters: {
           subPlan: {
-            value: subplanDefenderForServers 
+            value: subplanDefenderForServers
           }
           isAgentlessVmScanningEnabled: {
             value: subplanDefenderForServers == 'P1' ? 'false' : enableDefenderServersAgentlessVmScanning
