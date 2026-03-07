@@ -33,7 +33,7 @@ layout: default
         {% endif %}
         {% if page.header.og_image %}
         <div class="post-hero">
-          <img src="{{ page.header.og_image }}" alt="{{ page.title | escape }}" loading="lazy">
+          <img src="{{ page.header.og_image | escape }}" alt="{{ page.title | escape }}" loading="lazy">
         </div>
         {% endif %}
       </header>
