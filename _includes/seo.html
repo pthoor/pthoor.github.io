@@ -13,7 +13,7 @@
 {% endif %}
 
 <title>{{ seo_title | escape }}{% if paginator %}{% unless paginator.page == 1 %} - Page {{ paginator.page }}{% endunless %}{% endif %}</title>
-<meta name="description" content="{{ seo_description }}">
+<meta name="description" content="{{ seo_description | escape }}">
 <meta name="author" content="{{ site.author.name | escape }}">
 
 <!-- Open Graph -->
@@ -22,7 +22,7 @@
 <meta property="og:site_name" content="{{ site.title }}">
 <meta property="og:title" content="{{ page.title | default: site.title | escape }}">
 <meta property="og:url" content="{{ canonical_url }}">
-{% if seo_description %}<meta property="og:description" content="{{ seo_description }}">{% endif %}
+{% if seo_description %}<meta property="og:description" content="{{ seo_description | escape }}">{% endif %}
 {% if page.header.og_image %}<meta property="og:image" content="{{ page.header.og_image | absolute_url }}">
 {% elsif site.og_image %}<meta property="og:image" content="{{ site.og_image | absolute_url }}">{% endif %}
 {% if page.date %}<meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">{% endif %}
@@ -35,7 +35,7 @@
 {% endif %}
 <meta name="twitter:card" content="{% if page.header.og_image %}summary_large_image{% else %}summary{% endif %}">
 <meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
-<meta name="twitter:description" content="{{ seo_description }}">
+<meta name="twitter:description" content="{{ seo_description | escape }}">
 {% if page.header.og_image %}<meta name="twitter:image" content="{{ page.header.og_image | absolute_url | escape }}">{% endif %}
 
 <!-- Canonical -->
