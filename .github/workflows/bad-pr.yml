@@ -11,7 +11,7 @@ permissions:
 jobs:
   close-pr:
     runs-on: ubuntu-latest
-    if: "contains(github.event.pull_request.body, 'by deleting this comment block') || github.event.pull_request.body == ''"
+    if: "github.event.pull_request.user.login != github.repository_owner && (contains(github.event.pull_request.body, 'by deleting this comment block') || github.event.pull_request.body == '')"
     steps:
       - uses: actions-ecosystem/action-add-labels@18f1af5e3544586314bbe15c0273249c770b2daf # v1
         with:
