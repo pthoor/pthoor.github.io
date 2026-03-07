@@ -52,7 +52,7 @@ layout: default
       </div>
 
   <aside class="author-bio">
-    <img src="{{ site.author.avatar }}" alt="{{ site.author.name | escape }}" class="author-bio-avatar" width="72" height="72" loading="lazy">
+    <img src="{{ site.author.avatar | relative_url | escape }}" alt="{{ site.author.name | escape }}" class="author-bio-avatar" width="72" height="72" loading="lazy">
     <div class="author-bio-content">
       <p class="author-bio-name">{{ site.author.name | escape }}</p>
       <p class="author-bio-text">{{ site.author.bio | escape }}</p>
