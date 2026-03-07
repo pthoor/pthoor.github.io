@@ -36,7 +36,7 @@
 <meta name="twitter:card" content="{% if page.header.og_image %}summary_large_image{% else %}summary{% endif %}">
 <meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
 <meta name="twitter:description" content="{{ seo_description }}">
-{% if page.header.og_image %}<meta name="twitter:image" content="{{ page.header.og_image | absolute_url }}">{% endif %}
+{% if page.header.og_image %}<meta name="twitter:image" content="{{ page.header.og_image | absolute_url | escape }}">{% endif %}
 
 <!-- Canonical -->
 <link rel="canonical" href="{{ canonical_url }}">
