@@ -265,6 +265,8 @@
       lunrLoading = true;
       var s = document.createElement('script');
       s.src = 'https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js';
+      s.integrity = 'sha384-OLBgp1GsljhM2TJ+sbHjaiH9txEUvgdDTAzHv2P24donTt6/529l+9Ua0vFImLlb';
+      s.crossOrigin = 'anonymous';
       s.onload = function() {
         fetch('{{ "/search.json" | relative_url }}')
           .then(function(r) { return r.json(); })
