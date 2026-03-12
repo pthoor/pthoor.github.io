@@ -12,6 +12,7 @@ description: "Cybersecurity guy writing and talking about secure Microsoft Cloud
 url: "https://thoor.tech"
 baseurl: ""
 repository: "pthoor/pthoor.github.io"
+# og_image: "/assets/og-default.jpg"  # Uncomment after creating the 1200x630px image
 
 # Author
 author:
@@ -26,6 +27,8 @@ author:
       url: "https://twitter.com/PierreThoor"
     - label: "GitHub"
       url: "https://github.com/pthoor"
+    - label: "Bluesky"
+      url: "https://bsky.app/profile/pierrethoor.bsky.social"
 
 # Footer
 footer:
@@ -34,6 +37,8 @@ footer:
       url: "https://twitter.com/PierreThoor"
     - label: "GitHub"
       url: "https://github.com/pthoor"
+    - label: "Bluesky"
+      url: "https://bsky.app/profile/pierrethoor.bsky.social"
 
 # Social / SEO
 twitter:
@@ -125,3 +130,18 @@ defaults:
       type: pages
     values:
       layout: page
+
+# Comments (Giscus - GitHub Discussions)
+comments:
+  provider: "giscus"
+  giscus:
+    repo: "pthoor/pthoor.github.io"
+    repo_id: "R_kgDOI41bMw"
+    category: "Comments"
+    category_id: "DIC_kwDOI41bM84C4QFC"
+    mapping: "url"
+    strict: "0"
+    reactions_enabled: "1"
+    emit_metadata: "0"
+    input_position: "bottom"
+    lang: "en"

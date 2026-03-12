@@ -2,7 +2,7 @@
 title: Azure Cost Management API, Forecast and Power BI
 date: '2022-01-10T13:00:00+02:00'
 tags: 
-  - CostManagement
+  - Cost Management
 excerpt: "How does Azure Cost Management API work with forecasts, and Power BI visualizations, and how can we find out more about those API's - Let's find out!"
 toc: true
 ---

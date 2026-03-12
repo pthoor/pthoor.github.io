@@ -20,6 +20,7 @@
         {% for link in site.author.links %}
         <li><a href="{{ link.url }}" rel="noopener noreferrer">{{ link.label }}</a></li>
         {% endfor %}
+        <li><a href="{{ '/feed.xml' | relative_url }}">RSS Feed</a></li>
       </ul>
     </div>
   </div>

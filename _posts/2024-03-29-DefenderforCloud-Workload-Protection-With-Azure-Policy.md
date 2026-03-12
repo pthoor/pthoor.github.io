@@ -4,9 +4,9 @@ date: '2024-03-29T09:00:00+02:00'
 excerpt: 'This Azure Policy initiative enables and configures Defender for Cloud workload protections, including Defender for Storage Classic (per transaction) plan with a Managed Identity for remediation.'
 tags:
   - MDC
-  - DefenderforCloud
+  - Defender for Cloud
   - CSPM
-  - AzurePolicy
+  - Azure Policy
 toc: true
 header:
   og_image: /assets/MDC-Bicep-AzPolicy.png

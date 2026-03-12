@@ -23,6 +23,10 @@ layout: default
           <span class="post-meta-sep">&bull;</span>
           <span class="read-time">{% assign words = content | number_of_words %}{{ words | divided_by: 200 | plus: 1 }} min read</span>
           {% endif %}
+          {% if page.last_modified_at %}
+          <span class="post-meta-sep">&bull;</span>
+          <span class="updated-date">Updated {{ page.last_modified_at | date: "%B %-d, %Y" }}</span>
+          {% endif %}
         </div>
         {% if page.tags.size > 0 %}
         <div class="post-tags">
@@ -72,6 +76,7 @@ layout: default
       <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ page.url | absolute_url | uri_escape }}&title={{ page.title | uri_escape }}" rel="noopener noreferrer" target="_blank" aria-label="Share on LinkedIn">LinkedIn</a>
     </div>
     {% endif %}
+    {% include comments.html %}
   </footer>
     </article>
   </div>

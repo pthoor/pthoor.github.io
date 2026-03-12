@@ -5,7 +5,7 @@ excerpt: 'Do you have Windows Server 2012/2012 R2 in your environment? If so, yo
 tags:
   - Arc
   - ESU
-  - AzureUpdateManager
+  - Azure Update Manager
 toc: true
 header:
   og_image: /assets/PatchTuesday.png

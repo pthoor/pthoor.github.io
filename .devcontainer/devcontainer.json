@@ -1,11 +1,22 @@
 {
   "name": "Jekyll",
   "image": "mcr.microsoft.com/devcontainers/jekyll:2",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": {}
+  },
   "forwardPorts": [4000],
-  "postCreateCommand": "bundle install",
+  "postCreateCommand": "bundle install && npm install -g @anthropic-ai/claude-code",
   "customizations": {
     "vscode": {
-      "extensions": ["sissel.shopify-liquid"]
+      "extensions": [
+        "sissel.shopify-liquid",
+        "anthropic.claude-code",
+        "github.copilot-chat",
+        "github.vscode-pull-request-github",
+        "github.vscode-github-actions",
+        "eamodio.gitlens"
+      ]
     }
   }
 }

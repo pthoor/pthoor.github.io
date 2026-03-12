@@ -28,6 +28,17 @@ body {
   transition: color $transition-base, background-color $transition-base;
 }
 
+// Theme transition for major surfaces
+.site-header,
+.site-footer,
+.post-card,
+.author-bio,
+.toc-inline,
+.toc-sidebar,
+.search-overlay-inner {
+  transition: background-color $transition-base, border-color $transition-base, color $transition-base;
+}
+
 // --- Skip link (accessibility) ---
 .skip-link {
   position: absolute;
@@ -63,6 +74,13 @@ a {
     outline-offset: 2px;
     border-radius: $radius-sm;
   }
+}
+
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  border-radius: $radius-sm;
 }
 
 // --- Headings ---

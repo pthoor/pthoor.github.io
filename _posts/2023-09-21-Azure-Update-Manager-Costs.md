@@ -5,7 +5,7 @@ excerpt: 'Azure Update Manager (AUM) is now GA and is a new Patch Management too
 tags:
   - Arc
   - ESU
-  - AzureUpdateManager
+  - Azure Update Manager
 toc: true
 header:
   og_image: /assets/PatchSystems.png

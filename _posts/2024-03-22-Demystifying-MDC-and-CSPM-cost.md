@@ -4,7 +4,7 @@ date: '2024-03-22T09:00:00+02:00'
 excerpt: 'Do you find it hard to understand the mapping of features and capabilities Microsoft Defender for Cloud and Defender CSPM can offer? And which features are in-scope for e.g. Azure VMs and Azure Arc-enabled servers, or direct onboarding? And what is the cost of these services? In this blog post, I will try to make it a bit more clear for you.'
 tags:
   - MDC
-  - DefenderforCloud
+  - Defender for Cloud
   - CSPM
   - DevOps
 toc: true

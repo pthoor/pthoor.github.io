@@ -55,6 +55,11 @@
   color: var(--text-secondary);
 }
 
+.updated-date {
+  color: var(--accent-green);
+  font-style: italic;
+}
+
 // --- Tags ---
 .post-tags {
   display: flex;
@@ -194,7 +199,7 @@
     color: var(--accent-blue);
     font-weight: 600;
     border-left-color: var(--accent-blue);
-    background: var(--accent-blue-dim);
+    background: var(--accent-blue-alpha);
   }
 }
 
@@ -270,6 +275,21 @@
     border: 1px solid var(--border-default);
     border-radius: $radius-sm;
     color: var(--accent-purple);
+  }
+
+  // Responsive tables
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: $space-lg 0;
+
+    table {
+      margin-bottom: 0;
+    }
+  }
+
+  table {
+    min-width: 500px;
   }
 
   // Code blocks
@@ -542,4 +562,45 @@
 .related-post-date {
   font-size: $font-size-xs;
   color: var(--text-muted);
+}
+
+// --- Image lightbox ---
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 290;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 200ms ease, visibility 200ms ease;
+
+  &.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  img {
+    max-width: 95vw;
+    max-height: 95vh;
+    object-fit: contain;
+    border: none;
+    border-radius: 0;
+    margin: 0;
+    cursor: default;
+  }
+}
+
+.post-content img {
+  cursor: zoom-in;
+}
+
+// --- Comments ---
+.post-comments {
+  margin-top: $space-2xl;
+  padding-top: $space-lg;
+  border-top: 1px solid var(--border-default);
 }

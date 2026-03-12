@@ -41,6 +41,16 @@
       var next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
+
+      // Update giscus comment theme
+      var giscusFrame = document.querySelector('iframe.giscus-frame');
+      if (giscusFrame && giscusFrame.src && giscusFrame.src.indexOf('https://giscus.app') === 0) {
+        var giscusTheme = next === 'light' ? 'light' : 'dark';
+        giscusFrame.contentWindow.postMessage(
+          { giscus: { setConfig: { theme: giscusTheme } } },
+          'https://giscus.app'
+        );
+      }
     });
   })();
   </script>
@@ -107,6 +117,51 @@
       toolbar.appendChild(btn);
       highlight.insertBefore(toolbar, highlight.firstChild);
     });
+
+    // --- Wrap tables for horizontal scroll on mobile ---
+    document.querySelectorAll('.post-content table').forEach(function(table) {
+      if (table.parentElement.classList.contains('table-wrap')) return;
+      var wrapper = document.createElement('div');
+      wrapper.className = 'table-wrap';
+      wrapper.setAttribute('tabindex', '0');
+      wrapper.setAttribute('role', 'region');
+      wrapper.setAttribute('aria-label', 'Scrollable table');
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+
+    // --- Image lightbox ---
+    (function() {
+      var overlay = document.createElement('div');
+      overlay.className = 'lightbox-overlay';
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.setAttribute('aria-label', 'Image preview');
+      document.body.appendChild(overlay);
+
+      function closeLightbox() {
+        overlay.classList.remove('is-open');
+        overlay.innerHTML = '';
+      }
+
+      overlay.addEventListener('click', closeLightbox);
+
+      document.querySelectorAll('.post-content img').forEach(function(img) {
+        img.addEventListener('click', function() {
+          var clone = document.createElement('img');
+          clone.src = img.src;
+          clone.alt = img.alt;
+          clone.addEventListener('click', function(e) { e.stopPropagation(); });
+          overlay.innerHTML = '';
+          overlay.appendChild(clone);
+          overlay.classList.add('is-open');
+        });
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeLightbox();
+      });
+    })();
 
     // --- Heading anchor links (post content only) ---
     document.querySelectorAll('.post-content h2[id], .post-content h3[id], .post-content h4[id]').forEach(function(h) {
@@ -265,6 +320,8 @@
       lunrLoading = true;
       var s = document.createElement('script');
       s.src = 'https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js';
+      s.integrity = 'sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli';
+      s.crossOrigin = 'anonymous';
       s.onload = function() {
         fetch('{{ "/search.json" | relative_url }}')
           .then(function(r) { return r.json(); })

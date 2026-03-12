@@ -33,10 +33,11 @@
 <meta name="twitter:site" content="@{{ site.twitter.username | replace: '@', '' }}">
 <meta name="twitter:creator" content="@{{ site.twitter.username | replace: '@', '' }}">
 {% endif %}
-<meta name="twitter:card" content="{% if page.header.og_image %}summary_large_image{% else %}summary{% endif %}">
+{% assign twitter_img = page.header.og_image | default: site.og_image %}
+<meta name="twitter:card" content="{% if twitter_img %}summary_large_image{% else %}summary{% endif %}">
 <meta name="twitter:title" content="{{ page.title | default: site.title }}">
 <meta name="twitter:description" content="{{ seo_description }}">
-{% if page.header.og_image %}<meta name="twitter:image" content="{{ page.header.og_image | absolute_url }}">{% endif %}
+{% if twitter_img %}<meta name="twitter:image" content="{{ twitter_img | absolute_url }}">{% endif %}
 
 <!-- Canonical -->
 <link rel="canonical" href="{{ canonical_url }}">
