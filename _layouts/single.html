@@ -37,7 +37,7 @@ layout: default
         {% endif %}
         {% if page.header.og_image %}
         <div class="post-hero">
-          <img src="{{ page.header.og_image }}" alt="{{ page.title }}" loading="lazy">
+          <img src="{{ page.header.og_image | escape }}" alt="{{ page.title | escape }}" loading="lazy">
         </div>
         {% endif %}
       </header>
@@ -56,13 +56,13 @@ layout: default
       </div>
 
   <aside class="author-bio">
-    <img src="{{ site.author.avatar }}" alt="{{ site.author.name }}" class="author-bio-avatar" width="72" height="72" loading="lazy">
+    <img src="{{ site.author.avatar | relative_url | escape }}" alt="{{ site.author.name | escape }}" class="author-bio-avatar" width="72" height="72" loading="lazy">
     <div class="author-bio-content">
-      <p class="author-bio-name">{{ site.author.name }}</p>
-      <p class="author-bio-text">{{ site.author.bio }}</p>
+      <p class="author-bio-name">{{ site.author.name | escape }}</p>
+      <p class="author-bio-text">{{ site.author.bio | escape }}</p>
       <div class="author-bio-links">
         {% for link in site.author.links %}
-        <a href="{{ link.url }}" rel="noopener noreferrer">{{ link.label }}</a>
+        <a href="{{ link.url }}" rel="noopener noreferrer">{{ link.label | escape }}</a>
         {% endfor %}
       </div>
     </div>
@@ -111,13 +111,13 @@ layout: default
   {% if page.previous %}
   <a class="post-nav-prev" href="{{ page.previous.url | relative_url }}" rel="prev">
     <span class="post-nav-label">&larr; Previous</span>
-    <span class="post-nav-title">{{ page.previous.title }}</span>
+    <span class="post-nav-title">{{ page.previous.title | escape }}</span>
   </a>
   {% endif %}
   {% if page.next %}
   <a class="post-nav-next" href="{{ page.next.url | relative_url }}" rel="next">
     <span class="post-nav-label">Next &rarr;</span>
-    <span class="post-nav-title">{{ page.next.title }}</span>
+    <span class="post-nav-title">{{ page.next.title | escape }}</span>
   </a>
   {% endif %}
 </nav>

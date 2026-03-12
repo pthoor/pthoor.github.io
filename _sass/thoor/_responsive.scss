@@ -51,10 +51,12 @@
   }
 
   // Full-bleed code blocks on mobile
-  .post-content .highlighter-rouge,
-  .post-content .highlight {
+  .post-content .highlighter-rouge {
     margin-left: -#{$space-md};
     margin-right: -#{$space-md};
+  }
+
+  .post-content .highlighter-rouge pre {
     border-radius: 0;
     border-left: none;
     border-right: none;

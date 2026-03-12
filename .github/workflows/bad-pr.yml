@@ -11,7 +11,7 @@ permissions:
 jobs:
   close-pr:
     runs-on: ubuntu-latest
-    if: "contains(github.event.pull_request.body, 'by deleting this comment block') || github.event.pull_request.body == ''"
+    if: "github.event.pull_request.user.login != github.repository_owner && (contains(github.event.pull_request.body, 'by deleting this comment block') || github.event.pull_request.body == '')"
     steps:
       - uses: actions-ecosystem/action-add-labels@18f1af5e3544586314bbe15c0273249c770b2daf # v1
         with:
@@ -22,7 +22,7 @@ jobs:
           comment: |
             Thanks for the PR. This is the source repository for https://thoor.tech/.
             For security reasons, I only merge changes after prior discussion. Please open an Issue explaining the change.
-      - uses: sudo-bot/action-pull-request-lock@875cc6a949fa9de15563404110fff799d65d4ac9 # v1.0.5
+      - uses: sudo-bot/action-pull-request-lock@8d1ae2b00cc4bf943144f4706048d7e75f038c3c # v1.1.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           number: ${{ github.event.pull_request.number }}
