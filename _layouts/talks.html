@@ -1,0 +1,58 @@
+---
+layout: default
+---
+<div class="page-wrap page-wrap--wide">
+  <header class="page-hero">
+    <h1 class="page-hero-title">{{ page.title | escape }}</h1>
+    {% if page.description %}
+    <p class="page-hero-desc">{{ page.description | escape }}</p>
+    {% endif %}
+  </header>
+
+  <div class="talks-intro">
+    <div class="page-content">{{ content }}</div>
+    {% if page.sessionize_url %}
+    <a href="{{ page.sessionize_url }}" rel="noopener noreferrer" class="btn btn--primary">Speaker profile on Sessionize &rarr;</a>
+    {% endif %}
+  </div>
+
+  {% if site.data.sessions %}
+  <div class="section-head" style="margin-top:2.5rem">
+    <span class="section-label">Session Catalog</span>
+    <hr class="section-rule" aria-hidden="true">
+  </div>
+  <div class="session-grid">
+    {% for session in site.data.sessions %}
+    <div class="session-card session-card--{{ session.color | escape }}">
+      <span class="session-topic">{{ session.topic | escape }}</span>
+      <h3 class="session-title">{{ session.title | escape }}</h3>
+      {% if session.desc %}<p class="session-desc">{{ session.desc | escape }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if site.data.events %}
+  <div class="section-head" style="margin-top:3rem">
+    <span class="section-label">Event History</span>
+    <hr class="section-rule" aria-hidden="true">
+  </div>
+  <div class="event-history-grid">
+    {% assign grouped = site.data.events | group_by: "year" | sort: "name" | reverse %}
+    {% for group in grouped %}
+    <div class="event-history-year">
+      <span class="event-history-year-label">{{ group.name }}</span>
+      <ul class="event-history-list">
+        {% for ev in group.items %}
+        <li>
+          {% if ev.url %}<a href="{{ ev.url }}" rel="noopener noreferrer">{{ ev.event | escape }}</a>{% else %}{{ ev.event | escape }}{% endif %}
+          <span class="event-location">{{ ev.location | escape }}</span>
+          {% if ev.upcoming %}<span class="event-upcoming-tag">Upcoming</span>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>

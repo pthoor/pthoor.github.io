@@ -1,0 +1,28 @@
+---
+layout: default
+---
+<div class="page-wrap">
+  <div class="book-hero">
+    <div class="book-cover">
+      <img src="/assets/Cover_MDI.png" alt="{{ site.book.title | escape }} book cover" loading="lazy" width="2250" height="2775">
+    </div>
+    <div class="book-hero-text">
+      <p class="info-card-label">📘 Published {{ site.book.year }}</p>
+      <h2 class="book-hero-title">{{ site.book.title | escape }}</h2>
+      <p class="book-hero-subtitle">{{ site.book.subtitle | escape }}</p>
+      <p class="book-hero-meta">{{ site.book.publisher | escape }} &middot; Foreword by Matthew Zorich</p>
+      <div class="book-hero-ctas">
+        <a href="{{ site.book.url }}" rel="noopener noreferrer" class="btn btn--primary">Get on Packt &rarr;</a>
+        {% if site.book.amazon_url %}
+        <a href="{{ site.book.amazon_url }}" rel="noopener noreferrer" class="btn btn--ghost">Amazon</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <hr style="border:none;border-top:1px solid var(--border-muted);margin:2rem 0">
+
+  <div class="page-content">
+    {{ content }}
+  </div>
+</div>

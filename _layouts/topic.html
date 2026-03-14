@@ -1,0 +1,72 @@
+---
+layout: default
+---
+{%- assign topic_slug = page.topic_slug -%}
+{%- assign topic_data = nil -%}
+{%- for t in site.topics -%}
+  {%- if t.slug == topic_slug -%}
+    {%- assign topic_data = t -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- comment -%} Collect matching posts {%- endcomment -%}
+{%- assign topic_posts = "" | split: "" -%}
+{%- for post in site.posts -%}
+  {%- assign matched = false -%}
+  {%- if topic_data -%}
+    {%- for ttag in topic_data.tags -%}
+      {%- unless matched -%}
+        {%- for ptag in post.tags -%}
+          {%- if ptag == ttag -%}
+            {%- assign matched = true -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endunless -%}
+    {%- endfor -%}
+  {%- endif -%}
+  {%- if matched -%}
+    {%- assign topic_posts = topic_posts | push: post -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<div class="topic-page home-section">
+
+  <div class="topic-page-header topic-page-header--{{ topic_data.color | default: 'gray' | escape }}">
+    <div class="topic-page-icon" aria-hidden="true">
+      {% if topic_data %}{% include icons/topic.html icon=topic_data.icon %}{% endif %}
+    </div>
+    <div class="topic-page-meta">
+      <a href="{{ '/topics/' | relative_url }}" class="topic-page-back">&larr; All topics</a>
+      <h1 class="topic-page-title">{{ page.title | escape }}</h1>
+      {% if topic_data.description %}
+      <p class="topic-page-desc">{{ topic_data.description | escape }}</p>
+      {% endif %}
+      <p class="topic-page-count">{{ topic_posts.size }} post{% if topic_posts.size != 1 %}s{% endif %}</p>
+    </div>
+  </div>
+
+  {% if topic_posts.size > 0 %}
+  <div class="post-list" role="list">
+    {% for post in topic_posts %}
+    <a href="{{ post.url | relative_url }}" class="post-row" role="listitem">
+      <span class="post-row-bar post-row-bar--{{ topic_data.color | default: 'gray' | escape }}" aria-hidden="true"></span>
+      <span class="post-row-body">
+        <span class="post-row-title">{{ post.title | escape }}</span>
+        <span class="post-row-meta">
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+          <span aria-hidden="true">&middot;</span>
+          <span>{% assign words = post.content | number_of_words %}{{ words | divided_by: 200 | plus: 1 }} min read</span>
+          {% for tag in post.tags limit:3 %}
+          <span class="tag tag--{{ topic_data.color | default: 'gray' | escape }}">{{ tag | escape }}</span>
+          {% endfor %}
+        </span>
+      </span>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="topic-page-empty">No posts yet for this topic.</p>
+  {% endif %}
+
+</div>

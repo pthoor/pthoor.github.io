@@ -34,3 +34,5 @@ _site
 
 # Other
 docs
+CLAUDE.*
+.claude/

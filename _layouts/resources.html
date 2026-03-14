@@ -1,0 +1,49 @@
+---
+layout: default
+---
+<div class="page-wrap page-wrap--wide">
+  <header class="page-hero">
+    <h1 class="page-hero-title">{{ page.title | escape }}</h1>
+    {% if page.description %}
+    <p class="page-hero-desc">{{ page.description | escape }}</p>
+    {% endif %}
+  </header>
+
+  {% if content != "" %}
+  <div class="page-content" style="margin-bottom:2rem">{{ content }}</div>
+  {% endif %}
+
+  {% for category in site.data.resources %}
+  <div class="section-head{% unless forloop.first %} section-head--spaced{% endunless %}">
+    <span class="section-label">{{ category.category | escape }}</span>
+    <hr class="section-rule" aria-hidden="true">
+  </div>
+  <div class="resource-grid">
+    {% for item in category.items %}
+    <a href="{{ item.url }}" rel="noopener noreferrer" class="resource-card resource-card--{{ item.color | escape }}">
+      <span class="resource-card-name">{{ item.name | escape }}</span>
+      {% if item.desc %}<span class="resource-card-desc">{{ item.desc | escape }}</span>{% endif %}
+      {% unless item.desc %}<span class="resource-card-url">{{ item.url | remove: "https://" | truncate: 40 }}</span>{% endunless %}
+    </a>
+    {% endfor %}
+  </div>
+  {% endfor %}
+
+  {% if site.book %}
+  <div class="section-head section-head--spaced">
+    <span class="section-label">My Book</span>
+    <hr class="section-rule" aria-hidden="true">
+  </div>
+  <div class="info-card" style="max-width:600px">
+    <p class="info-card-label">📘 {{ site.book.publisher | escape }} &middot; {{ site.book.year }}</p>
+    <h3 class="info-card-title">{{ site.book.title | escape }}</h3>
+    <p class="info-card-body">{{ site.book.subtitle | escape }}</p>
+    <div style="display:flex;gap:0.75rem;margin-top:0.75rem;flex-wrap:wrap">
+      <a href="{{ site.book.url }}" rel="noopener noreferrer" class="btn btn--primary" style="font-size:0.8125rem;padding:8px 18px">Get on Packt &rarr;</a>
+      {% if site.book.amazon_url %}
+      <a href="{{ site.book.amazon_url }}" rel="noopener noreferrer" class="btn btn--ghost" style="font-size:0.8125rem;padding:8px 18px">Amazon</a>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+</div>

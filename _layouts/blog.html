@@ -1,0 +1,61 @@
+---
+layout: default
+---
+
+<div class="page-wrap">
+  <header class="page-hero">
+    <h1 class="page-hero-title">Blog</h1>
+    <p class="page-hero-desc">All posts — security engineering, cloud architecture, and Microsoft tooling.</p>
+  </header>
+
+  {% assign current_year = "" %}
+  {% for post in site.posts %}
+  {%- comment -%} Determine topic color for the left bar {%- endcomment -%}
+  {% assign post_color = "gray" %}
+  {% for topic in site.topics %}
+    {% if post_color == "gray" %}
+      {% for ttag in topic.tags %}
+        {% if post_color == "gray" %}
+          {% for ptag in post.tags %}
+            {% if ptag == ttag %}
+              {% assign post_color = topic.color %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+
+  {% assign post_year = post.date | date: "%Y" %}
+  {% if post_year != current_year %}
+    {% unless current_year == "" %}
+    </div><!-- /.post-list -->
+    {% endunless %}
+    {% assign current_year = post_year %}
+    <div class="blog-year-section">
+      <h2 class="blog-year-heading">{{ post_year }}</h2>
+    </div>
+    <div class="post-list" role="list">
+  {% endif %}
+
+    <a href="{{ post.url | relative_url }}" class="post-row" role="listitem">
+      <span class="post-row-bar post-row-bar--{{ post_color }}" aria-hidden="true"></span>
+      <span class="post-row-body">
+        <span class="post-row-title">{{ post.title | escape }}</span>
+        {% if post.excerpt %}<span class="post-row-excerpt">{{ post.excerpt | strip_html | truncate: 120 }}</span>{% endif %}
+        <span class="post-row-meta">
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d" }}</time>
+          <span aria-hidden="true">&middot;</span>
+          <span>{% assign words = post.content | number_of_words %}{{ words | divided_by: 200 | plus: 1 }} min read</span>
+          {% for tag in post.tags limit:3 %}
+          <span class="tag tag--{{ post_color }}">{{ tag | escape }}</span>
+          {% endfor %}
+        </span>
+      </span>
+    </a>
+  {% endfor %}
+  {% unless current_year == "" %}
+  </div><!-- /.post-list -->
+  {% endunless %}
+</div>

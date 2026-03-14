@@ -1,0 +1,48 @@
+# Conference sessions / talks
+# Fields: title, topic, color (blue/purple/orange/green/gray), desc
+# color should match the topic color from _config.yml topics
+
+- title: "We turned on Defender for Office 365. Now what?"
+  topic: "Email & Teams Security"
+  color: "orange"
+  desc: "A practical session covering AiTM phishing, inbox rule abuse, and Teams protection — with Advanced Hunting queries your SOC can use immediately."
+
+- title: "MDO: Optimizing Security Operations and Advanced Incident Response"
+  topic: "Email & Teams Security"
+  color: "orange"
+  desc: "Practical guidance on detection tuning, threat investigation, and maturing your SecOps workflows around Defender for Office 365."
+
+- title: "Teams Security and Networking Best Practices"
+  topic: "Email & Teams Security"
+  color: "orange"
+  desc: "Securing Microsoft Teams — from network configuration to threat protection and compliance policies."
+
+- title: "Kusto Maniacs — The Ultimate Kusto Session"
+  topic: "Microsoft Sentinel"
+  color: "blue"
+  desc: "Co-presented with a fellow KQL expert. Cutting-edge techniques, advanced query patterns, and real-world solutions for analysts who want to push beyond the basics."
+
+- title: "Cybersecurity with Microsoft Sentinel and Azure OpenAI"
+  topic: "Microsoft Sentinel"
+  color: "blue"
+  desc: "How to integrate Azure OpenAI into Sentinel workflows to accelerate threat detection and response at scale."
+
+- title: "Mastering Cloud Security: Defender for Cloud"
+  topic: "Defender XDR"
+  color: "purple"
+  desc: "Deep dive into CSPM, CWPP, and workload protection — how to proactively reduce attack surface across hybrid environments."
+
+- title: "Behind the Firewall — Why Your Azure Services Might Be More Exposed Than You Think"
+  topic: "Defender XDR"
+  color: "purple"
+  desc: "Live demos of how misconfigured Azure service firewalls can expose critical data, and how to remediate the risks."
+
+- title: "Defender External Attack Surface Management"
+  topic: "Defender XDR"
+  color: "purple"
+  desc: "How to use Microsoft Defender EASM to discover and reduce your organization's internet-exposed attack surface."
+
+- title: "Azure Networking Master Class"
+  topic: "Azure Networking"
+  color: "green"
+  desc: "Comprehensive session covering VNets, NSGs, ExpressRoute, API Management, and application delivery — building secure, resilient Azure network architectures."

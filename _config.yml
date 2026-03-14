@@ -5,30 +5,134 @@
 
 # Site Settings
 locale: "en-US"
-title: "Thoor.tech"
+title: "thoor.tech"
 title_separator: "-"
 name: "Pierre Thoor"
 description: "Cybersecurity guy writing and talking about secure Microsoft Cloud stuff"
 url: "https://thoor.tech"
 baseurl: ""
 repository: "pthoor/pthoor.github.io"
-# og_image: "/assets/og-default.jpg"  # Uncomment after creating the 1200x630px image
+og_image: "/assets/og-default.jpg"
 
 # Author
 author:
   name: "Pierre Thoor"
+  title: "Senior Cloud Security Architect"
+  company: "Onevinn AB"
   avatar: "/assets/profile-pic.jpg"
-  bio: "Cybersecurity guy writing and talking about secure Microsoft Cloud stuff"
+  speaker_photo: "/assets/speaker-photo.JPG"
+  bio: "I secure Microsoft Cloud environments at enterprise scale — from Sentinel detection engineering and Defender XDR threat hunting to Azure network architecture, email security, and GitHub DevSecOps."
   location: "Sweden"
+  sessionize: "https://sessionize.com/pierre-thoor/"
+  mvp_profile: "https://mvp.microsoft.com/en-us/PublicProfile/5004683?fullName=Pierre%20Thoor"
   links:
     - label: "Email"
+      icon: "email"
       url: "mailto:pierre@thoor.tech"
     - label: "Twitter"
+      icon: "twitter"
       url: "https://twitter.com/PierreThoor"
     - label: "GitHub"
+      icon: "github"
       url: "https://github.com/pthoor"
+    - label: "LinkedIn"
+      icon: "linkedin"
+      url: "https://www.linkedin.com/in/pierrethoor/"
     - label: "Bluesky"
+      icon: "bluesky"
       url: "https://bsky.app/profile/pierrethoor.bsky.social"
+
+# Credential badges shown in hero
+credentials:
+  - label: "Microsoft Security MVP"
+    class: "badge-mvp"
+  - label: "Published Author"
+    class: "badge-author"
+  - label: "Conference Speaker"
+    class: "badge-speaker"
+  - label: "MDO Champion"
+    class: "badge-mdo"
+
+# Book
+book:
+  title: "Microsoft Defender for Identity in Depth"
+  subtitle: "An exhaustive guide to ITDR, breach prevention, and cyberattack response"
+  publisher: "Packt Publishing"
+  year: 2024
+  url: "https://www.packtpub.com/en-us/product/microsoft-defender-for-identity-in-depth-9781835082850"
+  amazon_url: "https://www.amazon.com/Microsoft-Defender-Identity-Depth-cyberattack/dp/B0DK1HW2KX"
+
+# MDO Champion highlight
+mdo_champion:
+  description: "Co-authored a four-part guide to securing Microsoft Teams collaboration with the Defender for Office 365 product engineering team — covering user reporting, Safe Links, and advanced threat hunting for Teams protection."
+  post_url: "https://techcommunity.microsoft.com/blog/microsoftdefenderforoffice365blog/safeguarding-microsoft-teams-with-microsoft-defender-for-office-365/4464086"
+  video_url: "https://www.youtube.com/playlist?list=PLmAptfqzxVEUnmX3No1ZCCpU96Y9A-6PE"
+
+# Topic definitions — used by homepage and topic landing pages
+topics:
+  - name: "Microsoft Sentinel"
+    slug: "sentinel"
+    description: "SIEM/SOAR design · KQL · Detection engineering · Threat hunting · Log analytics"
+    color: "blue"
+    icon: "sentinel"
+    tags:
+      - "Sentinel"
+      - "sentinel"
+      - "Kusto"
+      - "kusto"
+      - "KQL"
+  - name: "Defender XDR"
+    slug: "defender"
+    description: "Identity · Endpoint · Cloud Apps · Defender for Cloud · CSPM · CWPP"
+    color: "purple"
+    icon: "defender"
+    tags:
+      - "Defender"
+      - "MDC"
+      - "DefenderforCloud"
+      - "Defender for Cloud"
+      - "CSPM"
+      - "MDI"
+      - "MDE"
+      - "Copilot for Security"
+  - name: "Email & Teams Security"
+    slug: "email-security"
+    description: "Defender for Office 365 · Exchange Online Protection · Teams · MDO Champion"
+    color: "orange"
+    icon: "mail"
+    tags:
+      - "MDO"
+      - "Defender for Office"
+      - "Exchange Online"
+      - "Teams"
+  - name: "Azure Networking"
+    slug: "networking"
+    description: "AVNM · Azure Firewall · WAF · DDoS · Private Endpoints · Hub-spoke"
+    color: "green"
+    icon: "network"
+    tags:
+      - "Azure"
+      - "Networking"
+      - "AVNM"
+      - "Firewall"
+      - "WAF"
+  - name: "GitHub Security"
+    slug: "github"
+    description: "Actions security · Supply chain · Org rulesets · Advanced Security · DevSecOps"
+    color: "gray"
+    icon: "github"
+    tags:
+      - "GitHub"
+  - name: "IaC & Automation"
+    slug: "iac"
+    description: "Bicep · Azure Verified Modules · PowerShell · Azure Policy · GitHub Actions CI/CD"
+    color: "blue-light"
+    icon: "code"
+    tags:
+      - "Bicep"
+      - "PowerShell"
+      - "AVM"
+      - "Azure Policy"
 
 # Footer
 footer:
@@ -54,6 +158,7 @@ analytics:
 # Reading Files
 include:
   - _pages
+  - topics
 exclude:
   - vendor
   - .bundle
@@ -104,7 +209,7 @@ sass:
   style: compressed
 
 # Outputting
-permalink: /:categories/:title/
+permalink: /:title/
 paginate: 5
 paginate_path: /page:num/
 timezone: "Europe/Stockholm"

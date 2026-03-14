@@ -10,74 +10,72 @@
   background: var(--bg-primary-alpha);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--border-muted);
   transition: background $transition-base, border-color $transition-base;
 }
 
 .header-inner {
   max-width: $site-width;
   margin: 0 auto;
-  padding: $space-md $space-lg;
+  padding: 13px $space-2xl;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: $space-lg;
+
+  @media (max-width: 768px) {
+    padding: 12px $space-lg;
+  }
 }
 
+// ── Brand / Logo ───────────────────────────────────────────
 .site-brand {
   display: flex;
   align-items: center;
   gap: $space-sm;
   text-decoration: none;
   color: var(--text-primary);
-  font-weight: 700;
-  font-size: 1.25rem;
-
-  &:hover {
-    color: var(--accent-blue);
-    text-decoration: none;
-  }
-}
-
-.site-brand-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: linear-gradient(135deg, var(--accent-blue-dim), var(--accent-purple));
-  border-radius: $radius-sm;
   flex-shrink: 0;
 
-  svg {
-    width: 22px;
-    height: 22px;
-    color: #fff;
-    fill: #fff;
+  &:hover {
+    text-decoration: none;
+    .brand-name { color: var(--accent-blue) }
   }
 }
 
-// --- Navigation ---
+.brand-logo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.brand-logo-q {
+  border-radius: 2px;
+  display: block;
+}
+
+.brand-logo-q1 { background: var(--accent-blue-dim) }
+.brand-logo-q2 { background: var(--accent-green) }
+.brand-logo-q3 { background: var(--accent-purple) }
+.brand-logo-q4 { background: var(--accent-orange) }
+
+.brand-name {
+  font-family: $font-mono;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  transition: color $transition-fast;
+}
+
+// ── Nav links ──────────────────────────────────────────────
 .site-nav {
+  flex: 1;
   display: flex;
   align-items: center;
-  gap: $space-xs;
-}
-
-.nav-toggle {
-  display: none;
-  background: none;
-  border: none;
-  color: var(--text-primary);
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: $space-xs;
-  line-height: 1;
-
-  &:focus-visible {
-    outline: 2px solid var(--accent-blue);
-    outline-offset: 2px;
-    border-radius: $radius-sm;
-  }
+  justify-content: center;
 }
 
 .nav-links {
@@ -85,80 +83,120 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: $space-xs;
+  gap: 4px;
+
+  li { display: flex; align-items: center }
 }
 
-.nav-links a {
+.nav-link {
   display: block;
-  padding: $space-xs $space-md;
+  padding: 5px 12px;
   color: var(--text-secondary);
-  font-size: $font-size-sm;
+  font-size: 0.875rem;
   font-weight: 500;
   border-radius: $radius-sm;
-  transition: all $transition-fast;
+  transition: color $transition-fast, background $transition-fast;
   text-decoration: none;
+  position: relative;
 
   &:hover,
-  &:focus {
+  &:focus-visible {
     color: var(--text-primary);
     background: var(--bg-elevated);
     text-decoration: none;
   }
 
-  &[aria-current="page"] {
+  &:focus-visible {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: 2px;
+  }
+
+  &--active {
     color: var(--text-primary);
-    background: var(--bg-elevated);
     font-weight: 600;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -14px;
+      left: 8px;
+      right: 8px;
+      height: 2px;
+      background: var(--accent-blue-dim);
+      border-radius: 1px;
+    }
   }
 }
 
-// --- Search toggle ---
+// ── Right actions ──────────────────────────────────────────
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+  flex-shrink: 0;
+}
+
+// Search button
 .search-toggle {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  background: none;
-  border: 1px solid var(--border-default);
-  border-radius: $radius-sm;
-  color: var(--text-secondary);
-  transition: all $transition-fast;
-  text-decoration: none;
+  gap: $space-xs;
+  padding: 6px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-muted);
+  border-radius: $radius-md;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: border-color $transition-fast, color $transition-fast;
+  font-family: $font-body;
 
   &:hover {
-    color: var(--text-primary);
-    border-color: var(--accent-blue-dim);
-    background: var(--bg-elevated);
-    text-decoration: none;
+    border-color: var(--border-default);
+    color: var(--text-secondary);
   }
 
-  svg {
-    width: 18px;
-    height: 18px;
-    fill: currentColor;
+  &:focus-visible {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: 2px;
+    border-radius: $radius-md;
+  }
+
+  svg { flex-shrink: 0 }
+}
+
+.search-kbd {
+  kbd {
+    font-size: 0.6875rem;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
+    font-family: $font-mono;
+    color: var(--text-muted);
+    display: inline-block;
   }
 }
 
-// --- Theme toggle ---
+// Theme toggle
 .theme-toggle {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   padding: 0;
-  background: none;
-  border: 1px solid var(--border-default);
-  border-radius: $radius-sm;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-muted);
+  border-radius: $radius-md;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all $transition-fast;
+  transition: border-color $transition-fast, background $transition-fast, color $transition-fast;
 
   &:hover {
     color: var(--text-primary);
-    border-color: var(--accent-blue-dim);
-    background: var(--bg-elevated);
+    border-color: var(--border-default);
+    background: var(--bg-tertiary);
   }
 
   &:focus-visible {
@@ -167,33 +205,49 @@
   }
 
   svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     fill: currentColor;
-  }
-
-  .icon-sun,
-  .icon-moon {
     display: none;
   }
 }
 
-[data-theme="dark"] .theme-toggle .icon-sun {
-  display: block;
+[data-theme="dark"]  .theme-toggle .icon-sun  { display: block }
+[data-theme="light"] .theme-toggle .icon-moon { display: block }
+
+// Mobile hamburger
+.nav-toggle {
+  display: none;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-muted);
+  border-radius: $radius-md;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 7px;
+  line-height: 0;
+  transition: border-color $transition-fast, color $transition-fast;
+
+  svg { width: 18px; height: 18px; fill: currentColor }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: 2px;
+  }
 }
 
-[data-theme="light"] .theme-toggle .icon-moon {
-  display: block;
-}
-
-// --- Mobile nav ---
+// ── Mobile nav ─────────────────────────────────────────────
 @media (max-width: 768px) {
-  .nav-toggle {
-    display: block;
-  }
+  // Hide the link list, not the <nav> parent — toggling is-open on the <ul>
+  // requires the parent to remain in the DOM and not display:none
+  .site-nav { flex: 0; overflow: visible }
+  .nav-links { display: none }
+  .nav-toggle { display: block }
 
-  .nav-links {
-    display: none;
+  .header-inner { position: relative }
+
+  // Slide-down mobile menu
+  .nav-links.is-open {
+    display: flex !important;
     position: absolute;
     top: 100%;
     left: 0;
@@ -201,16 +255,13 @@
     flex-direction: column;
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border-default);
-    padding: $space-md;
-    gap: 0;
+    padding: $space-sm $space-lg $space-md;
+    gap: 2px;
+    z-index: 99;
+    box-shadow: 0 8px 24px var(--shadow-card);
 
-    &.is-open {
-      display: flex;
-    }
-
-    a {
-      padding: $space-sm $space-md;
-      border-radius: $radius-sm;
-    }
+    .nav-link--active::after { display: none }
   }
+
+  .nav-link { padding: 9px 12px }
 }

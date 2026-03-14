@@ -50,16 +50,9 @@
     gap: $space-xs;
   }
 
-  // Full-bleed code blocks on mobile
+  // Code blocks: contained with horizontal scroll
   .post-content .highlighter-rouge {
-    margin-left: -#{$space-md};
-    margin-right: -#{$space-md};
-  }
-
-  .post-content .highlighter-rouge pre {
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
+    font-size: 0.875rem;
   }
 }
 
@@ -93,12 +86,8 @@
   }
 
   .post-content img {
-    margin-left: -#{$space-md};
-    margin-right: -#{$space-md};
-    max-width: calc(100% + #{$space-md} * 2);
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
+    max-width: 100%;
+    height: auto;
   }
 
   .hero {

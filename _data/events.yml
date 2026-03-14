@@ -1,0 +1,82 @@
+# Conference appearances — newest first
+# Fields: event, location, year, url, upcoming (optional, true/false)
+
+- event: "Experts Live Denmark"
+  location: "Copenhagen"
+  year: 2026
+  url: "https://www.expertslive.dk/"
+
+- event: "NIC Rebel Edition"
+  location: "Oslo"
+  year: 2025
+  url: "https://www.nicconf.com/"
+
+- event: "Experts Live Denmark"
+  location: "Copenhagen"
+  year: 2025
+  url: "https://www.expertslive.dk/"
+
+- event: "Teamsdagen"
+  location: "Stockholm"
+  year: 2025
+  url: "https://www.teamsdagen.se/"
+
+- event: "ESPC24"
+  location: "Stockholm"
+  year: 2024
+  url: "https://www.sharepointeurope.com/"
+
+- event: "Teamsdagen"
+  location: "Stockholm"
+  year: 2024
+  url: "https://www.teamsdagen.se/"
+
+- event: "India Cloud Security Summit"
+  location: "Online"
+  year: 2023
+  url: "https://www.indiacloudsecuritysummit.com/"
+
+- event: "NIC Cloud Connect"
+  location: "Oslo"
+  year: 2023
+  url: "https://www.nicconf.com/"
+
+- event: "Teamsdagen"
+  location: "Stockholm"
+  year: 2023
+  url: "https://www.teamsdagen.se"
+
+- event: "Stockholm TECH Show"
+  location: "Stockholm"
+  year: 2023
+  url: "https://stockholmtechshow.se/konferens-2023/"
+
+- event: "AVD Tech Fest"
+  location: "Online"
+  year: 2022
+  url: "https://www.avdtechfest.com"
+
+- event: "Teamsdagen"
+  location: "Stockholm"
+  year: 2022
+  url: "https://www.teamsdagen.se"
+
+- event: "AVD Tech Fest Winter Edition"
+  location: "Online"
+  year: 2021
+  url: "https://www.avdtechfest.com"
+
+- event: "Teamsdagen"
+  location: "Stockholm"
+  year: 2021
+  url: "https://www.teamsdagen.se"
+
+- event: "WVD Tech Fest"
+  location: "Online"
+  year: 2021
+  url: "https://www.avdtechfest.com"
+
+- event: "Teamsdagen"
+  location: "Online"
+  year: 2020
+  url: "https://www.teamsdagen.se"

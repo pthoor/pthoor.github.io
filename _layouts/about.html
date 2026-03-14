@@ -1,0 +1,143 @@
+---
+layout: default
+---
+<div class="page-wrap">
+  <header class="page-hero">
+    <h1 class="page-hero-title">{{ page.title | escape }}</h1>
+  </header>
+
+  <div class="about-intro">
+    <div class="about-intro-text">
+      {% if site.credentials %}
+      <div class="hero-badges" style="margin-bottom:1rem">
+        {% for cred in site.credentials %}
+        <span class="badge {{ cred.class | escape }}">{{ cred.label | escape }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <div class="page-content" style="margin:0">{{ content }}</div>
+      <p style="font-size:0.875rem;color:var(--text-muted);margin:0.75rem 0 0">
+        {% if site.author.sessionize %}
+        Full speaker profile on <a href="{{ site.author.sessionize }}" rel="noopener noreferrer">Sessionize</a>
+        {% endif %}
+        {% if site.author.sessionize and site.author.mvp_profile %}&middot;{% endif %}
+        {% if site.author.mvp_profile %}
+        <a href="{{ site.author.mvp_profile }}" rel="noopener noreferrer">MVP Profile</a>
+        {% endif %}
+      </p>
+    </div>
+    <div class="about-intro-photo">
+      {% if site.author.mvp_profile %}
+      <a href="{{ site.author.mvp_profile }}" rel="noopener noreferrer" aria-label="Microsoft MVP profile">
+      {% endif %}
+        <img src="/assets/MVP_Badge_Secondary_DarkBlue7694_RGB.jpg" alt="Microsoft Security MVP" loading="lazy" style="border-radius:0">
+      {% if site.author.mvp_profile %}
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <hr style="border:none;border-top:1px solid var(--border-muted);margin:2rem 0">
+
+  {% if site.topics %}
+  <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;color:var(--text-primary)">What I Do</h2>
+  <div class="about-expertise">
+    {% for topic in site.topics %}
+    <div class="about-expertise-item">
+      <strong>{{ topic.name | escape }}</strong>
+      <span>{{ topic.description | escape }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <hr style="border:none;border-top:1px solid var(--border-muted);margin:2rem 0">
+
+  {% if site.book %}
+  <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;color:var(--text-primary)">Book</h2>
+  <div class="cards-row" style="margin-bottom:2rem">
+    <div class="info-card">
+      <p class="info-card-label">📘 Published {{ site.book.year }} &middot; {{ site.book.publisher | escape }}</p>
+      <h3 class="info-card-title">{{ site.book.title | escape }}</h3>
+      <p class="info-card-body">{{ site.book.subtitle | escape }}</p>
+      <div style="display:flex;gap:0.75rem;margin-top:0.75rem;flex-wrap:wrap">
+        <a href="{{ site.book.url }}" rel="noopener noreferrer" class="btn btn--primary" style="font-size:0.8125rem;padding:8px 18px">Get on Packt &rarr;</a>
+        {% if site.book.amazon_url %}
+        <a href="{{ site.book.amazon_url }}" rel="noopener noreferrer" class="btn btn--ghost" style="font-size:0.8125rem;padding:8px 18px">Amazon</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if site.mdo_champion %}
+  <hr style="border:none;border-top:1px solid var(--border-muted);margin:2rem 0">
+  <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;color:var(--text-primary)">MDO Champion</h2>
+  <div class="mdo-highlight" role="note" style="margin-bottom:2rem">
+    <span class="mdo-highlight-icon" aria-hidden="true">🏆</span>
+    <div>
+      <h4 class="mdo-highlight-title">Microsoft Defender for Office 365 Champion</h4>
+      <p class="mdo-highlight-body">{{ site.mdo_champion.description | escape }}</p>
+      {% if site.mdo_champion.post_url or site.mdo_champion.video_url %}
+      <p class="mdo-highlight-body" style="margin-top:0.5rem">
+        {% if site.mdo_champion.post_url %}Published on <a href="{{ site.mdo_champion.post_url }}" rel="noopener noreferrer">Microsoft Tech Community</a>{% endif %}
+        {% if site.mdo_champion.post_url and site.mdo_champion.video_url %} with a {% endif %}
+        {% if site.mdo_champion.video_url %}<a href="{{ site.mdo_champion.video_url }}" rel="noopener noreferrer">YouTube video series</a>{% endif %}.
+      </p>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if site.data.events %}
+  <hr style="border:none;border-top:1px solid var(--border-muted);margin:2rem 0">
+  <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;color:var(--text-primary)">Speaking</h2>
+  <div class="cards-row">
+    <div class="info-card">
+      <p class="info-card-label">Conference Speaking · 2020 – {{ 'now' | date: '%Y' }}</p>
+      <ul class="event-list" role="list">
+        {% for ev in site.data.events limit:8 %}
+        <li class="event-row">
+          <span class="event-name">{{ ev.event | escape }}{% if ev.location %}, {{ ev.location | escape }}{% endif %}</span>
+          {% if ev.upcoming %}
+          <span class="event-upcoming">{{ ev.year }} — Upcoming</span>
+          {% else %}
+          <time class="event-year" datetime="{{ ev.year }}">{{ ev.year }}</time>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% if site.author.sessionize %}
+      <a href="{{ site.author.sessionize }}" rel="noopener noreferrer" class="card-link">Full profile on Sessionize &rarr;</a>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if site.author.links %}
+  <hr style="border:none;border-top:1px solid var(--border-muted);margin:2rem 0">
+  <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;color:var(--text-primary)">Get in Touch</h2>
+  <div class="about-contact">
+    {% for link in site.author.links %}
+    <a href="{{ link.url }}" {% unless link.icon == 'email' %}rel="noopener noreferrer"{% endunless %} class="about-contact-link">
+      {% case link.icon %}
+      {% when 'email' %}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      {% when 'twitter' %}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      {% when 'linkedin' %}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      {% when 'github' %}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      {% when 'bluesky' %}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.204-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/></svg>
+      {% else %}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z"/></svg>
+      {% endcase %}
+      {{ link.label | escape }}
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>

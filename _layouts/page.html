@@ -1,11 +1,14 @@
 ---
 layout: default
 ---
-<article class="page">
-  <header class="page-header">
-    <h1 class="page-title">{{ page.title | escape }}</h1>
+<div class="page-wrap{% if page.wide %} page-wrap--wide{% endif %}">
+  <header class="page-hero">
+    <h1 class="page-hero-title">{{ page.title | escape }}</h1>
+    {% if page.description %}
+    <p class="page-hero-desc">{{ page.description | escape }}</p>
+    {% endif %}
   </header>
-  <div class="page-content">
+  <article class="page-content">
     {{ content }}
-  </div>
-</article>
+  </article>
+</div>

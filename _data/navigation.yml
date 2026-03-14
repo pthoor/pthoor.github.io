@@ -1,8 +1,12 @@
 main:
-  - title: "Posts by Tag"
-    url: /tags/
+  - title: "Blog"
+    url: /blog/
+  - title: "Topics"
+    url: /topics/
   - title: "Talks"
     url: /talks/
+  - title: "Book"
+    url: /book/
   - title: "Resources"
     url: /resources/
   - title: "About"

@@ -1,90 +1,104 @@
 // ============================================================
-// MS Learn-style info boxes / callouts
+// Supports both .alert-box (legacy) and .callout-box (new)
 // ============================================================
 @use 'variables' as *;
 
-// Shared base styles
+// ── Shared base ───────────────────────────────────────────
+.callout-box,
 .alert-box {
-  position: relative;
+  border-radius: $radius-lg;
+  padding: 14px 18px;
   margin: $space-lg 0;
-  padding: $space-md $space-lg;
-  border-left: 4px solid;
-  border-radius: 0 $radius-md $radius-md 0;
+  border: 1px solid transparent;
+  border-left: 4px solid transparent;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
   font-size: $font-size-sm;
   line-height: 1.6;
 
-  p:last-child {
-    margin-bottom: 0;
-  }
+  p:last-child { margin-bottom: 0 }
+  code { font-size: 0.8125rem }
+}
 
-  strong:first-child {
+.callout-icon {
+  font-size: 1.0625rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+  line-height: 1;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
     display: block;
-    margin-bottom: $space-xs;
-    font-size: $font-size-base;
   }
 }
 
-.alert-icon {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-right: $space-sm;
-  vertical-align: text-bottom;
+.callout-body,
+.alert-body { flex: 1; min-width: 0 }
+
+.callout-label,
+.alert-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+
+  // Legacy: inline SVG inside label
+  svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0 }
 }
 
-// Shared label pattern
-@mixin alert-label($color-var) {
+// ── Variants ──────────────────────────────────────────────
+@mixin callout-variant($bg, $border, $accent) {
+  background: $bg;
+  border-color: #{$border}33;
+  border-left-color: $border;
+
+  .callout-label,
   .alert-label {
-    color: $color-var;
-    font-weight: 700;
-    margin-bottom: $space-xs;
-    display: flex;
-    align-items: center;
-    gap: $space-sm;
-
-    svg {
-      fill: $color-var;
-      flex-shrink: 0;
-    }
+    color: $accent;
+    svg { fill: $accent }
   }
+
+  .callout-icon { color: $accent }
 }
 
-// --- Note (blue) ---
-.note {
-  background: var(--note-bg);
-  border-left-color: var(--note-border);
+// Note (blue)
+.callout-note,
+.alert-box.note {
+  @include callout-variant(var(--note-bg), var(--note-border), var(--note-icon));
   color: var(--text-primary);
-  @include alert-label(var(--note-icon));
 }
 
-// --- Tip (green) ---
-.tip {
-  background: var(--tip-bg);
-  border-left-color: var(--tip-border);
+// Tip (green)
+.callout-tip,
+.alert-box.tip {
+  @include callout-variant(var(--tip-bg), var(--tip-border), var(--tip-icon));
   color: var(--text-primary);
-  @include alert-label(var(--tip-icon));
 }
 
-// --- Important (purple) ---
-.important {
-  background: var(--important-bg);
-  border-left-color: var(--important-border);
+// Important (purple)
+.callout-important,
+.alert-box.important {
+  @include callout-variant(var(--important-bg), var(--important-border), var(--important-icon));
   color: var(--text-primary);
-  @include alert-label(var(--important-icon));
 }
 
-// --- Caution (yellow) ---
-.caution {
-  background: var(--caution-bg);
-  border-left-color: var(--caution-border);
+// Warning (yellow/orange)
+.callout-warning,
+.alert-box.warning {
+  @include callout-variant(var(--caution-bg), var(--caution-border), var(--caution-icon));
   color: var(--text-primary);
-  @include alert-label(var(--caution-icon));
 }
 
-// --- Warning (red) ---
-.warning {
-  background: var(--warning-bg);
-  border-left-color: var(--warning-border);
+// Caution (red)
+.callout-caution,
+.alert-box.caution {
+  @include callout-variant(var(--warning-bg), var(--warning-border), var(--warning-icon));
   color: var(--text-primary);
-  @include alert-label(var(--warning-icon));
 }

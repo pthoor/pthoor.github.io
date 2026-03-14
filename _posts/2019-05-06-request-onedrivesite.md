@@ -1,8 +1,9 @@
 ---
 title: Request-OneDriveSite
 date: '2019-05-06T21:55:40+02:00'
-tags: 
+tags:
   - OneDrive
+  - PowerShell
 excerpt: "To automate things, that’s why Snover did create PowerShell for, we sometimes need to pre-provision users OneDrive storage..."
 toc: true
 ---
