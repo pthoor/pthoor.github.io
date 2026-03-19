@@ -7,6 +7,7 @@ tags:
   - Networking
   - Security
 toc: true
+mermaid: true
 ---
 
 On March 31, 2026, Microsoft will change how new Azure Virtual Networks handle outbound internet connectivity. The announcements mostly talk about VMs — but I keep getting the same question from colleagues and customers who run primarily PaaS workloads: *does this affect us?*
@@ -412,7 +413,7 @@ flowchart TD
 
 Microsoft positions the Microsoft-hosted network as the recommended default, and I understand why — it's simpler. But from a Zero Trust perspective, I'd push back on that recommendation for any organization that takes network security seriously.
 
-With Microsoft-hosted network, your **only visibility into Cloud PC traffic is at the endpoint level** — Microsoft Defender for Endpoint, Defender for Cloud Apps, Windows Firewall. That's not nothing, but it means you have no NSG flow logs, no Azure Firewall logs, no network-level DLP, no way to inspect or control egress at the network layer. You're trusting Microsoft's managed infrastructure to handle traffic you can't see.
+With Microsoft-hosted network, your **only visibility into Cloud PC traffic is at the endpoint level** — Microsoft Defender for Endpoint, Defender for Cloud Apps, Windows Firewall. That's not nothing, but it means you have no VNet flow logs (or still using NSG flow logs), no Azure Firewall logs, no network-level DLP, no way to inspect or control egress at the network layer. You're trusting Microsoft's managed infrastructure to handle traffic you can't see.
 
 With ANC, your Cloud PCs are on your VNet. Their traffic flows through your Azure Firewall (or whatever NVA you run). You get full logging, full inspection, and full control — the same way you'd handle any other workload in your environment. Yes, it's more work. Yes, you need to manage the networking. But you also get to **actually see what your Cloud PCs are doing on the network**, which in my experience matters a lot when something goes wrong or when compliance asks for evidence.
 
@@ -421,7 +422,7 @@ The trade-off in a table:
 | Capability | Microsoft-Hosted Network | ANC (Your VNet) |
 | ----------- | ------------------------ | ----------------- |
 | Network-level traffic inspection | ❌ No | ✅ Yes (Azure Firewall, NVA) |
-| NSG flow logs | ❌ No | ✅ Yes |
+| VNet flow logs | ❌ No | ✅ Yes |
 | Azure Firewall / NVA logs | ❌ No | ✅ Yes |
 | Network-level DLP | ❌ No | ✅ Yes |
 | Endpoint-level visibility (MDE) | ✅ Yes | ✅ Yes |
