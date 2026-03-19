@@ -28,6 +28,9 @@
 <!-- Styles -->
 <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 
+<!-- Hide mermaid source code until the mermaid.js script transforms it -->
+<style>.language-mermaid { visibility: hidden; } pre.mermaid { visibility: visible; }</style>
+
 {% if site.analytics.provider == "google-gtag" and site.analytics.google.tracking_id %}
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.analytics.google.tracking_id }}"></script>
