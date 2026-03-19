@@ -618,7 +618,7 @@
   </script>
 
   {% if page.mermaid %}
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@11.13.0/dist/mermaid.min.js" integrity="sha384-tI0sDqjGJcqrQ8e/XKiQGS+ee11v5knTNWx2goxMBxe4DO9U0uKlfxJtYB9ILZ4j" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
   <script>
   (function(){
     // Jekyll/Rouge wraps ```mermaid blocks as:
@@ -626,6 +626,16 @@
     //     <div class="highlight"><pre class="highlight"><code>…</code></pre></div>
     //   </div>
     // Transform each into a bare <pre class="mermaid"> that mermaid.js can process.
+
+    // Bail out gracefully if mermaid.js failed to load
+    if (typeof mermaid === 'undefined') {
+      // Remove the visibility:hidden so raw source is at least visible
+      document.querySelectorAll('.language-mermaid').forEach(function(el) {
+        el.style.visibility = 'visible';
+      });
+      return;
+    }
+
     document.querySelectorAll('.language-mermaid').forEach(function(wrapper) {
       var code = wrapper.querySelector('code');
       if (!code) return;
@@ -634,6 +644,7 @@
       pre.textContent = code.textContent;
       wrapper.parentNode.replaceChild(pre, wrapper);
     });
+
     var theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'default' : 'dark';
     mermaid.initialize({ startOnLoad: true, theme: theme, securityLevel: 'loose' });
   })();
