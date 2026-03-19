@@ -619,8 +619,16 @@
   <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js" integrity="sha384-ZdL2yczGFPmFmvgeJk0pflXqCy61AlFbPR9gBjoDJVDYC0RMx2l9am0fGE40YnfI" crossorigin="anonymous"></script>
   <script>
   (function(){
+    // Jekyll/Rouge renders ```mermaid as .language-mermaid — transform to <pre class="mermaid">
+    document.querySelectorAll('.language-mermaid code').forEach(function(code) {
+      var pre = document.createElement('pre');
+      pre.className = 'mermaid';
+      pre.textContent = code.textContent;
+      var wrapper = code.closest('.language-mermaid');
+      if (wrapper) wrapper.parentNode.replaceChild(pre, wrapper);
+    });
     var theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'default' : 'dark';
-    mermaid.initialize({startOnLoad:true,theme:theme,securityLevel:'strict'});
+    mermaid.initialize({startOnLoad:true,theme:theme,securityLevel:'loose'});
   })();
   </script>
   {% endif %}
