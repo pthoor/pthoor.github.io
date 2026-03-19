@@ -72,6 +72,8 @@
 
     document.querySelectorAll('div.highlight').forEach(function(highlight) {
       var outer = highlight.closest('.highlighter-rouge');
+      // Skip mermaid blocks — they'll be transformed by the mermaid script
+      if (outer && outer.classList.contains('language-mermaid')) return;
       var lang = null;
       if (outer) {
         var m = outer.className.match(/language-(\w+)/);
@@ -619,16 +621,21 @@
   <script src="https://cdn.jsdelivr.net/npm/mermaid@11.13.0/dist/mermaid.min.js" integrity="sha384-tI0sDqjGJcqrQ8e/XKiQGS+ee11v5knTNWx2goxMBxe4DO9U0uKlfxJtYB9ILZ4j" crossorigin="anonymous"></script>
   <script>
   (function(){
-    // Jekyll/Rouge renders ```mermaid as .language-mermaid — transform to <pre class="mermaid">
-    document.querySelectorAll('.language-mermaid code').forEach(function(code) {
+    // Jekyll/Rouge wraps ```mermaid blocks as:
+    //   <div class="language-mermaid highlighter-rouge">
+    //     <div class="highlight"><pre class="highlight"><code>…</code></pre></div>
+    //   </div>
+    // Transform each into a bare <pre class="mermaid"> that mermaid.js can process.
+    document.querySelectorAll('.language-mermaid').forEach(function(wrapper) {
+      var code = wrapper.querySelector('code');
+      if (!code) return;
       var pre = document.createElement('pre');
       pre.className = 'mermaid';
       pre.textContent = code.textContent;
-      var wrapper = code.closest('.language-mermaid');
-      if (wrapper) wrapper.parentNode.replaceChild(pre, wrapper);
+      wrapper.parentNode.replaceChild(pre, wrapper);
     });
     var theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'default' : 'dark';
-    mermaid.initialize({startOnLoad:true,theme:theme,securityLevel:'loose'});
+    mermaid.initialize({ startOnLoad: true, theme: theme, securityLevel: 'loose' });
   })();
   </script>
   {% endif %}
