@@ -28,8 +28,10 @@
 <!-- Styles -->
 <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 
+{% if page.mermaid %}
 <!-- Hide mermaid source code until the mermaid.js script transforms it -->
 <style>.language-mermaid { visibility: hidden; } pre.mermaid { visibility: visible; }</style>
+{% endif %}
 
 {% if site.analytics.provider == "google-gtag" and site.analytics.google.tracking_id %}
 <!-- Google Analytics -->
