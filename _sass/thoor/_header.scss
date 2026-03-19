@@ -40,6 +40,7 @@
   &:hover {
     text-decoration: none;
     .brand-name { color: var(--accent-blue) }
+    .brand-logo { transform: scale(1.1) }
   }
 }
 
@@ -50,6 +51,7 @@
   width: 20px;
   height: 20px;
   flex-shrink: 0;
+  transition: transform $transition-fast;
 }
 
 .brand-logo-q {
@@ -114,16 +116,27 @@
   &--active {
     color: var(--text-primary);
     font-weight: 600;
+    background: rgba(88, 166, 255, 0.08);
+
+    [data-theme="light"] & {
+      background: rgba(9, 105, 218, 0.07);
+    }
 
     &::after {
       content: '';
       position: absolute;
-      bottom: -14px;
+      bottom: -13px;
       left: 8px;
       right: 8px;
       height: 2px;
-      background: var(--accent-blue-dim);
+      background: var(--accent-blue);
       border-radius: 1px;
+      box-shadow: 0 0 8px rgba(88, 166, 255, 0.55);
+
+      [data-theme="light"] & {
+        background: var(--accent-blue-dim);
+        box-shadow: 0 0 8px rgba(9, 105, 218, 0.4);
+      }
     }
   }
 }
@@ -166,15 +179,20 @@
 }
 
 .search-kbd {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+
   kbd {
-    font-size: 0.6875rem;
-    padding: 1px 5px;
+    font-size: 0.6rem;
+    padding: 1px 4px;
     border-radius: 4px;
     background: var(--bg-tertiary);
     border: 1px solid var(--border-default);
     font-family: $font-mono;
     color: var(--text-muted);
     display: inline-block;
+    line-height: 1.4;
   }
 }
 

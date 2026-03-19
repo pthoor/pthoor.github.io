@@ -6,6 +6,24 @@
 <body>
   <div id="reading-progress" aria-hidden="true"></div>
   <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  {%- comment -%} ── COMMAND PALETTE ─────────────────────────────── {%- endcomment -%}
+  <div id="cmdk" class="cmdk-overlay" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="cmdk-panel">
+      <div class="cmdk-input-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="cmdk-input" class="cmdk-input" type="search" placeholder="Search posts, detections, MITRE tags&hellip;" autocomplete="off" spellcheck="false" aria-label="Search posts and detections">
+      </div>
+      <div id="cmdk-hint" class="cmdk-hint">Type to search &middot; <kbd style="font-size:.6rem;padding:1px 5px;background:var(--bg-elevated);border:1px solid var(--border-default);border-radius:3px;font-family:'JetBrains Mono',monospace">Esc</kbd> to close</div>
+      <div id="cmdk-results" class="cmdk-results"></div>
+      <div class="cmdk-footer">
+        <span><kbd>&uarr;&darr;</kbd> navigate</span>
+        <span><kbd>&hookleftarrow;</kbd> open</span>
+        <span><kbd>Esc</kbd> close</span>
+        <span id="cmdk-shortcut-hint"><kbd>Ctrl+K</kbd> toggle</span>
+      </div>
+    </div>
+  </div>
   {% include header.html %}
   <main id="main-content" class="site-main" role="main">
     {{ content }}
@@ -270,7 +288,7 @@
       query = (query || '').trim();
       if (!query) {
         if (searchResults) searchResults.innerHTML = '';
-        if (searchHint) searchHint.textContent = 'Type to search across all posts. Press Esc to close.';
+        if (searchHint) searchHint.textContent = 'Type to search across posts & detections \u2014 Esc to close';
         return;
       }
       if (!lunrReady) { if (searchHint) searchHint.textContent = 'Loading search index\u2026'; return; }
@@ -348,7 +366,7 @@
       if (searchOpenBtn) searchOpenBtn.setAttribute('aria-expanded', 'false');
       if (searchInput) searchInput.value = '';
       if (searchResults) searchResults.innerHTML = '';
-      if (searchHint) searchHint.textContent = 'Type to search across all posts. Press Esc to close.';
+      if (searchHint) searchHint.textContent = 'Type to search across posts & detections \u2014 Esc to close';
     }
 
     if (searchOpenBtn)  searchOpenBtn.addEventListener('click', openSearch);
@@ -367,19 +385,234 @@
     document.addEventListener('keydown', function(e) {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        searchBox && searchBox.classList.contains('is-open') ? closeSearch() : openSearch();
+        var cmdkEl = document.getElementById('cmdk');
+        if (cmdkEl) {
+          cmdkEl.classList.contains('is-open') ? (window.cmdkClose && window.cmdkClose()) : (window.cmdkOpen && window.cmdkOpen());
+        } else {
+          searchBox && searchBox.classList.contains('is-open') ? closeSearch() : openSearch();
+        }
       }
       if (e.key === 'Escape' && searchBox && searchBox.classList.contains('is-open')) closeSearch();
-      // '/' key to open search when not in a text field
+      // '/' key to open command palette when not in a text field
       if (e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey) {
         var tag = document.activeElement && document.activeElement.tagName.toLowerCase();
         if (tag !== 'input' && tag !== 'textarea' && tag !== 'select') {
           e.preventDefault();
-          openSearch();
+          if (window.cmdkOpen) window.cmdkOpen(); else openSearch();
         }
       }
     });
   })();
+  </script>
+
+  <script>
+  // ── Command palette ────────────────────────────────────────
+  (function () {
+    'use strict';
+    var overlay = document.getElementById('cmdk');
+    var input   = document.getElementById('cmdk-input');
+    var hint    = document.getElementById('cmdk-hint');
+    var results = document.getElementById('cmdk-results');
+    if (!overlay || !input) return;
+
+    var lunrIdx, docs, ready = false, loading = false;
+
+    function clearResults() {
+      while (results.firstChild) results.removeChild(results.firstChild);
+    }
+
+    function showResults(q, hits) {
+      clearResults();
+      if (!hits.length) {
+        var empty = document.createElement('div');
+        empty.className = 'cmdk-empty';
+        empty.textContent = 'No results for \u201c' + q + '\u201d';
+        results.appendChild(empty);
+        return;
+      }
+      hits.slice(0, 9).forEach(function (hit) {
+        var d = docs.find(function (x) { return x.url === hit.ref; });
+        if (!d) return;
+        var a = document.createElement('a');
+        a.href = d.url;
+        a.className = 'cmdk-result-item';
+        var titleRow = document.createElement('span');
+        titleRow.style.cssText = 'display:flex;align-items:center;gap:8px;width:100%';
+        var titleEl = document.createElement('span');
+        titleEl.className = 'cmdk-result-title';
+        titleEl.textContent = d.title;
+        titleRow.appendChild(titleEl);
+        if (d.type === 'detection') {
+          var typeBadge = document.createElement('span');
+          typeBadge.className = 'cmdk-result-type-badge';
+          typeBadge.textContent = 'Detection';
+          titleRow.appendChild(typeBadge);
+        }
+        a.appendChild(titleRow);
+        if (d.tags && d.tags.length) {
+          var tagsWrap = document.createElement('span');
+          tagsWrap.className = 'cmdk-result-tags';
+          d.tags.forEach(function (t) {
+            var tag = document.createElement('span');
+            tag.className = 'tag tag--small';
+            tag.textContent = t;
+            tagsWrap.appendChild(tag);
+          });
+          a.appendChild(tagsWrap);
+        }
+        if (d.excerpt) {
+          var exc = document.createElement('span');
+          exc.className = 'cmdk-result-excerpt';
+          exc.textContent = d.excerpt;
+          a.appendChild(exc);
+        }
+        var dt = document.createElement('span');
+        dt.className = 'cmdk-result-date';
+        dt.textContent = d.date;
+        a.appendChild(dt);
+        results.appendChild(a);
+      });
+    }
+
+    function doSearch(q) {
+      q = (q || '').trim();
+      if (!q) { clearResults(); hint.textContent = 'Type to search across posts & detections'; return; }
+      if (!ready) { hint.textContent = 'Loading index\u2026'; return; }
+      var hits;
+      try { hits = lunrIdx.search(q + '* ' + q); } catch(e) { hits = []; }
+      var seen = {};
+      hits = hits.filter(function (h) { if (seen[h.ref]) return false; seen[h.ref] = true; return true; });
+      hint.textContent = hits.length
+        ? hits.length + ' result' + (hits.length === 1 ? '' : 's') + ' for \u201c' + q + '\u201d'
+        : '';
+      showResults(q, hits);
+    }
+
+    function loadIndex() {
+      if (loading) return;
+      loading = true;
+      hint.textContent = 'Loading search index\u2026';
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js';
+      s.integrity = 'sha384-203J0SNzyqHby3iU6hzvzltrWi/M41wOP5Gu+BiJMz5nwKykbkUx8Kp7iti0Lpli';
+      s.crossOrigin = 'anonymous';
+      s.onload = function () {
+        fetch('{{ "/search.json" | relative_url }}')
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            docs = data;
+            lunrIdx = lunr(function () {
+              this.ref('url');
+              this.field('title',   { boost: 10 });
+              this.field('tags',    { boost: 5 });
+              this.field('excerpt', { boost: 2 });
+              this.field('content');
+              data.forEach(function (doc) {
+                this.add({ url: doc.url, title: doc.title, tags: (doc.tags||[]).join(' '), excerpt: doc.excerpt||'', content: doc.content||'' });
+              }, this);
+            });
+            ready = true;
+            hint.textContent = 'Type to search across posts & detections';
+            if (input.value) doSearch(input.value);
+          });
+      };
+      document.head.appendChild(s);
+    }
+
+    window.cmdkOpen = function () {
+      overlay.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      setTimeout(function () { input.focus(); }, 50);
+      loadIndex();
+    };
+
+    window.cmdkClose = function () {
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+      input.value = '';
+      clearResults();
+      hint.textContent = 'Type to search across posts & detections';
+    };
+
+    input.addEventListener('input', function () { doSearch(this.value); });
+
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) window.cmdkClose();
+    });
+
+    results.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+      e.preventDefault();
+      var items = results.querySelectorAll('.cmdk-result-item');
+      if (!items.length) return;
+      var idx = -1;
+      items.forEach(function (item, i) { if (item === document.activeElement) idx = i; });
+      if (e.key === 'ArrowDown') idx = Math.min(idx + 1, items.length - 1);
+      else idx = Math.max(idx - 1, 0);
+      items[idx].focus();
+    });
+
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        var first = results.querySelector('.cmdk-result-item');
+        if (first) first.focus();
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay.classList.contains('is-open')) window.cmdkClose();
+    });
+  }());
+
+  // ── Scroll-reveal ──────────────────────────────────────────
+  (function () {
+    'use strict';
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var els = document.querySelectorAll('.reveal');
+    if (!els.length) return;
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('is-visible'); });
+      return;
+    }
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    els.forEach(function (el) { obs.observe(el); });
+  }());
+
+  // ── Count-up animation for hero stats ─────────────────────
+  (function () {
+    'use strict';
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var els = document.querySelectorAll('[data-count]');
+    if (!els.length || !('IntersectionObserver' in window)) return;
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        obs.unobserve(entry.target);
+        var el     = entry.target;
+        var target = parseInt(el.getAttribute('data-count'), 10);
+        var suffix = el.getAttribute('data-count-suffix') || '';
+        var dur    = 1100;
+        var startTs = null;
+        function step(ts) {
+          if (!startTs) startTs = ts;
+          var p = Math.min((ts - startTs) / dur, 1);
+          p = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(p * target) + suffix;
+          if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.6 });
+    els.forEach(function (el) { obs.observe(el); });
+  }());
   </script>
 
   {% if page.mermaid %}

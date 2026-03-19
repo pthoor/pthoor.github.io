@@ -1,0 +1,214 @@
+---
+layout: default
+---
+<div class="page-wrap page-wrap--wide">
+  <header class="page-hero">
+    <h1 class="page-hero-title">{{ page.title | escape }}</h1>
+    {% if page.description %}
+    <p class="page-hero-desc">{{ page.description | escape }}
+      {% assign det_count = site.data.detections.detections | size %}
+      {% if det_count > 0 %}
+      <span class="det-count-badge">{{ det_count }} rule{% if det_count != 1 %}s{% endif %}</span>
+      {% endif %}
+    </p>
+    {% endif %}
+    <p class="det-source-note">
+      Synced from
+      <a href="https://github.com/pthoor/detections-ai-kql" rel="noopener noreferrer" class="det-source-link">github.com/pthoor/detections-ai-kql</a>
+    </p>
+  </header>
+
+  {% assign detections = site.data.detections.detections %}
+
+  {% if detections and detections.size > 0 %}
+
+  {%- comment -%} ── FILTER BAR ─────────────────────────────── {%- endcomment -%}
+  <div class="det-filters reveal" role="toolbar" aria-label="Filter detections">
+    <div class="det-filter-group">
+      <span class="det-filter-label">Severity</span>
+      <button class="det-filter-btn det-filter-btn--severity is-active" data-filter="severity" data-value="all">All</button>
+      <button class="det-filter-btn det-filter-btn--critical" data-filter="severity" data-value="critical">Critical</button>
+      <button class="det-filter-btn det-filter-btn--high"     data-filter="severity" data-value="high">High</button>
+      <button class="det-filter-btn det-filter-btn--medium"   data-filter="severity" data-value="medium">Medium</button>
+      <button class="det-filter-btn det-filter-btn--low"      data-filter="severity" data-value="low">Low</button>
+      <button class="det-filter-btn det-filter-btn--info"     data-filter="severity" data-value="info">Info</button>
+    </div>
+    <div class="det-filter-group">
+      <span class="det-filter-label">Search</span>
+      <input type="search" id="det-search" class="det-search-input"
+             placeholder="Filter by title, tag, MITRE…" aria-label="Search detections" autocomplete="off">
+    </div>
+  </div>
+
+  {%- comment -%} ── DETECTIONS GRID ─────────────────────────── {%- endcomment -%}
+  <div class="det-grid reveal reveal--d1" id="det-grid">
+    {% for det in detections %}
+    <div class="det-card det-card--{{ det.severity | escape }}"
+         id="det-{{ det.slug | escape }}"
+         data-severity="{{ det.severity | escape }}"
+         data-title="{{ det.title | downcase | escape }}"
+         data-tags="{{ det.tags | join: ' ' | downcase | escape }}"
+         data-mitre="{{ det.mitre | join: ' ' | downcase | escape }}">
+
+      <div class="det-card-head">
+        <div class="det-card-meta">
+          <span class="det-severity-badge det-severity-badge--{{ det.severity | escape }}">{{ det.severity | upcase | escape }}</span>
+          {% if det.product != "" %}
+          <span class="det-product-badge">{{ det.product | escape }}</span>
+          {% endif %}
+        </div>
+        <span class="det-card-chevron" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+
+      <h3 class="det-card-title">{{ det.title | escape }}</h3>
+      {% if det.description != "" %}
+      <p class="det-card-desc">{{ det.description | escape }}</p>
+      {% endif %}
+
+      {% if det.mitre.size > 0 %}
+      <div class="det-mitre-tags" aria-label="MITRE ATT&CK">
+        {% for m in det.mitre limit:4 %}
+        <span class="det-mitre-tag">{{ m | escape }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if det.tags.size > 0 %}
+      <div class="det-tag-list">
+        {% for tag in det.tags limit:5 %}
+        <span class="tag">{{ tag | escape }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if det.kql != "" %}
+      <div class="det-kql-wrap">
+        <button class="det-kql-toggle" aria-expanded="false" aria-controls="kql-{{ forloop.index }}">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+          View KQL
+        </button>
+        <div class="det-kql-body" id="kql-{{ forloop.index }}" hidden>
+          <div class="det-kql-actions">
+            <button class="det-copy-btn" data-clipboard-target="kql-code-{{ forloop.index }}" aria-label="Copy KQL">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <pre class="det-kql highlight" id="kql-code-{{ forloop.index }}"><code>{{ det.kql | escape }}</code></pre>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if det.created != "" %}
+      <p class="det-card-footer">
+        <time datetime="{{ det.created | escape }}">{{ det.created | escape }}</time>
+        {% if det.status != "" and det.status != "stable" %}
+        <span class="det-status-badge det-status-badge--{{ det.status | escape }}">{{ det.status | escape }}</span>
+        {% endif %}
+      </p>
+      {% endif %}
+
+    </div>
+    {% endfor %}
+  </div>
+
+  <p class="det-empty-msg" id="det-no-results" hidden>No detections match the current filter.</p>
+
+  {% else %}
+  {%- comment -%} Empty state — detections repo has no KQL files yet {%- endcomment -%}
+  <div class="det-empty-state reveal">
+    <div class="det-empty-icon" aria-hidden="true">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M11 8v3M11 14h.01"/></svg>
+    </div>
+    <h2 class="det-empty-title">No detections yet</h2>
+    <p class="det-empty-body">
+      KQL hunting queries will appear here once they are published to
+      <a href="https://github.com/pthoor/detections-ai-kql" rel="noopener noreferrer">pthoor/detections-ai-kql</a>.
+    </p>
+    <a href="https://github.com/pthoor/detections-ai-kql" rel="noopener noreferrer" class="btn btn--ghost" style="margin-top:1rem">View on GitHub &rarr;</a>
+  </div>
+  {% endif %}
+</div>
+
+{% if detections and detections.size > 0 %}
+<script>
+(function () {
+  'use strict';
+  var grid      = document.getElementById('det-grid');
+  var searchEl  = document.getElementById('det-search');
+  var noResults = document.getElementById('det-no-results');
+  var cards     = Array.prototype.slice.call(grid ? grid.querySelectorAll('.det-card') : []);
+  var activeSeverity = 'all';
+  var searchVal      = '';
+
+  function applyFilters() {
+    var visible = 0;
+    cards.forEach(function (card) {
+      var sevOk  = activeSeverity === 'all' || card.dataset.severity === activeSeverity;
+      var query  = searchVal.toLowerCase().trim();
+      var textOk = !query ||
+        card.dataset.title.indexOf(query) !== -1 ||
+        card.dataset.tags.indexOf(query)  !== -1 ||
+        card.dataset.mitre.indexOf(query) !== -1;
+      var show   = sevOk && textOk;
+      card.classList.toggle('is-hidden', !show);
+      if (show) visible++;
+    });
+    if (noResults) noResults.hidden = (visible > 0);
+  }
+
+  // Severity filter buttons
+  document.querySelectorAll('.det-filter-btn[data-filter="severity"]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.det-filter-btn[data-filter="severity"]').forEach(function (b) {
+        b.classList.remove('is-active');
+      });
+      btn.classList.add('is-active');
+      activeSeverity = btn.dataset.value;
+      applyFilters();
+    });
+  });
+
+  // Search
+  if (searchEl) {
+    searchEl.addEventListener('input', function () {
+      searchVal = searchEl.value;
+      applyFilters();
+    });
+  }
+
+  // KQL expand/collapse
+  document.querySelectorAll('.det-kql-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var expanded = btn.getAttribute('aria-expanded') === 'true';
+      var targetId = btn.getAttribute('aria-controls');
+      var body = document.getElementById(targetId);
+      if (!body) return;
+      expanded = !expanded;
+      btn.setAttribute('aria-expanded', String(expanded));
+      body.hidden = !expanded;
+      btn.querySelector('svg').style.transform = expanded ? 'rotate(180deg)' : '';
+    });
+  });
+
+  // Copy KQL
+  document.querySelectorAll('.det-copy-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var targetId = btn.dataset.clipboardTarget;
+      var pre = document.getElementById(targetId);
+      if (!pre) return;
+      var text = pre.textContent || '';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          var orig = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(function () { btn.textContent = orig; }, 1500);
+        });
+      }
+    });
+  });
+}());
+</script>
+{% endif %}

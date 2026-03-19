@@ -4,26 +4,76 @@ layout: default
 
 {%- comment -%} ── HERO ─────────────────────────────────────────── {%- endcomment -%}
 <section class="hero">
-  <div class="hero-bg" aria-hidden="true"></div>
+  <canvas id="hero-matrix" aria-hidden="true"></canvas>
   <div class="hero-glow" aria-hidden="true"></div>
+  <div class="hero-glow hero-glow--secondary" aria-hidden="true"></div>
 
+  <div class="hero-inner">
   <div class="hero-text">
     {% if site.credentials %}
     <div class="hero-badges" aria-label="Credentials">
       {% for cred in site.credentials %}
       <span class="badge {{ cred.class | escape }}">{{ cred.label | escape }}</span>
       {% endfor %}
+      {%- comment -%} Speaking availability badge {%- endcomment -%}
+      {% assign upcoming_event = nil %}
+      {% for ev in site.data.events %}
+        {% if ev.upcoming %}{% assign upcoming_event = ev %}{% break %}{% endif %}
+      {% endfor %}
+      {% if upcoming_event %}
+      <a href="{{ '/talks/' | relative_url }}" class="speaking-available">Speaking&nbsp;@ {{ upcoming_event.event | escape }}&nbsp;{{ upcoming_event.year }}</a>
+      {% else %}
+      <a href="{{ '/talks/' | relative_url }}" class="speaking-available">Available&nbsp;for&nbsp;speaking</a>
+      {% endif %}
     </div>
     {% endif %}
 
     <h1 class="hero-name">{{ site.author.name | escape }}</h1>
-    <p class="hero-role">{{ site.author.title | escape }}</p>
+    <p class="hero-role">{{ site.author.title | escape }}<span class="cursor-blink" aria-hidden="true"></span></p>
     <p class="hero-company">{{ site.author.company | escape }}</p>
     <p class="hero-bio">{{ site.author.bio | escape }}</p>
 
     <div class="hero-ctas">
       <a href="{{ '/blog/' | relative_url }}" class="btn btn--primary">Read the blog</a>
       <a href="{{ '/talks/' | relative_url }}" class="btn btn--ghost">Speaking &amp; talks</a>
+    </div>
+    <p class="hero-search-tip" id="hero-search-tip" aria-hidden="true">
+      <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"/></svg>
+      Press <span id="hero-search-tip-kbd"><kbd>Ctrl</kbd><kbd>K</kbd></span> to search posts &amp; detections
+    </p>
+
+    <div class="hero-stats" aria-label="Key achievements">
+      {% assign total_events = site.data.events | size %}
+      {% assign total_posts = site.posts | size %}
+      <div class="hero-stat">
+        <span class="hero-stat-number" data-count="{{ total_events }}" data-count-suffix="+">{{ total_events }}+</span>
+        <span class="hero-stat-label">Talks</span>
+      </div>
+      <div class="hero-stat-divider" aria-hidden="true"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-number" data-count="{{ total_posts }}" data-count-suffix="+">{{ total_posts }}+</span>
+        <span class="hero-stat-label">Articles</span>
+      </div>
+      {% if site.book %}
+      <div class="hero-stat-divider" aria-hidden="true"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-number">1</span>
+        <span class="hero-stat-label">Book</span>
+      </div>
+      {% endif %}
+      {% assign total_detections = site.data.detections.detections | size %}
+      {% if total_detections > 0 %}
+      <div class="hero-stat-divider" aria-hidden="true"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-number" data-count="{{ total_detections }}" data-count-suffix="+">{{ total_detections }}+</span>
+        <span class="hero-stat-label"><a href="{{ '/detections/' | relative_url }}" style="color:inherit;text-decoration:none">Detections</a></span>
+      </div>
+      {% endif %}
+      <div class="hero-stat-divider" aria-hidden="true"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-number">MVP</span>
+        <span class="hero-stat-label">Microsoft</span>
+      </div>
     </div>
   </div>
 
@@ -44,11 +94,12 @@ layout: default
       </div>
     </div>
   </div>
+  </div>{%- comment -%} /.hero-inner {%- endcomment -%}
 </section>
 
 {%- comment -%} ── TOPICS GRID ───────────────────────────────────── {%- endcomment -%}
 {% if site.topics %}
-<section class="home-section topics-section">
+<section class="home-section topics-section reveal">
   <div class="section-head">
     <span class="section-label">Security Topics</span>
     <hr class="section-rule" aria-hidden="true">
@@ -93,12 +144,64 @@ layout: default
 </section>
 {% endif %}
 
+{%- comment -%} ── DETECTIONS (only shown when _data/detections.yml has entries) ── {%- endcomment -%}
+{% if site.data.detections.detections.size > 0 %}
+{% include security-log-demo.html %}
+{% endif %}
+
 {%- comment -%} ── RECENT POSTS ──────────────────────────────────── {%- endcomment -%}
-<section class="home-section" id="latest-posts">
+<section class="home-section reveal" id="latest-posts">
   <div class="section-head">
     <span class="section-label">Recent Posts</span>
     <hr class="section-rule" aria-hidden="true">
     <a href="{{ '/blog/' | relative_url }}" class="section-action">All posts &rarr;</a>
+  </div>
+
+  {%- comment -%} Featured top-2 posts as cards {%- endcomment -%}
+  <div class="featured-posts" aria-label="Featured posts">
+    {% for post in site.posts limit:2 %}
+    {% assign fc = "gray" %}
+    {% for topic in site.topics %}
+      {% if fc == "gray" %}
+        {% for ttag in topic.tags %}
+          {% if fc == "gray" %}
+            {% for ptag in post.tags %}
+              {% if ptag == ttag %}{% assign fc = topic.color %}{% break %}{% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+    {% assign fc_words = post.content | number_of_words %}
+    {% assign fc_rt = fc_words | divided_by: 200 | plus: 1 %}
+    {% assign fc_topic_name = "" %}
+    {% for topic in site.topics %}
+      {% if fc_topic_name == "" %}
+        {% assign matched = false %}
+        {% for ttag in topic.tags %}
+          {% unless matched %}
+            {% for ptag in post.tags %}
+              {% if ptag == ttag %}{% assign matched = true %}{% break %}{% endif %}
+            {% endfor %}
+          {% endunless %}
+        {% endfor %}
+        {% if matched %}{% assign fc_topic_name = topic.name %}{% endif %}
+      {% endif %}
+    {% endfor %}
+    <a href="{{ post.url | relative_url }}" class="featured-card featured-card--{{ fc }}">
+      <span class="featured-card-eyebrow">{{ fc_topic_name | default: "Security" | escape }}</span>
+      <h3 class="featured-card-title">{{ post.title | escape }}</h3>
+      {% if post.excerpt %}
+      <p class="featured-card-excerpt">{{ post.excerpt | strip_html | truncate: 160 }}</p>
+      {% endif %}
+      <div class="featured-card-meta">
+        <span class="featured-label">Latest</span>
+        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+        <span aria-hidden="true">&middot;</span>
+        <span>{{ fc_rt }} min read</span>
+      </div>
+    </a>
+    {% endfor %}
   </div>
 
   <div class="post-list" role="list">
@@ -139,7 +242,7 @@ layout: default
 </section>
 
 {%- comment -%} ── SPEAKING + BOOK ───────────────────────────────── {%- endcomment -%}
-<section class="home-section">
+<section class="home-section reveal">
   <div class="section-head">
     <span class="section-label">Speaking &amp; Writing</span>
     <hr class="section-rule" aria-hidden="true">
@@ -181,7 +284,7 @@ layout: default
 
 {%- comment -%} ── MDO CHAMPION ──────────────────────────────────── {%- endcomment -%}
 {% if site.mdo_champion %}
-<section class="home-section">
+<section class="home-section reveal">
   <div class="mdo-highlight" role="note">
     <span class="mdo-highlight-icon" aria-hidden="true">🏆</span>
     <div>
@@ -192,3 +295,78 @@ layout: default
 </section>
 {% endif %}
 
+<script>
+(function () {
+  'use strict';
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var canvas = document.getElementById('hero-matrix');
+  if (!canvas || !canvas.getContext) return;
+
+  var ctx    = canvas.getContext('2d');
+  var hero   = canvas.parentElement;
+  var cols, drops, animFrame;
+  var fontSize      = 13;
+  var frameInterval = 55; // ~18 fps
+  var lastFrame     = 0;
+  var chars = '0123456789ABCDEFabcdef01:<>/|@#!?%^&*;.';
+
+  function isDark() {
+    return document.documentElement.getAttribute('data-theme') !== 'light';
+  }
+
+  function resize() {
+    canvas.width  = hero.offsetWidth;
+    canvas.height = hero.offsetHeight;
+    cols  = Math.max(1, Math.floor(canvas.width / fontSize));
+    drops = [];
+    for (var i = 0; i < cols; i++) {
+      drops[i] = Math.floor(Math.random() * -(canvas.height / fontSize));
+    }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function draw(ts) {
+    animFrame = requestAnimationFrame(draw);
+    if (ts - lastFrame < frameInterval) return;
+    lastFrame = ts;
+
+    var dark = isDark();
+    ctx.fillStyle = dark ? 'rgba(13,17,23,0.07)' : 'rgba(255,255,255,0.07)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.font      = fontSize + 'px "JetBrains Mono",monospace';
+    ctx.fillStyle = dark ? 'rgba(88,166,255,0.42)' : 'rgba(9,105,218,0.28)';
+
+    for (var i = 0; i < cols; i++) {
+      var y = drops[i] * fontSize;
+      if (y > 0 && y < canvas.height + fontSize) {
+        var ch = chars.charAt(Math.floor(Math.random() * chars.length));
+        ctx.fillText(ch, i * fontSize, y);
+      }
+      drops[i]++;
+      if (drops[i] * fontSize > canvas.height + 60 && Math.random() > 0.97) {
+        drops[i] = Math.floor(Math.random() * -30);
+      }
+    }
+  }
+
+  resize();
+
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resize, 200);
+  }, { passive: true });
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      cancelAnimationFrame(animFrame);
+    } else {
+      lastFrame = 0;
+      animFrame = requestAnimationFrame(draw);
+    }
+  });
+
+  animFrame = requestAnimationFrame(draw);
+}());
+</script>

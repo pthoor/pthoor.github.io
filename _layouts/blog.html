@@ -5,7 +5,9 @@ layout: default
 <div class="page-wrap">
   <header class="page-hero">
     <h1 class="page-hero-title">Blog</h1>
-    <p class="page-hero-desc">All posts — security engineering, cloud architecture, and Microsoft tooling.</p>
+    <p class="page-hero-desc">All posts — security engineering, cloud architecture, and Microsoft tooling.
+      <span style="margin-left:0.5rem;font-family:'JetBrains Mono',monospace;font-size:0.8125rem;color:var(--text-muted)">{{ site.posts | size }}&nbsp;articles</span>
+    </p>
   </header>
 
   {% assign current_year = "" %}

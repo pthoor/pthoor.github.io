@@ -1,0 +1,53 @@
+name: Sync Detections from pthoor/detections-ai-kql
+
+on:
+  repository_dispatch:
+    types: [detections-updated]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "sync-detections"
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout site repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: true
+
+      - name: Checkout detections repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: pthoor/detections-ai-kql
+          path: _detections-src
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+
+      - name: Install Python deps
+        run: pip install pyyaml
+
+      - name: Parse detections
+        run: python scripts/parse_detections.py _detections-src _data/detections.yml
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add _data/detections.yml
+          if git diff --staged --quiet; then
+            echo "No changes - detections already up to date"
+          else
+            git commit -m "sync: update detections from pthoor/detections-ai-kql"
+            git push
+          fi

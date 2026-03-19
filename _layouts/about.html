@@ -37,13 +37,14 @@ layout: default
     </div>
   </div>
 
-  <hr style="border:none;border-top:1px solid var(--border-muted);margin:2rem 0">
-
   {% if site.topics %}
-  <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;color:var(--text-primary)">What I Do</h2>
-  <div class="about-expertise">
+  <div class="section-head reveal" style="margin-top:2rem">
+    <span class="section-label">Expertise</span>
+    <hr class="section-rule" aria-hidden="true">
+  </div>
+  <div class="about-expertise reveal reveal--d1">
     {% for topic in site.topics %}
-    <div class="about-expertise-item">
+    <div class="about-expertise-item about-expertise-item--{{ topic.color | escape }}">
       <strong>{{ topic.name | escape }}</strong>
       <span>{{ topic.description | escape }}</span>
     </div>
@@ -51,11 +52,12 @@ layout: default
   </div>
   {% endif %}
 
-  <hr style="border:none;border-top:1px solid var(--border-muted);margin:2rem 0">
-
   {% if site.book %}
-  <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;color:var(--text-primary)">Book</h2>
-  <div class="cards-row" style="margin-bottom:2rem">
+  <div class="section-head reveal" style="margin-top:2.5rem">
+    <span class="section-label">Book</span>
+    <hr class="section-rule" aria-hidden="true">
+  </div>
+  <div class="cards-row reveal reveal--d1" style="margin-bottom:2rem">
     <div class="info-card">
       <p class="info-card-label">📘 Published {{ site.book.year }} &middot; {{ site.book.publisher | escape }}</p>
       <h3 class="info-card-title">{{ site.book.title | escape }}</h3>
@@ -71,9 +73,11 @@ layout: default
   {% endif %}
 
   {% if site.mdo_champion %}
-  <hr style="border:none;border-top:1px solid var(--border-muted);margin:2rem 0">
-  <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;color:var(--text-primary)">MDO Champion</h2>
-  <div class="mdo-highlight" role="note" style="margin-bottom:2rem">
+  <div class="section-head reveal" style="margin-top:2.5rem">
+    <span class="section-label">Recognition</span>
+    <hr class="section-rule" aria-hidden="true">
+  </div>
+  <div class="mdo-highlight reveal reveal--d1" role="note" style="margin-bottom:2rem">
     <span class="mdo-highlight-icon" aria-hidden="true">🏆</span>
     <div>
       <h4 class="mdo-highlight-title">Microsoft Defender for Office 365 Champion</h4>
@@ -90,34 +94,40 @@ layout: default
   {% endif %}
 
   {% if site.data.events %}
-  <hr style="border:none;border-top:1px solid var(--border-muted);margin:2rem 0">
-  <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;color:var(--text-primary)">Speaking</h2>
-  <div class="cards-row">
-    <div class="info-card">
-      <p class="info-card-label">Conference Speaking · 2020 – {{ 'now' | date: '%Y' }}</p>
-      <ul class="event-list" role="list">
-        {% for ev in site.data.events limit:8 %}
-        <li class="event-row">
-          <span class="event-name">{{ ev.event | escape }}{% if ev.location %}, {{ ev.location | escape }}{% endif %}</span>
-          {% if ev.upcoming %}
-          <span class="event-upcoming">{{ ev.year }} — Upcoming</span>
-          {% else %}
-          <time class="event-year" datetime="{{ ev.year }}">{{ ev.year }}</time>
-          {% endif %}
+  <div class="section-head reveal" style="margin-top:2.5rem">
+    <span class="section-label">Speaking</span>
+    <hr class="section-rule" aria-hidden="true">
+    <a href="{{ '/talks/' | relative_url }}" class="section-action">All talks &rarr;</a>
+  </div>
+  <div class="event-timeline reveal reveal--d1" style="margin-bottom:2rem">
+    {% assign grouped_about = site.data.events | group_by: "year" | sort: "name" | reverse %}
+    {% for group in grouped_about limit:4 %}
+    {% assign year_has_upcoming = false %}
+    {% for ev in group.items %}{% if ev.upcoming %}{% assign year_has_upcoming = true %}{% break %}{% endif %}{% endfor %}
+    <div class="event-timeline-year">
+      <span class="event-timeline-dot{% if year_has_upcoming %} event-timeline-dot--upcoming{% endif %}" aria-hidden="true"></span>
+      <span class="event-timeline-year-label{% if year_has_upcoming %} event-timeline-year-label--upcoming{% endif %}">
+        {{ group.name }}{% if year_has_upcoming %}&nbsp;&mdash;&nbsp;Upcoming{% endif %}
+      </span>
+      <ul class="event-timeline-items">
+        {% for ev in group.items limit:4 %}
+        <li class="event-timeline-item{% if ev.upcoming %} event-timeline-item--upcoming{% endif %}">
+          <span class="event-timeline-name">{{ ev.event | escape }}</span>
+          <span class="event-timeline-location">{{ ev.location | escape }}</span>
         </li>
         {% endfor %}
       </ul>
-      {% if site.author.sessionize %}
-      <a href="{{ site.author.sessionize }}" rel="noopener noreferrer" class="card-link">Full profile on Sessionize &rarr;</a>
-      {% endif %}
     </div>
+    {% endfor %}
   </div>
   {% endif %}
 
   {% if site.author.links %}
-  <hr style="border:none;border-top:1px solid var(--border-muted);margin:2rem 0">
-  <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 1rem;color:var(--text-primary)">Get in Touch</h2>
-  <div class="about-contact">
+  <div class="section-head reveal" style="margin-top:2.5rem">
+    <span class="section-label">Get in Touch</span>
+    <hr class="section-rule" aria-hidden="true">
+  </div>
+  <div class="about-contact reveal reveal--d1">
     {% for link in site.author.links %}
     <a href="{{ link.url }}" {% unless link.icon == 'email' %}rel="noopener noreferrer"{% endunless %} class="about-contact-link">
       {% case link.icon %}

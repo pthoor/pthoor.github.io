@@ -158,6 +158,47 @@ layout: default
 </section>
 {% endif %}
 
+{% assign _all_dets = site.data.detections.detections %}
+{% if _all_dets and _all_dets.size > 0 %}
+  {% assign _rel_dets = "" | split: "" %}
+  {% for det in _all_dets %}
+    {% assign _matched = false %}
+    {% unless _matched %}
+      {% for dtag in det.tags %}
+        {% unless _matched %}
+          {% for ptag in page.tags %}
+            {% if ptag == dtag %}{% assign _matched = true %}{% break %}{% endif %}
+          {% endfor %}
+        {% endunless %}
+      {% endfor %}
+    {% endunless %}
+    {% unless _matched %}
+      {% for dm in det.mitre %}
+        {% unless _matched %}
+          {% for ptag in page.tags %}
+            {% if ptag == dm %}{% assign _matched = true %}{% break %}{% endif %}
+          {% endfor %}
+        {% endunless %}
+      {% endfor %}
+    {% endunless %}
+    {% if _matched %}{% assign _rel_dets = _rel_dets | push: det %}{% endif %}
+  {% endfor %}
+  {% if _rel_dets.size > 0 %}
+  <section class="related-detections" aria-label="Related detection rules">
+    <p class="related-detections-title">Related Detections</p>
+    <div class="related-detections-list">
+      {% for det in _rel_dets limit:4 %}
+      <a href="{{ '/detections/' | relative_url }}#det-{{ det.slug | escape }}" class="related-detection-chip">
+        <span class="related-detection-sev related-detection-sev--{{ det.severity | escape }}" aria-hidden="true"></span>
+        <span class="related-detection-title">{{ det.title | escape }}</span>
+        <span class="related-detection-product">{{ det.product | escape }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+{% endif %}
+
 <nav class="post-nav" aria-label="Post navigation">
   {% if page.previous %}
   {%- comment -%} Detect topic for previous post {%- endcomment -%}

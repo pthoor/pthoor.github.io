@@ -30,11 +30,11 @@
 
     <div class="header-actions">
       <div class="search-box" id="search-box">
-        <button class="search-toggle" id="search-open" aria-label="Search posts" aria-expanded="false">
+        <button class="search-toggle" id="search-open" aria-label="Search (Ctrl+K)" aria-expanded="false">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
             <path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"/>
           </svg>
-          <span class="search-kbd" aria-hidden="true"><kbd>/</kbd></span>
+          <span class="search-kbd" id="search-kbd-hint" aria-hidden="true"><kbd>Ctrl</kbd><kbd>K</kbd></span>
         </button>
         <div class="search-inline-row" id="search-inline-row">
           <svg class="search-inline-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -75,6 +75,33 @@
   </div>
 
   <script>
+  (function(){
+    var isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+    var kbdHint = document.getElementById('search-kbd-hint');
+    var cmdkHint = document.getElementById('cmdk-shortcut-hint');
+    var searchBtn = document.getElementById('search-open');
+    if (isMac) {
+      if (kbdHint) {
+        while (kbdHint.firstChild) kbdHint.removeChild(kbdHint.firstChild);
+        var k1 = document.createElement('kbd'); k1.textContent = '\u2318';
+        var k2 = document.createElement('kbd'); k2.textContent = 'K';
+        kbdHint.appendChild(k1); kbdHint.appendChild(k2);
+      }
+      if (cmdkHint) {
+        while (cmdkHint.firstChild) cmdkHint.removeChild(cmdkHint.firstChild);
+        var ck = document.createElement('kbd'); ck.textContent = '\u2318K';
+        cmdkHint.appendChild(ck);
+        cmdkHint.appendChild(document.createTextNode(' toggle'));
+      }
+      if (searchBtn) searchBtn.setAttribute('aria-label', 'Search (\u2318K)');
+      var heroTip = document.getElementById('hero-search-tip-kbd');
+      if (heroTip) {
+        while (heroTip.firstChild) heroTip.removeChild(heroTip.firstChild);
+        var hk = document.createElement('kbd'); hk.textContent = '\u2318K';
+        heroTip.appendChild(hk);
+      }
+    }
+  })();
   (function(){
     var toggle = document.querySelector('.nav-toggle');
     var nav    = document.getElementById('nav-links');

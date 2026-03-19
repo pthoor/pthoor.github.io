@@ -17,11 +17,12 @@ layout: default
   </div>
 
   {% if site.data.sessions %}
-  <div class="section-head" style="margin-top:2.5rem">
+  <div class="section-head reveal" style="margin-top:2.5rem">
     <span class="section-label">Session Catalog</span>
     <hr class="section-rule" aria-hidden="true">
+    <span class="section-action">{{ site.data.sessions | size }} sessions</span>
   </div>
-  <div class="session-grid">
+  <div class="session-grid reveal reveal--d1">
     {% for session in site.data.sessions %}
     <div class="session-card session-card--{{ session.color | escape }}">
       <span class="session-topic">{{ session.topic | escape }}</span>
@@ -36,18 +37,27 @@ layout: default
   <div class="section-head" style="margin-top:3rem">
     <span class="section-label">Event History</span>
     <hr class="section-rule" aria-hidden="true">
+    <span class="section-action">{{ site.data.events | size }}+ events</span>
   </div>
-  <div class="event-history-grid">
+  <div class="event-timeline">
     {% assign grouped = site.data.events | group_by: "year" | sort: "name" | reverse %}
     {% for group in grouped %}
-    <div class="event-history-year">
-      <span class="event-history-year-label">{{ group.name }}</span>
-      <ul class="event-history-list">
+    {% assign year_has_upcoming = false %}
+    {% for ev in group.items %}{% if ev.upcoming %}{% assign year_has_upcoming = true %}{% break %}{% endif %}{% endfor %}
+    <div class="event-timeline-year">
+      <span class="event-timeline-dot{% if year_has_upcoming %} event-timeline-dot--upcoming{% endif %}" aria-hidden="true"></span>
+      <span class="event-timeline-year-label{% if year_has_upcoming %} event-timeline-year-label--upcoming{% endif %}">
+        {{ group.name }}{% if year_has_upcoming %}&nbsp;&mdash;&nbsp;Upcoming{% endif %}
+      </span>
+      <ul class="event-timeline-items">
         {% for ev in group.items %}
-        <li>
-          {% if ev.url %}<a href="{{ ev.url }}" rel="noopener noreferrer">{{ ev.event | escape }}</a>{% else %}{{ ev.event | escape }}{% endif %}
-          <span class="event-location">{{ ev.location | escape }}</span>
-          {% if ev.upcoming %}<span class="event-upcoming-tag">Upcoming</span>{% endif %}
+        <li class="event-timeline-item{% if ev.upcoming %} event-timeline-item--upcoming{% endif %}">
+          {% if ev.url %}
+          <a href="{{ ev.url | escape }}" rel="noopener noreferrer" class="event-timeline-name">{{ ev.event | escape }}</a>
+          {% else %}
+          <span class="event-timeline-name">{{ ev.event | escape }}</span>
+          {% endif %}
+          <span class="event-timeline-location">{{ ev.location | escape }}</span>
         </li>
         {% endfor %}
       </ul>
