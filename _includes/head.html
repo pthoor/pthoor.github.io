@@ -29,8 +29,13 @@
 <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 
 {% if page.mermaid %}
-<!-- Hide mermaid source code until the mermaid.js script transforms it -->
-<style>.language-mermaid { visibility: hidden; } pre.mermaid { visibility: visible; }</style>
+<style>
+  /* Hide raw mermaid source until mermaid.js transforms it.
+     Covers both Rouge-wrapped (.highlighter-rouge) and bare (<pre><code>) output. */
+  .language-mermaid.highlighter-rouge,
+  pre > code.language-mermaid { visibility: hidden; }
+  pre.mermaid { visibility: visible; }
+</style>
 {% endif %}
 
 {% if site.analytics.provider == "google-gtag" and site.analytics.google.tracking_id %}

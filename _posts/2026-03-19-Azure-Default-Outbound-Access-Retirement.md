@@ -31,12 +31,6 @@ flowchart TD
     Q1 -->|AKS clusters| A5["⚠️ MOSTLY FINE<br/>AKS handles it, but read the details."]
     Q1 -->|100% PaaS<br/>no VMs, no VMSS| A6["✅ NOT AFFECTED<br/>Almost certainly no impact."]
 
-    style A1 fill:#d4edda,stroke:#28a745
-    style A2 fill:#f8d7da,stroke:#dc3545
-    style A3 fill:#d4edda,stroke:#28a745
-    style A4 fill:#d4edda,stroke:#28a745
-    style A5 fill:#fff3cd,stroke:#ffc107
-    style A6 fill:#d4edda,stroke:#28a745
 ```
 
 Now let's understand *why*.
@@ -77,14 +71,9 @@ flowchart TD
     src -->|"2️⃣ BGP route<br/>(from VPN/ER gateway)"| bgp["BGP wins<br/>(if no UDR)"]
     src -->|"3️⃣ System route"| sys["System route wins<br/>(lowest priority)"]
 
-    style pkt fill:#fff,stroke:#333
-    style done fill:#d4edda,stroke:#28a745
-    style udr fill:#cce5ff,stroke:#004085
-    style bgp fill:#e2e3e5,stroke:#383d41
-    style sys fill:#f8f9fa,stroke:#6c757d
 ```
 
-A /28 beats a /16 beats a /0, regardless of source. Longest prefix match always wins first. Only when prefix lengths are equal does the source type matter.
+A `/28` beats a `/16` beats a `/0`, regardless of source. Longest prefix match always wins first. Only when prefix lengths are equal does the source type matter.
 
 **Two important exceptions** from the docs [3]:
 
@@ -219,22 +208,12 @@ These services require a **delegated subnet** in your VNet [5]. You create the s
 ```mermaid
 flowchart TD
     subgraph vnet["Your VNet: 10.0.0.0/16"]
-        subgraph delegated["snet-sqlmi · 10.0.1.0/24<br/>Delegation: Microsoft.Sql/managedInstances"]
-            sqlmi["SQL MI Instance<br/>(Microsoft-managed NICs)"]
-        end
-        subgraph workload["snet-workload · 10.0.2.0/24<br/>No delegation — your VMs"]
-            vm["Your VMs"]
-        end
+        sqlmi["snet-sqlmi · 10.0.1.0/24<br/>Delegation: Microsoft.Sql/managedInstances<br/>SQL MI Instance (Microsoft-managed NICs)"]
+        vm["snet-workload · 10.0.2.0/24<br/>No delegation — your VMs"]
     end
 
-    delegated -. "Delegated subnet:<br/>exempt from private<br/>subnet setting [4]" .-> note1["But check per-service<br/>support carefully!"]
-    workload -. "Your subnet:<br/>IS affected<br/>in new VNets" .-> note2["Needs explicit outbound"]
-
-    style delegated fill:#d4edda,stroke:#28a745
-    style workload fill:#fff3cd,stroke:#856404
-    style note1 fill:#fff3cd,stroke:#856404
-    style note2 fill:#f8d7da,stroke:#dc3545
-    style vnet fill:#f8f9fa,stroke:#333
+    sqlmi -. "Delegated subnet:<br/>exempt from private<br/>subnet setting [4]" .-> note1["But check per-service<br/>support carefully!"]
+    vm -. "Your subnet:<br/>IS affected<br/>in new VNets" .-> note2["Needs explicit outbound"]
 ```
 
 The important thing: **each service handles this differently.** The exemption from the private subnet setting is documented, but what "managed by the individual service" means varies:
@@ -251,9 +230,7 @@ App Service and Azure Functions (Premium/Dedicated) use this model [8]. They del
 ```mermaid
 flowchart TD
     subgraph vnet["Your VNet"]
-        subgraph intsubnet["snet-app-int<br/>Delegation: Microsoft.Web/serverFarms"]
-            vnics["App Service mounts vNICs here<br/>for OUTBOUND traffic"]
-        end
+        vnics["snet-app-int<br/>Delegation: Microsoft.Web/serverFarms<br/>App Service mounts vNICs here<br/>for OUTBOUND traffic"]
     end
 
     subgraph appservice["App Service (Microsoft-managed)"]
@@ -262,10 +239,6 @@ flowchart TD
 
     app -- "Outbound calls route<br/>through this subnet" --> vnics
     vnics -- "Follows your UDR<br/>and NAT Gateway" --> internet(("Internet /<br/>other services"))
-
-    style intsubnet fill:#e2e3e5,stroke:#383d41
-    style appservice fill:#cce5ff,stroke:#004085
-    style vnet fill:#f8f9fa,stroke:#333
 ```
 
 **One thing I got wrong initially and want to be clear about:** by default, App Service with VNet integration does **not** route all outbound traffic through your VNet. Internet-bound traffic still exits through App Service's own platform IPs unless you explicitly set `outboundVnetRouting.allTraffic = true` [8]. This catches people off guard — you think you're controlling egress because you configured VNet integration, but only RFC 1918 traffic goes through the VNet by default.
@@ -369,8 +342,6 @@ flowchart TD
 
     safe --> warning["⚠️ Do NOT deploy non-AKS resources<br/>into AKS-managed subnets"]
 
-    style safe fill:#d4edda,stroke:#28a745
-    style warning fill:#fff3cd,stroke:#856404
 ```
 
 **My recommendation (take it for what it's worth from a non-AKS-specialist):** for production, use BYO VNet with `userDefinedRouting` through your firewall. For dev/test, `managedNATGateway` is simple and cheap. And regardless — don't put non-AKS resources in AKS subnets.
@@ -403,10 +374,6 @@ flowchart TD
 
     mhn_impact --> tradeoff["⚠️ But: no network-level<br/>visibility or control"]
 
-    style mhn_impact fill:#d4edda,stroke:#28a745
-    style anc_new fill:#f8d7da,stroke:#dc3545
-    style anc_existing fill:#d4edda,stroke:#28a745
-    style tradeoff fill:#fff3cd,stroke:#856404
 ```
 
 ### My Take: ANC Is the Right Choice for Security-Conscious Organizations
@@ -442,9 +409,7 @@ If you're running hub-and-spoke with a UDR sending `0.0.0.0/0` to Azure Firewall
 ```mermaid
 flowchart LR
     subgraph spoke["Spoke VNet"]
-        subgraph sub["snet-workload<br/>UDR: 0.0.0.0/0 → 10.100.0.4"]
-            vm["VM: 10.0.1.4"]
-        end
+        vm["VM: 10.0.1.4<br/>snet-workload<br/>UDR: 0.0.0.0/0 → 10.100.0.4"]
     end
 
     subgraph hub["Hub VNet"]
@@ -453,10 +418,6 @@ flowchart LR
 
     vm -- "UDR match: 0.0.0.0/0<br/>→ Virtual Appliance<br/>(explicit outbound ✅)" --> fw
     fw --> internet(("Internet"))
-
-    style spoke fill:#f8f9fa,stroke:#333
-    style hub fill:#e8f4fd,stroke:#0078d4
-    style sub fill:#fff,stroke:#333
 ```
 
 **Still, make subnets private as defense-in-depth.** If someone accidentally removes the route table, a non-private subnet falls back to default outbound — uncontrolled internet access through a random Microsoft IP. Private subnet = fail-closed.
@@ -479,8 +440,6 @@ flowchart TD
     problem -->|"Yes"| drop["🚫 DROPPED<br/>'Internet' next-hop<br/>has no path"]
     problem -->|"No (legacy)"| works["✅ Works via<br/>default outbound"]
 
-    style drop fill:#f8d7da,stroke:#dc3545
-    style works fill:#d4edda,stroke:#28a745
 ```
 
 In a private subnet, the `Internet` next-hop type **breaks** [4]. No default outbound means no path for that traffic.
