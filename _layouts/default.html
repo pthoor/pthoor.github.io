@@ -620,64 +620,8 @@
 {% if page.mermaid %}
 <script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script>
 <script>
-(async function () {
-  if (typeof mermaid === 'undefined') {
-    document.querySelectorAll('.language-mermaid.highlighter-rouge, code.language-mermaid, pre > code.language-mermaid').forEach(function (el) {
-      el.style.visibility = 'visible';
-      if (el.parentNode) el.parentNode.style.visibility = 'visible';
-    });
-    return;
-  }
-
   var theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'default' : 'dark';
-
-  mermaid.initialize({
-    startOnLoad: false,
-    theme: theme,
-    securityLevel: 'loose'
-  });
-
-  // Collect mermaid source blocks.
-  // Handles two possible HTML structures:
-  //   Rouge-wrapped: <div class="language-mermaid highlighter-rouge"><div class="highlight"><pre><code>…</code></pre></div></div>
-  //   Bare Kramdown: <pre><code class="language-mermaid">…</code></pre>
-  var blocks = document.querySelectorAll('.language-mermaid.highlighter-rouge, code.language-mermaid');
-
-  for (var i = 0; i < blocks.length; i++) {
-    var el = blocks[i];
-    var code = el.tagName === 'CODE' ? el : el.querySelector('code');
-    if (!code) continue;
-
-    // textContent correctly decodes HTML entities (&gt;&gt; → >>, &lt;br/&gt; → <br/>).
-    // We pass the decoded text directly to mermaid.render() to avoid any re-encoding
-    // that can happen when Mermaid reads diagram text from DOM elements via innerHTML.
-    var text = code.textContent;
-    var id = 'mermaid-diagram-' + i;
-    var target = el.tagName === 'CODE' ? el.parentNode : el;
-
-    try {
-      var result = await mermaid.render(id, text);
-      var container = document.createElement('div');
-      container.className = 'mermaid';
-      container.innerHTML = result.svg;
-
-      // Ensure SVG is visible and responsive
-      var svg = container.querySelector('svg');
-      if (svg) {
-        svg.style.display = 'block';
-        svg.style.maxWidth = '100%';
-        svg.style.height = 'auto';
-      }
-
-      target.parentNode.replaceChild(container, target);
-    } catch (e) {
-      console.error('Mermaid render error for diagram ' + i + ':', e);
-      // Show raw source as fallback on error
-      target.style.visibility = 'visible';
-      if (el.tagName === 'CODE') el.style.visibility = 'visible';
-    }
-  }
-})();
+  mermaid.initialize({ startOnLoad: true, theme: theme, securityLevel: 'loose' });
 </script>
 {% endif %}
 </body>
