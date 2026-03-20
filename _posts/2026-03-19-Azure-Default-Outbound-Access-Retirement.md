@@ -138,7 +138,7 @@ sequenceDiagram
 
     Note over VFP: 🚫 DROP<br/>No ephemeral IP assigned.<br/>Packet silently dropped.<br/><br/>Windows Update fails.<br/>Defender can't phone home.<br/>KMS activation fails.
 
-    VFP--xVM: No connectivity
+    VFP --x VM: No connectivity
 ```
 
 No safety net. No outbound. Period.
