@@ -30,11 +30,9 @@
 
 {% if page.mermaid %}
 <style>
-  /* Hide raw mermaid source until mermaid.js transforms it.
-     Covers both Rouge-wrapped (.highlighter-rouge) and bare (<pre><code>) output. */
-  .language-mermaid.highlighter-rouge,
-  pre > code.language-mermaid { visibility: hidden; }
-  pre.mermaid, div.mermaid { visibility: visible; }
+  /* Mermaid renders SVG into pre.mermaid elements, replacing the raw text.
+     Style the output SVGs to be responsive. */
+  pre.mermaid svg { display: block; max-width: 100%; height: auto; }
 </style>
 {% endif %}
 
