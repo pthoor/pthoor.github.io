@@ -101,7 +101,7 @@ Here's what happens today when you deploy a VM with only a private IP — no pub
 
 ```mermaid
 sequenceDiagram
-    participant VM as VM (10.0.1.4)<br/>Private IP only
+    participant VM as VM (10.0.1.4) - Private IP only
     participant VFP as VFP on Host
     participant Azure as Azure Platform
     participant Internet as Internet
@@ -128,7 +128,7 @@ When `defaultOutboundAccess = false`, the same scenario plays out very different
 
 ```mermaid
 sequenceDiagram
-    participant VM as VM (10.0.1.4)<br/>Private IP only
+    participant VM as VM (10.0.1.4) - Private IP only
     participant VFP as VFP on Host
 
     VM->>VFP: Packet to 8.8.8.8
