@@ -618,7 +618,7 @@
   </script>
 
 {% if page.mermaid %}
-<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script>
 <script>
 (async function () {
   if (typeof mermaid === 'undefined') {
@@ -629,23 +629,6 @@
     return;
   }
 
-  // Replace mermaid source blocks with <pre class="mermaid"> that mermaid.js can process.
-  // Handles two possible HTML structures:
-  //   Rouge-wrapped: <div class="language-mermaid highlighter-rouge"><div class="highlight"><pre><code>…</code></pre></div></div>
-  //   Bare Kramdown: <pre><code class="language-mermaid">…</code></pre>
-  document.querySelectorAll('.language-mermaid.highlighter-rouge, code.language-mermaid').forEach(function (el) {
-    var code = el.tagName === 'CODE' ? el : el.querySelector('code');
-    if (!code) return;
-
-    var pre = document.createElement('pre');
-    pre.className = 'mermaid';
-    pre.textContent = code.textContent;
-
-    // For bare <code> inside <pre>, replace the <pre>; for Rouge wrapper, replace the outer div
-    var target = el.tagName === 'CODE' ? el.parentNode : el;
-    target.parentNode.replaceChild(pre, target);
-  });
-
   var theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'default' : 'dark';
 
   mermaid.initialize({
@@ -654,15 +637,46 @@
     securityLevel: 'loose'
   });
 
-  // Render diagrams
-  await mermaid.run({ querySelector: 'pre.mermaid' });
+  // Collect mermaid source blocks.
+  // Handles two possible HTML structures:
+  //   Rouge-wrapped: <div class="language-mermaid highlighter-rouge"><div class="highlight"><pre><code>…</code></pre></div></div>
+  //   Bare Kramdown: <pre><code class="language-mermaid">…</code></pre>
+  var blocks = document.querySelectorAll('.language-mermaid.highlighter-rouge, code.language-mermaid');
 
-  // Safety: ensure output SVG is not getting collapsed/hidden by site CSS
-  document.querySelectorAll('pre.mermaid svg').forEach(function (svg) {
-    svg.style.display = 'block';
-    svg.style.maxWidth = '100%';
-    svg.style.height = 'auto';
-  });
+  for (var i = 0; i < blocks.length; i++) {
+    var el = blocks[i];
+    var code = el.tagName === 'CODE' ? el : el.querySelector('code');
+    if (!code) continue;
+
+    // textContent correctly decodes HTML entities (&gt;&gt; → >>, &lt;br/&gt; → <br/>).
+    // We pass the decoded text directly to mermaid.render() to avoid any re-encoding
+    // that can happen when Mermaid reads diagram text from DOM elements via innerHTML.
+    var text = code.textContent;
+    var id = 'mermaid-diagram-' + i;
+    var target = el.tagName === 'CODE' ? el.parentNode : el;
+
+    try {
+      var result = await mermaid.render(id, text);
+      var container = document.createElement('div');
+      container.className = 'mermaid';
+      container.innerHTML = result.svg;
+
+      // Ensure SVG is visible and responsive
+      var svg = container.querySelector('svg');
+      if (svg) {
+        svg.style.display = 'block';
+        svg.style.maxWidth = '100%';
+        svg.style.height = 'auto';
+      }
+
+      target.parentNode.replaceChild(container, target);
+    } catch (e) {
+      console.error('Mermaid render error for diagram ' + i + ':', e);
+      // Show raw source as fallback on error
+      target.style.visibility = 'visible';
+      if (el.tagName === 'CODE') el.style.visibility = 'visible';
+    }
+  }
 })();
 </script>
 {% endif %}
