@@ -24,12 +24,12 @@ Before we go deep, here's the cheat sheet:
 
 <pre class="mermaid">
 flowchart TD
-    Q1{"Your scenario?"} -->|Existing VNets\ncreated before March 31, 2026| A1["✅ NOT AFFECTED\nNothing changes. Not now, not later."]
-    Q1 -->|New VNets + VMs\nwithout explicit outbound| A2["❌ AFFECTED\nSubnets will be private by default."]
-    Q1 -->|PaaS services with\ndelegated/managed subnets| A3["✅ NOT AFFECTED\nMicrosoft manages outbound for those."]
-    Q1 -->|Hub-and-spoke with\nUDR to Azure Firewall| A4["✅ NOT AFFECTED\nYou already have explicit outbound."]
-    Q1 -->|AKS clusters| A5["⚠️ MOSTLY FINE\nAKS handles it, but read the details."]
-    Q1 -->|100% PaaS\nno VMs, no VMSS| A6["✅ NOT AFFECTED\nAlmost certainly no impact."]
+    Q1{"Your scenario?"} -->|"Existing VNets<br/>created before March 31, 2026"| A1["✅ NOT AFFECTED<br/>Nothing changes. Not now, not later."]
+    Q1 -->|"New VNets + VMs<br/>without explicit outbound"| A2["❌ AFFECTED<br/>Subnets will be private by default."]
+    Q1 -->|"PaaS services with<br/>delegated/managed subnets"| A3["✅ NOT AFFECTED<br/>Microsoft manages outbound for those."]
+    Q1 -->|"Hub-and-spoke with<br/>UDR to Azure Firewall"| A4["✅ NOT AFFECTED<br/>You already have explicit outbound."]
+    Q1 -->|AKS clusters| A5["⚠️ MOSTLY FINE<br/>AKS handles it, but read the details."]
+    Q1 -->|"100% PaaS<br/>no VMs, no VMSS"| A6["✅ NOT AFFECTED<br/>Almost certainly no impact."]
 </pre>
 
 Now let's understand *why*.
@@ -62,13 +62,13 @@ Routing in Azure is evaluated **per subnet, per packet** [3]. When a packet leav
 
 <pre class="mermaid">
 flowchart TD
-    pkt["Packet leaves VM NIC\nDestination: X.X.X.X"] --> lpm{"Step 1: Longest Prefix Match\n(LPM) — always wins first"}
-    lpm -->|Multiple routes\nsame prefix length| src{"Step 2: Route source\nprecedence"}
-    lpm -->|Single longest\nmatch found| done["✅ Use that route"]
+    pkt["Packet leaves VM NIC<br/>Destination: X.X.X.X"] --> lpm{"Step 1: Longest Prefix Match<br/>(LPM) — always wins first"}
+    lpm -->|"Multiple routes<br/>same prefix length"| src{"Step 2: Route source<br/>precedence"}
+    lpm -->|"Single longest<br/>match found"| done["✅ Use that route"]
 
-    src -->|"1️⃣ User-Defined Route (UDR)"| udr["UDR wins\n(highest priority)"]
-    src -->|"2️⃣ BGP route\n(from VPN/ER gateway)"| bgp["BGP wins\n(if no UDR)"]
-    src -->|"3️⃣ System route"| sys["System route wins\n(lowest priority)"]
+    src -->|"1️⃣ User-Defined Route (UDR)"| udr["UDR wins<br/>(highest priority)"]
+    src -->|"2️⃣ BGP route<br/>(from VPN/ER gateway)"| bgp["BGP wins<br/>(if no UDR)"]
+    src -->|"3️⃣ System route"| sys["System route wins<br/>(lowest priority)"]
 </pre>
 
 A `/28` beats a `/16` beats a `/0`, regardless of source. Longest prefix match always wins first. Only when prefix lengths are equal does the source type matter.
@@ -109,9 +109,9 @@ sequenceDiagram
     VFP->>VFP: No explicit outbound method found
     VFP->>Azure: Apply "Default Outbound Access"
 
-    Note over Azure: Assigns ephemeral public IP\nfrom Microsoft-owned pool:\n• NOT visible to you\n• NOT static (can change)\n• Shared with other tenants\n• ZERO control
+    Note over Azure: Assigns ephemeral public IP<br/>from Microsoft-owned pool:<br/>• NOT visible to you<br/>• NOT static (can change)<br/>• Shared with other tenants<br/>• ZERO control
 
-    Azure->>Internet: Packet exits with source:\n20.x.x.x (ephemeral)
+    Azure->>Internet: Packet exits with source:<br/>20.x.x.x (ephemeral)
 </pre>
 
 This "hidden public IP" is what Microsoft calls **default outbound access** [4]. It was convenient — your VM just worked — but it was always a problem:
@@ -132,9 +132,9 @@ sequenceDiagram
     VM->>VFP: Packet to 8.8.8.8
     VFP->>VFP: Route lookup: 0.0.0.0/0 → Internet
     VFP->>VFP: No explicit outbound method found
-    VFP->>VFP: Subnet is private\n(defaultOutboundAccess = false)
+    VFP->>VFP: Subnet is private<br/>(defaultOutboundAccess = false)
 
-    Note over VFP: 🚫 DROP\nNo ephemeral IP assigned.\nPacket silently dropped.\n\nWindows Update fails.\nDefender can't phone home.\nKMS activation fails.
+    Note over VFP: 🚫 DROP<br/>No ephemeral IP assigned.<br/>Packet silently dropped.<br/><br/>Windows Update fails.<br/>Defender can't phone home.<br/>KMS activation fails.
 
     VFP --x VM: No connectivity
 </pre>
@@ -206,12 +206,12 @@ These services require a **delegated subnet** in your VNet [5]. You create the s
 <pre class="mermaid">
 flowchart TD
     subgraph vnet["Your VNet: 10.0.0.0/16"]
-        sqlmi["snet-sqlmi · 10.0.1.0/24\nDelegation: Microsoft.Sql/managedInstances\nSQL MI Instance (Microsoft-managed NICs)"]
-        vm["snet-workload · 10.0.2.0/24\nNo delegation — your VMs"]
+        sqlmi["snet-sqlmi · 10.0.1.0/24<br/>Delegation: Microsoft.Sql/managedInstances<br/>SQL MI Instance (Microsoft-managed NICs)"]
+        vm["snet-workload · 10.0.2.0/24<br/>No delegation — your VMs"]
     end
 
-    sqlmi -. "Delegated subnet:\nexempt from private\nsubnet setting [4]" .-> note1["But check per-service\nsupport carefully!"]
-    vm -. "Your subnet:\nIS affected\nin new VNets" .-> note2["Needs explicit outbound"]
+    sqlmi -. "Delegated subnet:<br/>exempt from private<br/>subnet setting [4]" .-> note1["But check per-service<br/>support carefully!"]
+    vm -. "Your subnet:<br/>IS affected<br/>in new VNets" .-> note2["Needs explicit outbound"]
 </pre>
 
 The important thing: **each service handles this differently.** The exemption from the private subnet setting is documented, but what "managed by the individual service" means varies:
@@ -228,15 +228,15 @@ App Service and Azure Functions (Premium/Dedicated) use this model [8]. They del
 <pre class="mermaid">
 flowchart TD
     subgraph vnet["Your VNet"]
-        vnics["snet-app-int\nDelegation: Microsoft.Web/serverFarms\nApp Service mounts vNICs here\nfor OUTBOUND traffic"]
+        vnics["snet-app-int<br/>Delegation: Microsoft.Web/serverFarms<br/>App Service mounts vNICs here<br/>for OUTBOUND traffic"]
     end
 
     subgraph appservice["App Service (Microsoft-managed)"]
         app["Your Web App"]
     end
 
-    app -- "Outbound calls route\nthrough this subnet" --> vnics
-    vnics -- "Follows your UDR\nand NAT Gateway" --> internet(("Internet /\nother services"))
+    app -- "Outbound calls route<br/>through this subnet" --> vnics
+    vnics -- "Follows your UDR<br/>and NAT Gateway" --> internet(("Internet /<br/>other services"))
 </pre>
 
 **One thing I got wrong initially and want to be clear about:** by default, App Service with VNet integration does **not** route all outbound traffic through your VNet. Internet-bound traffic still exits through App Service's own platform IPs unless you explicitly set `outboundVnetRouting.allTraffic = true` [8]. This catches people off guard — you think you're controlling egress because you configured VNet integration, but only RFC 1918 traffic goes through the VNet by default.
@@ -338,7 +338,7 @@ flowchart TD
     ok1 --> safe["✅ Supported config: NOT impacted"]
     ok2 --> safe
 
-    safe --> warning["⚠️ Do NOT deploy non-AKS resources\ninto AKS-managed subnets"]
+    safe --> warning["⚠️ Do NOT deploy non-AKS resources<br/>into AKS-managed subnets"]
 </pre>
 
 **My recommendation (take it for what it's worth from a non-AKS-specialist):** for production, use BYO VNet with `userDefinedRouting` through your firewall. For dev/test, `managedNATGateway` is simple and cheap. And regardless — don't put non-AKS resources in AKS subnets.
@@ -361,15 +361,15 @@ Microsoft published guidance for Windows 365 ANC customers specifically about th
 
 <pre class="mermaid">
 flowchart TD
-    w365{"Windows 365\nnetwork model?"} -->|Microsoft-hosted\nnetwork| mhn["Microsoft manages everything\nNo customer VNet"]
-    w365 -->|Azure Network\nConnection| anc["Cloud PC NIC in\nYOUR VNet"]
+    w365{"Windows 365<br/>network model?"} -->|"Microsoft-hosted<br/>network"| mhn["Microsoft manages everything<br/>No customer VNet"]
+    w365 -->|"Azure Network<br/>Connection"| anc["Cloud PC NIC in<br/>YOUR VNet"]
 
-    mhn --> mhn_impact["✅ Not affected\nby retirement"]
-    anc --> anc_q{"New VNet\nafter March 31?"}
-    anc_q -->|Yes| anc_new["❌ Needs explicit outbound\n(NAT GW, Firewall, etc.)\nor provisioning fails"]
-    anc_q -->|No| anc_existing["✅ Existing VNet\ncontinues working"]
+    mhn --> mhn_impact["✅ Not affected<br/>by retirement"]
+    anc --> anc_q{"New VNet<br/>after March 31?"}
+    anc_q -->|Yes| anc_new["❌ Needs explicit outbound<br/>(NAT GW, Firewall, etc.)<br/>or provisioning fails"]
+    anc_q -->|No| anc_existing["✅ Existing VNet<br/>continues working"]
 
-    mhn_impact --> tradeoff["⚠️ But: no network-level\nvisibility or control"]
+    mhn_impact --> tradeoff["⚠️ But: no network-level<br/>visibility or control"]
 </pre>
 
 ### My Take: ANC Is the Right Choice for Security-Conscious Organizations
@@ -405,14 +405,14 @@ If you're running hub-and-spoke with a UDR sending `0.0.0.0/0` to Azure Firewall
 <pre class="mermaid">
 flowchart LR
     subgraph spoke["Spoke VNet"]
-        vm["VM: 10.0.1.4\nsnet-workload\nUDR: 0.0.0.0/0 → 10.100.0.4"]
+        vm["VM: 10.0.1.4<br/>snet-workload<br/>UDR: 0.0.0.0/0 → 10.100.0.4"]
     end
 
     subgraph hub["Hub VNet"]
-        fw["Azure Firewall\n10.100.0.4\nSNAT → Public IP"]
+        fw["Azure Firewall<br/>10.100.0.4<br/>SNAT → Public IP"]
     end
 
-    vm -- "UDR match: 0.0.0.0/0\n→ Virtual Appliance\n(explicit outbound ✅)" --> fw
+    vm -- "UDR match: 0.0.0.0/0<br/>→ Virtual Appliance<br/>(explicit outbound ✅)" --> fw
     fw --> internet(("Internet"))
 </pre>
 
@@ -429,12 +429,12 @@ This one has caught people I know personally. Some organizations use UDR service
 <pre class="mermaid">
 flowchart TD
     vm["VM in spoke subnet"] --> rt{"Route table lookup"}
-    rt -->|"AzureMonitor / Storage tag\n→ Internet"| bypass["Bypass firewall\n→ Direct to Azure"]
-    rt -->|"0.0.0.0/0\n→ Virtual Appliance"| fw["Azure Firewall"]
+    rt -->|"AzureMonitor / Storage tag<br/>→ Internet"| bypass["Bypass firewall<br/>→ Direct to Azure"]
+    rt -->|"0.0.0.0/0<br/>→ Virtual Appliance"| fw["Azure Firewall"]
 
     bypass --> problem{"Subnet is private?"}
-    problem -->|"Yes"| drop["🚫 DROPPED\n'Internet' next-hop\nhas no path"]
-    problem -->|"No (legacy)"| works["✅ Works via\ndefault outbound"]
+    problem -->|"Yes"| drop["🚫 DROPPED<br/>'Internet' next-hop<br/>has no path"]
+    problem -->|"No (legacy)"| works["✅ Works via<br/>default outbound"]
 
 </pre>
 
