@@ -24,12 +24,12 @@ Before we go deep, here's the cheat sheet:
 
 <pre class="mermaid">
 flowchart TD
-    Q1{"Your scenario?"} -->|Existing VNets<br/>created before March 31, 2026| A1["✅ NOT AFFECTED<br/>Nothing changes. Not now, not later."]
-    Q1 -->|New VNets + VMs<br/>without explicit outbound| A2["❌ AFFECTED<br/>Subnets will be private by default."]
-    Q1 -->|PaaS services with<br/>delegated/managed subnets| A3["✅ NOT AFFECTED<br/>Microsoft manages outbound for those."]
-    Q1 -->|Hub-and-spoke with<br/>UDR to Azure Firewall| A4["✅ NOT AFFECTED<br/>You already have explicit outbound."]
+    Q1{"Your scenario?"} -->|"Existing VNets<br/>created before March 31, 2026"| A1["✅ NOT AFFECTED<br/>Nothing changes. Not now, not later."]
+    Q1 -->|"New VNets + VMs<br/>without explicit outbound"| A2["❌ AFFECTED<br/>Subnets will be private by default."]
+    Q1 -->|"PaaS services with<br/>delegated/managed subnets"| A3["✅ NOT AFFECTED<br/>Microsoft manages outbound for those."]
+    Q1 -->|"Hub-and-spoke with<br/>UDR to Azure Firewall"| A4["✅ NOT AFFECTED<br/>You already have explicit outbound."]
     Q1 -->|AKS clusters| A5["⚠️ MOSTLY FINE<br/>AKS handles it, but read the details."]
-    Q1 -->|100% PaaS<br/>no VMs, no VMSS| A6["✅ NOT AFFECTED<br/>Almost certainly no impact."]
+    Q1 -->|"100% PaaS<br/>no VMs, no VMSS"| A6["✅ NOT AFFECTED<br/>Almost certainly no impact."]
 </pre>
 
 Now let's understand *why*.
@@ -63,8 +63,8 @@ Routing in Azure is evaluated **per subnet, per packet** [3]. When a packet leav
 <pre class="mermaid">
 flowchart TD
     pkt["Packet leaves VM NIC<br/>Destination: X.X.X.X"] --> lpm{"Step 1: Longest Prefix Match<br/>(LPM) — always wins first"}
-    lpm -->|Multiple routes<br/>same prefix length| src{"Step 2: Route source<br/>precedence"}
-    lpm -->|Single longest<br/>match found| done["✅ Use that route"]
+    lpm -->|"Multiple routes<br/>same prefix length"| src{"Step 2: Route source<br/>precedence"}
+    lpm -->|"Single longest<br/>match found"| done["✅ Use that route"]
 
     src -->|"1️⃣ User-Defined Route (UDR)"| udr["UDR wins<br/>(highest priority)"]
     src -->|"2️⃣ BGP route<br/>(from VPN/ER gateway)"| bgp["BGP wins<br/>(if no UDR)"]
@@ -361,8 +361,8 @@ Microsoft published guidance for Windows 365 ANC customers specifically about th
 
 <pre class="mermaid">
 flowchart TD
-    w365{"Windows 365<br/>network model?"} -->|Microsoft-hosted<br/>network| mhn["Microsoft manages everything<br/>No customer VNet"]
-    w365 -->|Azure Network<br/>Connection| anc["Cloud PC NIC in<br/>YOUR VNet"]
+    w365{"Windows 365<br/>network model?"} -->|"Microsoft-hosted<br/>network"| mhn["Microsoft manages everything<br/>No customer VNet"]
+    w365 -->|"Azure Network<br/>Connection"| anc["Cloud PC NIC in<br/>YOUR VNet"]
 
     mhn --> mhn_impact["✅ Not affected<br/>by retirement"]
     anc --> anc_q{"New VNet<br/>after March 31?"}
