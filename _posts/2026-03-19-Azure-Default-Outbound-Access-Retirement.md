@@ -218,7 +218,7 @@ flowchart TD
 
 The important thing: **each service handles this differently.** The exemption from the private subnet setting is documented, but what "managed by the individual service" means varies:
 
-- **Azure SQL Managed Instance** uses Network Intent Policies — automatically injected NSG rules and routes [6]. SQL MI now supports private subnets — this was confirmed directly by the SQL MI product team in March 2026. This is a relatively recent change; earlier documentation stated that private subnet deployments were not supported. If you read older guidance, be aware it's been updated.
+- **Azure SQL Managed Instance** uses Network Intent Policies — automatically injected NSG rules and routes [6]. But here's the critical part: **SQL MI does not support private subnets.** The docs state deploying SQL MI in a private subnet (where default outbound access is disabled) is currently not supported. SQL MI still relies on default outbound access for management traffic, and NAT Gateway isn't supported on SQL MI subnets. If you're running SQL MI, **this is the service you need to watch most closely** as the deadline approaches. Monitor the docs for updates.
 - **Azure NetApp Files** has no internet egress at all — it operates entirely within the VNet over NFS/SMB using private network interfaces. Not affected, and there's nothing to configure.
 - **Azure DB for PostgreSQL Flexible Server** doesn't use Network Intent Policies. The service requires access to Azure Storage for WAL file archival — the recommended approach is adding a `Microsoft.Storage` service endpoint to the delegated subnet [7].
 - **Azure Databricks** — customer owns egress on the data plane. Use Secure Cluster Connectivity.
@@ -270,7 +270,7 @@ The "Egress Owner" column is the one that matters — if Microsoft owns egress, 
 
 | Service | Delegation | Egress Owner | Impact |
 | --------- | ----------- | ------------- | -------- |
-| **Azure SQL Managed Instance** | `Microsoft.Sql/managedInstances` | **Microsoft** (Network Intent Policy) | **None** — private subnet support now confirmed by the SQL MI product team (March 2026) [6] |
+| **Azure SQL Managed Instance** | `Microsoft.Sql/managedInstances` | **Microsoft** (Network Intent Policy) | **⚠️ HIGH RISK** — private subnets not supported; still relies on default outbound [6] |
 | Azure Databricks | `Microsoft.Databricks/workspaces` | **Customer** (data plane) | Low — use Secure Cluster Connectivity |
 | Azure NetApp Files | `Microsoft.NetApp/volumes` | N/A — no internet egress | **None** |
 | Azure DB for PostgreSQL Flex | `Microsoft.DBforPostgreSQL/flexibleServers` | **Partially Microsoft** | Low — needs Storage service endpoint [7] |
@@ -343,7 +343,7 @@ flowchart TD
     safe --> warning["⚠️ Do NOT deploy non-AKS resources<br/>into AKS-managed subnets"]
 </pre>
 
-**My recommendation (take it for what it's worth from a non-AKS-specialist):** for production, use BYO VNet with `userDefinedRouting` through your firewall. For dev/test, `managedNATGateway` is simple and cheap. And regardless — don't put non-AKS resources in AKS subnets.
+**My recommendation (take it for what it's worth from a non-AKS-specialist):** for production, use BYO VNet with `userDefinedRouting` through your firewall. For dev/test, `managedNATGateway` is straightforward. And regardless — don't put non-AKS resources in AKS subnets.
 
 ---
 
@@ -480,6 +480,8 @@ If you must keep the `Internet` next-hop type, attach a NAT Gateway to the subne
 
 4. **Check for UDR `Internet` next-hop bypasses.** If you use service tag bypass routes, migrate to Service Endpoints or Private Endpoints before making subnets private.
 
+5. **If you run Azure SQL Managed Instance** — pay close attention. SQL MI doesn't support private subnets today [6]. Monitor the docs for updates.
+
 ### For New Deployments
 
 1. **Be explicit in your IaC.** Don't rely on defaults:
@@ -527,14 +529,16 @@ If you must keep the `Internet` next-hop type, attach a NAT Gateway to the subne
 This retirement is a meaningful security improvement — it pushes Azure toward Zero Trust for network egress. But it's narrower than the announcements suggest:
 
 - **Existing VNets:** Not affected.
-- **PaaS services with delegated subnets:** Generally not affected — Microsoft manages their egress. SQL MI now supports private subnets as of March 2026.
+- **PaaS services with delegated subnets:** Generally not affected — Microsoft manages their egress. **Except SQL MI**, which doesn't support private subnets yet.
 - **Hub-and-spoke with Azure Firewall:** Not affected — you already have explicit outbound.
 - **AKS in supported configurations:** Not affected — AKS always configures explicit outbound.
 - **New VMs in new VNets without explicit outbound:** **Affected.** This is the target audience.
 
 The organizations most at risk are those spinning up new VNets for dev/test, PoC, or lab environments where VMs are deployed quickly without proper networking. If you have established patterns — hub-and-spoke, NAT Gateway, load balancers — you're already compliant.
 
-> **Update (March 24, 2026):** This post was reviewed by members of the Microsoft networking product team. Key corrections: SQL MI now supports private subnets (confirmed by the SQL MI PM), AKS has never used default outbound access and already defaults to private subnets, the new API version is expected to be `2025-07-01`, and there are two separate Azure Advisor recommendations (VMs and VMSS uniform). Thanks to the PM team for the feedback.
+> **Update (March 24, 2026):** This post was reviewed by members of the Microsoft networking product team. Key corrections: AKS has never used default outbound access and already defaults to private subnets, the new API version is expected to be `2025-07-01`, and there are two separate Azure Advisor recommendations (VMs and VMSS uniform). Thanks to the PM team for the feedback.
+>
+> **Update (March 25, 2026):** Clarified that SQL MI still does not support private subnets — the [networking constraints docs](https://learn.microsoft.com/en-us/azure/azure-sql/managed-instance/connectivity-architecture-overview?view=azuresql#networking-constraints) confirm this. NAT Gateway is also not supported on SQL MI subnets. This remains the service to watch most closely.
 
 ---
 
