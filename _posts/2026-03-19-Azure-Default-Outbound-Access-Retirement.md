@@ -155,8 +155,8 @@ Let's be precise [4]:
 
 ### What Changes
 
-- **New VNets** created using API versions released after March 31, 2026 will have `defaultOutboundAccess = false` on their subnets **by default**.
-- This applies to all configuration methods: Azure Portal, ARM templates, Bicep, PowerShell, CLI.
+- **New VNets** created using API versions released after March 31, 2026 will have `defaultOutboundAccess = false` on their subnets **by default**. The new API version is expected to be `2025-07-01`.
+- This applies to all configuration methods: Azure Portal, ARM templates, Bicep, PowerShell, CLI — but **the Portal will adopt the new API first**, so Portal users will see the change before IaC users who pin older API versions.
 
 ### What Does NOT Change
 
@@ -166,7 +166,9 @@ Let's be precise [4]:
 
 ### The API Version Detail
 
-If you use Bicep or ARM templates and pin an older API version, the old behavior continues. The official FAQ confirms this includes Terraform: *"Earlier versions of ARM templates (or tools like Terraform that can specify older versions) will continue to set defaultOutboundAccess as null, which implicitly allows outbound access"* [4]. The AzureRM Terraform provider pins API versions internally per resource type — which version you get depends on the provider release. Newer releases will adopt the post-March 2026 API and the new default. If you need explicit control, use the AzAPI provider.
+If you use Bicep or ARM templates and pin an older API version, the old behavior continues. The official FAQ confirms this includes Terraform: *"Earlier versions of ARM templates (or tools like Terraform that can specify older versions) will continue to set defaultOutboundAccess as null, which implicitly allows outbound access"* [4].
+
+An important nuance here: the new default doesn't flip like a switch on April 1. It's tied to a specific new API version (likely `2025-07-01`) that will roll out after March 31. **The Azure Portal will adopt the new API version first**, so people creating VNets through the portal will see private subnets as the default. If you deploy via ARM/Bicep templates pinned to an older API version, nothing changes until you update the API version in your template. For the AzureRM Terraform provider, we don't know exactly when it will adopt the new API — but when it does, the default will flip. The AzAPI provider gives you explicit control over which API version to target.
 
 In Bicep, I'd recommend being explicit regardless:
 
@@ -189,7 +191,7 @@ Buried in the Microsoft Learn documentation for default outbound access [4], the
 
 If your subnet is delegated to a PaaS service, the `defaultOutboundAccess` property **does not apply**. The PaaS service manages its own connectivity. This eliminates the concern for most PaaS-heavy organizations.
 
-But — and this is important — *"managed by the individual service"* doesn't mean the same thing for every service. Some services truly own their egress. Others expect you to provide it. And one major service doesn't even support private subnets at all. Let me break this down.
+But — and this is important — *"managed by the individual service"* doesn't mean the same thing for every service. Some services truly own their egress. Others expect you to provide it. Let me break this down.
 
 ---
 
@@ -218,7 +220,7 @@ flowchart TD
 
 The important thing: **each service handles this differently.** The exemption from the private subnet setting is documented, but what "managed by the individual service" means varies:
 
-- **Azure SQL Managed Instance** uses Network Intent Policies — automatically injected NSG rules and routes [6]. But here's the critical part: **SQL MI does not support private subnets.** The docs state deploying SQL MI in a private subnet (where default outbound access is disabled) is currently not supported. SQL MI still relies on default outbound access for management traffic, and NAT Gateway isn't supported on SQL MI subnets. If you're running SQL MI, **this is the service you need to watch most closely** as the deadline approaches. Monitor the docs for updates.
+- **Azure SQL Managed Instance** uses Network Intent Policies — automatically injected NSG rules and routes [6]. SQL MI now supports private subnets — this was confirmed directly by the SQL MI product team in March 2026. This is a relatively recent change; earlier documentation stated that private subnet deployments were not supported. If you read older guidance, be aware it's been updated.
 - **Azure NetApp Files** has no internet egress at all — it operates entirely within the VNet over NFS/SMB using private network interfaces. Not affected, and there's nothing to configure.
 - **Azure DB for PostgreSQL Flexible Server** doesn't use Network Intent Policies. The service requires access to Azure Storage for WAL file archival — the recommended approach is adding a `Microsoft.Storage` service endpoint to the delegated subnet [7].
 - **Azure Databricks** — customer owns egress on the data plane. Use Secure Cluster Connectivity.
@@ -270,7 +272,7 @@ The "Egress Owner" column is the one that matters — if Microsoft owns egress, 
 
 | Service | Delegation | Egress Owner | Impact |
 | --------- | ----------- | ------------- | -------- |
-| **Azure SQL Managed Instance** | `Microsoft.Sql/managedInstances` | **Microsoft** (Network Intent Policy) | **⚠️ HIGH RISK** — private subnets not supported; still relies on default outbound [6] |
+| **Azure SQL Managed Instance** | `Microsoft.Sql/managedInstances` | **Microsoft** (Network Intent Policy) | **None** — private subnet support now confirmed by the SQL MI product team (March 2026) [6] |
 | Azure Databricks | `Microsoft.Databricks/workspaces` | **Customer** (data plane) | Low — use Secure Cluster Connectivity |
 | Azure NetApp Files | `Microsoft.NetApp/volumes` | N/A — no internet egress | **None** |
 | Azure DB for PostgreSQL Flex | `Microsoft.DBforPostgreSQL/flexibleServers` | **Partially Microsoft** | Low — needs Storage service endpoint [7] |
@@ -305,11 +307,11 @@ The "Egress Owner" column is the one that matters — if Microsoft owns egress, 
 
 I'll be upfront: AKS is not my deepest area of expertise. My day-to-day is more on the network security and platform architecture side. But I've gone through the docs carefully and spoken with colleagues who live in the Kubernetes world, so here's what I can tell you with confidence.
 
-AKS sits in a gray area — it's a PaaS service, but it deploys VMs (nodes) into a VNet. That's why it's affected by this change at all.
+AKS sits in a gray area — it's a PaaS service, but it deploys VMs (nodes) into a VNet. That might make you think it's affected, but the reality is simpler than it looks.
 
 ### What Changes for AKS
 
-Starting March 31, 2026, AKS clusters using the **AKS-managed VNet option** will place cluster subnets into private subnets by default [9]. But AKS has always required an explicit outbound type. Every cluster gets one of these:
+Starting March 31, 2026, AKS clusters using the **AKS-managed VNet option** will place cluster subnets into private subnets by default [9]. But here's the thing — **AKS has never used default outbound access**, and in fact already sets subnets as private for new deployments. AKS always configures an explicit outbound type. Every cluster gets one of these:
 
 | Outbound Type | What It Does |
 | --------------- | -------------- |
@@ -324,7 +326,7 @@ Because AKS always configures one of these, the docs state: *"This setting doesn
 
 ### Where It Could Bite You
 
-The risk is in **unsupported scenarios**: if you deploy non-AKS resources (test VMs, sidecar workloads) into the AKS-managed subnet, those resources relied on default outbound and will lose internet access.
+The risk is strictly in **unsupported scenarios** — and you'd have to be doing something fairly unusual. For example, deploying non-AKS resources (test VMs, sidecar workloads) into the AKS-managed subnet. Those resources would have relied on default outbound and will lose internet access. In any supported AKS configuration, this retirement is a non-event.
 
 ```mermaid
 flowchart TD
@@ -460,7 +462,7 @@ If you must keep the `Internet` next-hop type, attach a NAT Gateway to the subne
 
 ### For Existing Environments
 
-1. **Run Azure Advisor.** Look for "Add explicit outbound method to disable default outbound" under Operational Excellence.
+1. **Run Azure Advisor.** There are actually **two separate recommendations** under Operational Excellence: "Add explicit outbound method to disable default outbound" for VMs, and a separate one for VMSS uniform instances. Both are driven by a **NIC-level parameter** (`defaultOutboundConnectivityEnabled`) that tracks whether a default outbound IP is allocated — this is separate from the subnet-level `defaultOutboundAccess` property. A VM can have the NIC-level flag set even if the subnet has explicit outbound configured. To clear it, you need to make the subnet private AND stop/deallocate the VM [4].
 
 2. **Audit your subnets:**
 
@@ -481,8 +483,6 @@ If you must keep the `Internet` next-hop type, attach a NAT Gateway to the subne
 3. **Make subnets private proactively** — even with a UDR to Azure Firewall. Defense-in-depth. Remember to stop/deallocate VMs for the change to take effect on their NICs [4].
 
 4. **Check for UDR `Internet` next-hop bypasses.** If you use service tag bypass routes, migrate to Service Endpoints or Private Endpoints before making subnets private.
-
-5. **If you run Azure SQL Managed Instance** — pay close attention. SQL MI doesn't support private subnets today [6]. Monitor the docs for updates.
 
 ### For New Deployments
 
@@ -522,7 +522,7 @@ If you must keep the `Internet` next-hop type, attach a NAT Gateway to the subne
    }
    ```
 
-5. **Watch your Terraform provider version.** Newer AzureRM releases will use post-March 2026 API versions and default to private subnets. Set `default_outbound_access_enabled` explicitly. For full API version control, use the AzAPI provider [4].
+5. **Watch your Terraform provider version.** We don't know exactly when the AzureRM provider will adopt the new API version (likely `2025-07-01`), but when it does, new VNets will default to private subnets. Set `default_outbound_access_enabled` explicitly in your configs now so you're not caught off guard. For full API version control, use the AzAPI provider [4].
 
 ---
 
@@ -531,12 +531,14 @@ If you must keep the `Internet` next-hop type, attach a NAT Gateway to the subne
 This retirement is a meaningful security improvement — it pushes Azure toward Zero Trust for network egress. But it's narrower than the announcements suggest:
 
 - **Existing VNets:** Not affected.
-- **PaaS services with delegated subnets:** Generally not affected — Microsoft manages their egress. **Except SQL MI**, which doesn't support private subnets yet.
+- **PaaS services with delegated subnets:** Generally not affected — Microsoft manages their egress. SQL MI now supports private subnets as of March 2026.
 - **Hub-and-spoke with Azure Firewall:** Not affected — you already have explicit outbound.
 - **AKS in supported configurations:** Not affected — AKS always configures explicit outbound.
 - **New VMs in new VNets without explicit outbound:** **Affected.** This is the target audience.
 
 The organizations most at risk are those spinning up new VNets for dev/test, PoC, or lab environments where VMs are deployed quickly without proper networking. If you have established patterns — hub-and-spoke, NAT Gateway, load balancers — you're already compliant.
+
+> **Update (March 24, 2026):** This post was reviewed by members of the Microsoft networking product team. Key corrections: SQL MI now supports private subnets (confirmed by the SQL MI PM), AKS has never used default outbound access and already defaults to private subnets, the new API version is expected to be `2025-07-01`, and there are two separate Azure Advisor recommendations (VMs and VMSS uniform). Thanks to the PM team for the feedback.
 
 ---
 
