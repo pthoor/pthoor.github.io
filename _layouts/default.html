@@ -618,52 +618,10 @@
   </script>
 
 {% if page.mermaid %}
-<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script>
 <script>
-(async function () {
-  if (typeof mermaid === 'undefined') {
-    document.querySelectorAll('.language-mermaid.highlighter-rouge, code.language-mermaid, pre > code.language-mermaid').forEach(function (el) {
-      el.style.visibility = 'visible';
-      if (el.parentNode) el.parentNode.style.visibility = 'visible';
-    });
-    return;
-  }
-
-  // Replace mermaid source blocks with <pre class="mermaid"> that mermaid.js can process.
-  // Handles two possible HTML structures:
-  //   Rouge-wrapped: <div class="language-mermaid highlighter-rouge"><div class="highlight"><pre><code>…</code></pre></div></div>
-  //   Bare Kramdown: <pre><code class="language-mermaid">…</code></pre>
-  document.querySelectorAll('.language-mermaid.highlighter-rouge, code.language-mermaid').forEach(function (el) {
-    var code = el.tagName === 'CODE' ? el : el.querySelector('code');
-    if (!code) return;
-
-    var pre = document.createElement('pre');
-    pre.className = 'mermaid';
-    pre.textContent = code.textContent;
-
-    // For bare <code> inside <pre>, replace the <pre>; for Rouge wrapper, replace the outer div
-    var target = el.tagName === 'CODE' ? el.parentNode : el;
-    target.parentNode.replaceChild(pre, target);
-  });
-
   var theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'default' : 'dark';
-
-  mermaid.initialize({
-    startOnLoad: false,
-    theme: theme,
-    securityLevel: 'loose'
-  });
-
-  // Render diagrams
-  await mermaid.run({ querySelector: 'pre.mermaid' });
-
-  // Safety: ensure output SVG is not getting collapsed/hidden by site CSS
-  document.querySelectorAll('pre.mermaid svg').forEach(function (svg) {
-    svg.style.display = 'block';
-    svg.style.maxWidth = '100%';
-    svg.style.height = 'auto';
-  });
-})();
+  mermaid.initialize({ startOnLoad: true, theme: theme, securityLevel: 'loose' });
 </script>
 {% endif %}
 </body>
