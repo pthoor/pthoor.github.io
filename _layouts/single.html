@@ -173,7 +173,16 @@ layout: default
       {% endfor %}
     {% endunless %}
     {% unless _matched %}
-      {% for dm in det.mitre %}
+      {% for dm in det.techniques %}
+        {% unless _matched %}
+          {% for ptag in page.tags %}
+            {% if ptag == dm %}{% assign _matched = true %}{% break %}{% endif %}
+          {% endfor %}
+        {% endunless %}
+      {% endfor %}
+    {% endunless %}
+    {% unless _matched %}
+      {% for dm in det.tactics %}
         {% unless _matched %}
           {% for ptag in page.tags %}
             {% if ptag == dm %}{% assign _matched = true %}{% break %}{% endif %}
