@@ -19,102 +19,151 @@ layout: default
   </header>
 
   {% assign detections = site.data.detections.detections %}
-
   {% if detections and detections.size > 0 %}
+
+  {%- comment -%} ── Collect unique filter values ──────────────── {%- endcomment -%}
+  {% assign all_products = "" | split: "" %}
+  {% assign all_tactics = "" | split: "" %}
+  {% assign all_techniques = "" | split: "" %}
+  {% assign all_datasources = "" | split: "" %}
+  {% for det in detections %}
+    {% unless all_products contains det.product %}
+      {% assign all_products = all_products | push: det.product %}
+    {% endunless %}
+    {% for t in det.tactics %}
+      {% unless all_tactics contains t %}
+        {% assign all_tactics = all_tactics | push: t %}
+      {% endunless %}
+    {% endfor %}
+    {% for t in det.techniques %}
+      {% unless all_techniques contains t %}
+        {% assign all_techniques = all_techniques | push: t %}
+      {% endunless %}
+    {% endfor %}
+    {% for ds in det.data_sources %}
+      {% unless all_datasources contains ds %}
+        {% assign all_datasources = all_datasources | push: ds %}
+      {% endunless %}
+    {% endfor %}
+  {% endfor %}
 
   {%- comment -%} ── FILTER BAR ─────────────────────────────── {%- endcomment -%}
   <div class="det-filters reveal" role="toolbar" aria-label="Filter detections">
-    <div class="det-filter-group">
-      <span class="det-filter-label">Severity</span>
-      <button class="det-filter-btn det-filter-btn--severity is-active" data-filter="severity" data-value="all">All</button>
-      <button class="det-filter-btn det-filter-btn--critical" data-filter="severity" data-value="critical">Critical</button>
-      <button class="det-filter-btn det-filter-btn--high"     data-filter="severity" data-value="high">High</button>
-      <button class="det-filter-btn det-filter-btn--medium"   data-filter="severity" data-value="medium">Medium</button>
-      <button class="det-filter-btn det-filter-btn--low"      data-filter="severity" data-value="low">Low</button>
-      <button class="det-filter-btn det-filter-btn--info"     data-filter="severity" data-value="info">Info</button>
+    <div class="det-filter-row">
+      <div class="det-chip-group" data-category="product">
+        <span class="det-filter-label">Product</span>
+        {% for p in all_products %}
+        <button class="det-chip det-chip--product" data-category="product" data-value="{{ p | downcase | escape }}">{{ p | escape }}</button>
+        {% endfor %}
+      </div>
+      <div class="det-chip-group" data-category="mitre">
+        <span class="det-filter-label">MITRE ATT&CK</span>
+        {% for t in all_tactics %}
+        <button class="det-chip det-chip--mitre" data-category="mitre" data-value="{{ t | downcase | escape }}">{{ t | escape }}</button>
+        {% endfor %}
+        {% for t in all_techniques %}
+        <button class="det-chip det-chip--mitre" data-category="mitre" data-value="{{ t | downcase | escape }}">{{ t | escape }}</button>
+        {% endfor %}
+      </div>
+      <div class="det-chip-group" data-category="datasource">
+        <span class="det-filter-label">Data Source</span>
+        {% for ds in all_datasources %}
+        <button class="det-chip det-chip--datasource" data-category="datasource" data-value="{{ ds | downcase | escape }}">{{ ds | escape }}</button>
+        {% endfor %}
+      </div>
     </div>
-    <div class="det-filter-group">
-      <span class="det-filter-label">Search</span>
-      <input type="search" id="det-search" class="det-search-input"
-             placeholder="Filter by title, tag, MITRE…" aria-label="Search detections" autocomplete="off">
+    <div class="det-filter-row">
+      <div class="det-filter-group">
+        <input type="search" id="det-search" class="det-search-input"
+               placeholder="Filter by title, tag, MITRE..." aria-label="Search detections" autocomplete="off">
+      </div>
+      <div class="det-active-filters" id="det-active-filters" hidden>
+        <span class="det-active-count" id="det-active-count">0 active</span>
+        <button class="det-clear-btn" id="det-clear-all">Clear all</button>
+      </div>
     </div>
   </div>
 
   {%- comment -%} ── DETECTIONS GRID ─────────────────────────── {%- endcomment -%}
   <div class="det-grid reveal reveal--d1" id="det-grid">
     {% for det in detections %}
-    <div class="det-card det-card--{{ det.severity | escape }}"
+    <div class="det-card"
          id="det-{{ det.slug | escape }}"
-         data-severity="{{ det.severity | escape }}"
-         data-title="{{ det.title | downcase | escape }}"
+         data-name="{{ det.name | downcase | escape }}"
+         data-description="{{ det.description | downcase | escape }}"
+         data-product="{{ det.product | downcase | escape }}"
+         data-datasources="{{ det.data_sources | join: ' ' | downcase | escape }}"
+         data-tactics="{{ det.tactics | join: ' ' | downcase | escape }}"
+         data-techniques="{{ det.techniques | join: ' ' | downcase | escape }}"
          data-tags="{{ det.tags | join: ' ' | downcase | escape }}"
-         data-mitre="{{ det.mitre | join: ' ' | downcase | escape }}">
+         data-kind="{{ det.kind | downcase | escape }}">
 
       <div class="det-card-head">
-        <div class="det-card-meta">
-          <span class="det-severity-badge det-severity-badge--{{ det.severity | escape }}">{{ det.severity | upcase | escape }}</span>
-          {% if det.product != "" %}
-          <span class="det-product-badge">{{ det.product | escape }}</span>
+        <h3 class="det-card-title">{{ det.name | escape }}</h3>
+        <div class="det-card-actions">
+          {% if det.query != "" %}
+          <button class="det-kql-open-btn" data-slug="{{ det.slug | escape }}" data-name="{{ det.name | escape }}" aria-label="View KQL for {{ det.name | escape }}">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+            View KQL
+          </button>
+          <button class="det-copy-btn" data-slug="{{ det.slug | escape }}" aria-label="Copy KQL for {{ det.name | escape }}">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
           {% endif %}
         </div>
-        <span class="det-card-chevron" aria-hidden="true">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
       </div>
 
-      <h3 class="det-card-title">{{ det.title | escape }}</h3>
       {% if det.description != "" %}
       <p class="det-card-desc">{{ det.description | escape }}</p>
       {% endif %}
 
-      {% if det.mitre.size > 0 %}
-      <div class="det-mitre-tags" aria-label="MITRE ATT&CK">
-        {% for m in det.mitre limit:4 %}
-        <span class="det-mitre-tag">{{ m | escape }}</span>
+      <div class="det-pill-row">
+        {% for t in det.tactics %}
+        <span class="det-pill det-pill--mitre">{{ t | escape }}</span>
+        {% endfor %}
+        {% for t in det.techniques %}
+        <span class="det-pill det-pill--mitre">{{ t | escape }}</span>
         {% endfor %}
       </div>
-      {% endif %}
 
-      {% if det.tags.size > 0 %}
-      <div class="det-tag-list">
-        {% for tag in det.tags limit:5 %}
-        <span class="tag">{{ tag | escape }}</span>
+      <div class="det-pill-row">
+        {% for ds in det.data_sources %}
+        <span class="det-pill det-pill--datasource">{{ ds | escape }}</span>
         {% endfor %}
+        <span class="det-pill det-pill--product">{{ det.product | escape }}</span>
+        <span class="det-pill det-pill--kind">{{ det.kind | escape }}</span>
       </div>
-      {% endif %}
 
-      {% if det.kql != "" %}
-      <div class="det-kql-wrap">
-        <button class="det-kql-toggle" aria-expanded="false" aria-controls="kql-{{ forloop.index }}">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
-          View KQL
-        </button>
-        <div class="det-kql-body" id="kql-{{ forloop.index }}" hidden>
-          <div class="det-kql-actions">
-            <button class="det-copy-btn" data-clipboard-target="kql-code-{{ forloop.index }}" aria-label="Copy KQL">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-              Copy
-            </button>
-          </div>
-          <pre class="det-kql highlight" id="kql-code-{{ forloop.index }}"><code>{{ det.kql | escape }}</code></pre>
-        </div>
-      </div>
+      {% if det.query != "" %}
+      <div class="det-kql-data" id="kql-data-{{ det.slug | escape }}" hidden>{{ det.query | escape }}</div>
       {% endif %}
-
-      {% if det.created != "" %}
-      <p class="det-card-footer">
-        <time datetime="{{ det.created | escape }}">{{ det.created | escape }}</time>
-        {% if det.status != "" and det.status != "stable" %}
-        <span class="det-status-badge det-status-badge--{{ det.status | escape }}">{{ det.status | escape }}</span>
-        {% endif %}
-      </p>
-      {% endif %}
-
     </div>
     {% endfor %}
   </div>
 
   <p class="det-empty-msg" id="det-no-results" hidden>No detections match the current filter.</p>
+
+  {%- comment -%} ── KQL MODAL ────────────────────────────────── {%- endcomment -%}
+  <div class="det-modal-backdrop" id="det-modal-backdrop" hidden>
+    <div class="det-modal" role="dialog" aria-modal="true" aria-labelledby="det-modal-title">
+      <div class="det-modal-header">
+        <h4 class="det-modal-title" id="det-modal-title"></h4>
+        <div class="det-modal-header-actions">
+          <button class="det-modal-copy" id="det-modal-copy" aria-label="Copy KQL">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+          <button class="det-modal-close" id="det-modal-close" aria-label="Close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="det-modal-body">
+        <pre class="det-kql" id="det-modal-kql"><code></code></pre>
+      </div>
+    </div>
+  </div>
 
   {% else %}
   {%- comment -%} Empty state — detections repo has no KQL files yet {%- endcomment -%}
@@ -136,40 +185,92 @@ layout: default
 <script>
 (function () {
   'use strict';
-  var grid      = document.getElementById('det-grid');
-  var searchEl  = document.getElementById('det-search');
-  var noResults = document.getElementById('det-no-results');
-  var cards     = Array.prototype.slice.call(grid ? grid.querySelectorAll('.det-card') : []);
-  var activeSeverity = 'all';
-  var searchVal      = '';
+  var grid       = document.getElementById('det-grid');
+  var searchEl   = document.getElementById('det-search');
+  var noResults  = document.getElementById('det-no-results');
+  var cards      = Array.prototype.slice.call(grid ? grid.querySelectorAll('.det-card') : []);
+  var chips      = Array.prototype.slice.call(document.querySelectorAll('.det-chip'));
+  var activeEl   = document.getElementById('det-active-filters');
+  var countEl    = document.getElementById('det-active-count');
+  var clearBtn   = document.getElementById('det-clear-all');
+
+  // Modal elements
+  var backdrop   = document.getElementById('det-modal-backdrop');
+  var modalTitle = document.getElementById('det-modal-title');
+  var modalKql   = document.getElementById('det-modal-kql');
+  var modalClose = document.getElementById('det-modal-close');
+  var modalCopy  = document.getElementById('det-modal-copy');
+  var currentKql = '';
+
+  // Active filters: { product: ['defender for office 365'], mitre: [], datasource: [] }
+  var activeFilters = { product: [], mitre: [], datasource: [] };
+  var searchVal = '';
 
   function applyFilters() {
     var visible = 0;
+    var activeCount = activeFilters.product.length + activeFilters.mitre.length + activeFilters.datasource.length;
+
     cards.forEach(function (card) {
-      var sevOk  = activeSeverity === 'all' || card.dataset.severity === activeSeverity;
-      var query  = searchVal.toLowerCase().trim();
-      var textOk = !query ||
-        card.dataset.title.indexOf(query) !== -1 ||
-        card.dataset.tags.indexOf(query)  !== -1 ||
-        card.dataset.mitre.indexOf(query) !== -1;
-      var show   = sevOk && textOk;
+      // AND between categories: card must match ALL active categories
+      // OR within category: card must match ANY active value in that category
+      var productOk = activeFilters.product.length === 0 ||
+        activeFilters.product.some(function (v) { return card.dataset.product === v; });
+
+      var mitreOk = activeFilters.mitre.length === 0 ||
+        activeFilters.mitre.some(function (v) {
+          return card.dataset.tactics.indexOf(v) !== -1 || card.dataset.techniques.indexOf(v) !== -1;
+        });
+
+      var dsOk = activeFilters.datasource.length === 0 ||
+        activeFilters.datasource.some(function (v) { return card.dataset.datasources.indexOf(v) !== -1; });
+
+      // Free-text search across all data attributes
+      var query = searchVal.toLowerCase().trim();
+      var textOk = !query || [
+        card.dataset.name, card.dataset.description, card.dataset.product,
+        card.dataset.datasources, card.dataset.tactics, card.dataset.techniques,
+        card.dataset.tags, card.dataset.kind
+      ].some(function (attr) { return (attr || '').indexOf(query) !== -1; });
+
+      var show = productOk && mitreOk && dsOk && textOk;
       card.classList.toggle('is-hidden', !show);
       if (show) visible++;
     });
+
     if (noResults) noResults.hidden = (visible > 0);
+
+    // Update active filter count
+    if (activeEl) {
+      activeEl.hidden = (activeCount === 0);
+      if (countEl) countEl.textContent = activeCount + ' active';
+    }
   }
 
-  // Severity filter buttons
-  document.querySelectorAll('.det-filter-btn[data-filter="severity"]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      document.querySelectorAll('.det-filter-btn[data-filter="severity"]').forEach(function (b) {
-        b.classList.remove('is-active');
-      });
-      btn.classList.add('is-active');
-      activeSeverity = btn.dataset.value;
+  // Chip toggle
+  chips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var category = chip.dataset.category;
+      var value = chip.dataset.value;
+      var idx = activeFilters[category].indexOf(value);
+      if (idx === -1) {
+        activeFilters[category].push(value);
+        chip.classList.add('is-active');
+      } else {
+        activeFilters[category].splice(idx, 1);
+        chip.classList.remove('is-active');
+      }
       applyFilters();
     });
   });
+
+  // Clear all
+  if (clearBtn) {
+    clearBtn.addEventListener('click', function () {
+      activeFilters = { product: [], mitre: [], datasource: [] };
+      chips.forEach(function (c) { c.classList.remove('is-active'); });
+      applyFilters();
+    });
+  }
 
   // Search
   if (searchEl) {
@@ -179,34 +280,58 @@ layout: default
     });
   }
 
-  // KQL expand/collapse
-  document.querySelectorAll('.det-kql-toggle').forEach(function (btn) {
+  // Modal open
+  document.querySelectorAll('.det-kql-open-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      var expanded = btn.getAttribute('aria-expanded') === 'true';
-      var targetId = btn.getAttribute('aria-controls');
-      var body = document.getElementById(targetId);
-      if (!body) return;
-      expanded = !expanded;
-      btn.setAttribute('aria-expanded', String(expanded));
-      body.hidden = !expanded;
-      btn.querySelector('svg').style.transform = expanded ? 'rotate(180deg)' : '';
+      var slug = btn.dataset.slug;
+      var name = btn.dataset.name;
+      var dataEl = document.getElementById('kql-data-' + slug);
+      if (!dataEl || !backdrop) return;
+      currentKql = dataEl.textContent;
+      if (modalTitle) modalTitle.textContent = name;
+      if (modalKql) modalKql.querySelector('code').textContent = currentKql;
+      backdrop.hidden = false;
+      document.body.style.overflow = 'hidden';
     });
   });
 
-  // Copy KQL
-  document.querySelectorAll('.det-copy-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var targetId = btn.dataset.clipboardTarget;
-      var pre = document.getElementById(targetId);
-      if (!pre) return;
-      var text = pre.textContent || '';
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function () {
-          var orig = btn.textContent;
-          btn.textContent = 'Copied!';
-          setTimeout(function () { btn.textContent = orig; }, 1500);
+  // Modal close
+  function closeModal() {
+    if (backdrop) backdrop.hidden = true;
+    document.body.style.overflow = '';
+  }
+  if (modalClose) modalClose.addEventListener('click', closeModal);
+  if (backdrop) backdrop.addEventListener('click', function (e) {
+    if (e.target === backdrop) closeModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && backdrop && !backdrop.hidden) closeModal();
+  });
+
+  // Modal copy
+  if (modalCopy) {
+    modalCopy.addEventListener('click', function () {
+      if (navigator.clipboard && currentKql) {
+        navigator.clipboard.writeText(currentKql).then(function () {
+          var orig = modalCopy.textContent;
+          modalCopy.textContent = 'Copied!';
+          setTimeout(function () { modalCopy.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy'; }, 1500);
         });
       }
+    });
+  }
+
+  // Card-level copy buttons
+  document.querySelectorAll('.det-card .det-copy-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var slug = btn.dataset.slug;
+      var dataEl = document.getElementById('kql-data-' + slug);
+      if (!dataEl || !navigator.clipboard) return;
+      navigator.clipboard.writeText(dataEl.textContent).then(function () {
+        var orig = btn.innerHTML;
+        btn.textContent = 'Copied!';
+        setTimeout(function () { btn.innerHTML = orig; }, 1500);
+      });
     });
   });
 }());

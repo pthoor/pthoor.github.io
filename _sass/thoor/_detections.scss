@@ -32,6 +32,7 @@
 // ── Filter bar ───────────────────────────────────────────────
 .det-filters {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   align-items: center;
   gap: $space-lg;
@@ -61,31 +62,72 @@
   white-space: nowrap;
 }
 
-.det-filter-btn {
+// ── Filter rows ─────────────────────────────────────────────
+.det-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-sm;
+  width: 100%;
+}
+
+// ── Chip groups ─────────────────────────────────────────────
+.det-chip-group {
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+  flex-wrap: wrap;
+}
+
+.det-chip {
   padding: 4px 12px;
-  border-radius: 6px;
+  border-radius: 20px;
   border: 1px solid var(--border-muted);
-  background: var(--bg-primary);
-  color: var(--text-secondary);
-  font-size: 0.8125rem;
+  background: transparent;
+  font-size: 0.75rem;
   font-weight: 500;
   cursor: pointer;
   transition: all $transition-fast;
+  white-space: nowrap;
 
-  &:hover { border-color: var(--border-default); color: var(--text-primary); }
+  &:hover { border-color: var(--border-default); }
 
-  &.is-active {
-    border-color: var(--accent-blue);
-    background: rgba(31,111,235,0.1);
-    color: var(--accent-blue);
+  // Category colors
+  &--product {
+    color: #3fb950;
+    &.is-active { background: rgba(63,185,80,0.15); border-color: rgba(63,185,80,0.4); }
   }
+  &--mitre {
+    color: #58a6ff;
+    &.is-active { background: rgba(31,111,235,0.15); border-color: rgba(31,111,235,0.4); }
+  }
+  &--datasource {
+    color: #39d0d0;
+    &.is-active { background: rgba(31,200,200,0.15); border-color: rgba(31,200,200,0.4); }
+  }
+}
 
-  // Severity-coloured active states
-  &--critical.is-active { border-color: var(--accent-red,#f85149);  background: rgba(248,81,73,0.1);  color: var(--accent-red,#f85149);  }
-  &--high.is-active     { border-color: var(--accent-orange);       background: rgba(210,153,34,0.1); color: var(--accent-orange);       }
-  &--medium.is-active   { border-color: #e3b341;                    background: rgba(227,179,65,0.1); color: #e3b341;                    }
-  &--low.is-active      { border-color: var(--accent-blue);         background: rgba(31,111,235,0.1); color: var(--accent-blue);         }
-  &--info.is-active     { border-color: var(--accent-green);        background: rgba(63,185,80,0.1);  color: var(--accent-green);        }
+// ── Active filter bar ───────────────────────────────────────
+.det-active-filters {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+}
+
+.det-active-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.det-clear-btn {
+  background: none;
+  border: none;
+  color: var(--accent-blue);
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0;
+  &:hover { text-decoration: underline; }
 }
 
 .det-search-input {
@@ -108,7 +150,7 @@
 // ── Grid ─────────────────────────────────────────────────────
 .det-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: 1fr;
   gap: $space-lg;
   margin-bottom: $space-2xl;
 }
@@ -126,19 +168,6 @@
   position: relative;
   overflow: hidden;
 
-  // Left accent bar by severity
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-  }
-  &--critical::before { background: var(--accent-red,#f85149); }
-  &--high::before     { background: var(--accent-orange); }
-  &--medium::before   { background: #e3b341; }
-  &--low::before      { background: var(--accent-blue); }
-  &--info::before     { background: var(--accent-green); }
-
   &:hover {
     border-color: var(--border-default);
     box-shadow: 0 4px 24px rgba(0,0,0,0.15);
@@ -149,51 +178,37 @@
   }
 }
 
+// ── Card head (title + actions) ─────────────────────────────
 .det-card-head {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: $space-md;
 }
 
-.det-card-meta {
+.det-card-actions {
   display: flex;
-  align-items: center;
   gap: $space-xs;
-  flex-wrap: wrap;
-}
-
-.det-card-chevron {
-  color: var(--text-muted);
   flex-shrink: 0;
 }
 
-// ── Severity badges ──────────────────────────────────────────
-.det-severity-badge {
+.det-kql-open-btn,
+.det-copy-btn {
   display: inline-flex;
   align-items: center;
-  padding: 2px 8px;
-  border-radius: 5px;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
-  letter-spacing: 0.08em;
-
-  &--critical { background: rgba(248,81,73,0.15);  color: var(--accent-red,#f85149); }
-  &--high     { background: rgba(210,153,34,0.15); color: var(--accent-orange); }
-  &--medium   { background: rgba(227,179,65,0.15); color: #e3b341; }
-  &--low      { background: rgba(31,111,235,0.15); color: var(--accent-blue); }
-  &--info     { background: rgba(63,185,80,0.15);  color: var(--accent-green); }
-}
-
-.det-product-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 8px;
-  border-radius: 5px;
+  gap: 4px;
+  background: none;
   border: 1px solid var(--border-muted);
-  font-size: 0.6875rem;
+  border-radius: 5px;
+  padding: 3px 10px;
+  font-size: 0.75rem;
   color: var(--text-muted);
-  background: var(--bg-tertiary);
+  font-family: inherit;
+  cursor: pointer;
+  transition: all $transition-fast;
+  white-space: nowrap;
+
+  &:hover { border-color: var(--border-default); color: var(--text-secondary); }
 }
 
 // ── Card body ────────────────────────────────────────────────
@@ -212,24 +227,42 @@
   line-height: 1.55;
 }
 
-.det-mitre-tags {
+// ── Tag pills (on cards) ────────────────────────────────────
+.det-pill-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 2px;
+  gap: 6px;
 }
 
-.det-mitre-tag {
+.det-pill {
   display: inline-flex;
   align-items: center;
-  padding: 2px 7px;
-  border-radius: 4px;
-  background: rgba(188,140,255,0.1);
-  border: 1px solid rgba(188,140,255,0.2);
+  padding: 3px 10px;
+  border-radius: 12px;
   font-size: 0.6875rem;
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--accent-purple);
   font-weight: 500;
+  border: 1px solid;
+
+  &--mitre {
+    background: rgba(31,111,235,0.1);
+    color: #58a6ff;
+    border-color: rgba(31,111,235,0.25);
+  }
+  &--datasource {
+    background: rgba(31,200,200,0.1);
+    color: #39d0d0;
+    border-color: rgba(31,200,200,0.25);
+  }
+  &--product {
+    background: rgba(63,185,80,0.1);
+    color: #3fb950;
+    border-color: rgba(63,185,80,0.25);
+  }
+  &--kind {
+    background: rgba(188,140,255,0.1);
+    color: #bc8cff;
+    border-color: rgba(188,140,255,0.25);
+  }
 }
 
 .det-tag-list {
@@ -238,58 +271,10 @@
   gap: 4px;
 }
 
-// ── KQL expand ───────────────────────────────────────────────
-.det-kql-wrap {
-  margin-top: auto;
-  padding-top: $space-sm;
-  border-top: 1px solid var(--border-muted);
-}
+// ── KQL data (hidden, used by JS) ───────────────────────────
+.det-kql-data { display: none; }
 
-.det-kql-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 0.8125rem;
-  font-family: inherit;
-  cursor: pointer;
-  padding: 0;
-  transition: color $transition-fast;
-
-  svg { transition: transform 0.2s ease; }
-
-  &:hover { color: var(--accent-blue); }
-}
-
-.det-kql-body {
-  margin-top: $space-sm;
-}
-
-.det-kql-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 4px;
-}
-
-.det-copy-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: none;
-  border: 1px solid var(--border-muted);
-  border-radius: 5px;
-  padding: 3px 10px;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-family: inherit;
-  cursor: pointer;
-  transition: all $transition-fast;
-
-  &:hover { border-color: var(--border-default); color: var(--text-secondary); }
-}
-
+// ── KQL code block ──────────────────────────────────────────
 .det-kql {
   margin: 0;
   padding: $space-md;
@@ -310,26 +295,77 @@
   }
 }
 
-// ── Card footer ──────────────────────────────────────────────
-.det-card-footer {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-family: 'JetBrains Mono', monospace;
+// ── Modal ───────────────────────────────────────────────────
+.det-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-lg;
+}
+
+.det-modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-muted);
+  border-radius: 12px;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.det-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-md $space-lg;
+  border-bottom: 1px solid var(--border-muted);
+  flex-shrink: 0;
+}
+
+.det-modal-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.det-modal-header-actions {
   display: flex;
   align-items: center;
   gap: $space-sm;
-  margin: 0;
-  padding-top: $space-xs;
+  flex-shrink: 0;
 }
 
-.det-status-badge {
-  padding: 1px 6px;
-  border-radius: 4px;
-  font-size: 0.6875rem;
-  text-transform: capitalize;
+.det-modal-copy {
+  @extend .det-copy-btn;
+}
 
-  &--testing    { background: rgba(227,179,65,0.12); color: #e3b341; }
-  &--deprecated { background: rgba(139,148,158,0.12); color: var(--text-muted); }
+.det-modal-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  border-radius: 4px;
+  transition: color $transition-fast;
+  &:hover { color: var(--text-primary); }
+}
+
+.det-modal-body {
+  padding: $space-lg;
+  overflow-y: auto;
+  flex: 1;
 }
 
 // ── Empty states ─────────────────────────────────────────────
@@ -376,17 +412,26 @@
 }
 
 // ── Responsive ───────────────────────────────────────────────
-@media (max-width: 640px) {
-  .det-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 768px) {
+  .det-modal-backdrop { padding: $space-sm; }
+  .det-modal {
+    max-height: 95vh;
+    border-radius: 8px;
   }
+}
 
-  .det-filters {
+@media (max-width: 640px) {
+  .det-chip-group {
+    width: 100%;
+  }
+  .det-filter-row {
     flex-direction: column;
+    align-items: flex-start;
+  }
+  .det-filters {
     align-items: flex-start;
     gap: $space-md;
   }
-
   .det-filter-group:last-child { width: 100%; }
   .det-search-input { width: 100%; }
 }
