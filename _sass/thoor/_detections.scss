@@ -301,10 +301,14 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
   z-index: 1000;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   padding: $space-lg;
+
+  &:not([hidden]) {
+    display: flex;
+  }
 }
 
 .det-modal {
