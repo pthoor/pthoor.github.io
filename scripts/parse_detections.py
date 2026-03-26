@@ -1,28 +1,8 @@
 #!/usr/bin/env python3
 """
 parse_detections.py
-Walks the pthoor/detections-ai-kql repository and emits _data/detections.yml
-for the Jekyll site.
-
-Expected KQL file structure (YAML frontmatter + KQL body):
-
-  ---
-  title: "Detect Legacy Authentication"
-  description: "Detects sign-ins via legacy auth protocols"
-  severity: high          # critical | high | medium | low | info
-  product: Microsoft Sentinel
-  platform: Azure
-  tags:
-    - identity
-    - entra-id
-  mitre:
-    - T1078               # Valid Accounts
-    - TA0001              # Initial Access
-  status: stable          # stable | testing | deprecated
-  created: 2024-01-15
-  ---
-  SigninLogs
-  | where ...
+Walks the pthoor/detections-ai-kql repository, reads Sentinel-format YAML
+files, and emits _data/detections.yml for the Jekyll site.
 
 Run:
   python scripts/parse_detections.py <detections-repo-dir> <output-yml>
@@ -32,82 +12,86 @@ import sys
 import os
 import re
 import yaml
-from datetime import date
+
+PRODUCT_MAP = {
+    'MDO': 'Defender for Office 365',
+    'MDE': 'Defender for Endpoint',
+    'MDI': 'Defender for Identity',
+    'MDA': 'Defender for Cloud Apps',
+    'Sentinel': 'Microsoft Sentinel',
+}
 
 
-def find_kql_files(root):
-    """Recursively yield .kql files under root, skipping hidden dirs."""
+def find_yml_files(root):
+    """Recursively yield .yml files under root, skipping hidden dirs."""
     for dirpath, dirnames, filenames in os.walk(root):
-        # Skip hidden directories (.git, etc.)
         dirnames[:] = [d for d in dirnames if not d.startswith('.')]
         for fname in filenames:
-            if fname.endswith('.kql'):
+            if fname.endswith('.yml') or fname.endswith('.yaml'):
                 yield os.path.join(dirpath, fname)
 
 
-def parse_kql_file(filepath):
-    """Parse a KQL file with optional YAML frontmatter.
-    Returns a dict or None on failure."""
+def pascal_to_display(name):
+    """Convert PascalCase to display name: InitialAccess -> Initial Access."""
+    return re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', name)
+
+
+def derive_product(filepath, root):
+    """Derive product from folder path using PRODUCT_MAP."""
+    rel = os.path.relpath(filepath, root)
+    parts = rel.replace('\\', '/').split('/')
+    for part in parts:
+        if part in PRODUCT_MAP:
+            return PRODUCT_MAP[part]
+    parent = os.path.basename(os.path.dirname(filepath))
+    return PRODUCT_MAP.get(parent, parent)
+
+
+def parse_yml_file(filepath, root):
+    """Parse a Sentinel-format YAML file. Returns a dict or None."""
     with open(filepath, encoding='utf-8') as f:
-        raw = f.read()
+        try:
+            data = yaml.safe_load(f)
+        except yaml.YAMLError:
+            return None
 
-    # Split frontmatter from KQL body
-    frontmatter = {}
-    kql_body = raw.strip()
-
-    if raw.startswith('---'):
-        parts = raw.split('---', 2)
-        if len(parts) >= 3:
-            try:
-                frontmatter = yaml.safe_load(parts[1]) or {}
-            except yaml.YAMLError:
-                frontmatter = {}
-            kql_body = parts[2].strip()
-
-    if not kql_body:
+    if not data or not isinstance(data, dict):
         return None
 
-    # Derive slug from file path
-    rel = os.path.relpath(filepath)
-    slug = re.sub(r'[^a-z0-9]+', '-', os.path.splitext(os.path.basename(filepath))[0].lower()).strip('-')
+    name = data.get('name', '')
+    if not name:
+        return None
 
-    # Normalise fields
-    severity = str(frontmatter.get('severity', 'info')).lower()
-    if severity not in ('critical', 'high', 'medium', 'low', 'info'):
-        severity = 'info'
+    slug = re.sub(r'[^a-z0-9]+', '-',
+                  os.path.splitext(os.path.basename(filepath))[0].lower()
+                  ).strip('-')
 
-    created = frontmatter.get('created')
-    if isinstance(created, date):
-        created = created.isoformat()
-    else:
-        created = str(created) if created else ''
+    data_sources = []
+    for connector in (data.get('requiredDataConnectors') or []):
+        for dt in (connector.get('dataTypes') or []):
+            if dt not in data_sources:
+                data_sources.append(dt)
 
-    mitre = frontmatter.get('mitre') or []
-    if isinstance(mitre, str):
-        mitre = [mitre]
-
-    tags = frontmatter.get('tags') or []
-    if isinstance(tags, str):
-        tags = [tags]
+    tactics = [pascal_to_display(t) for t in (data.get('tactics') or [])]
 
     return {
         'slug': slug,
-        'title': str(frontmatter.get('title') or slug.replace('-', ' ').title()),
-        'description': str(frontmatter.get('description') or ''),
-        'severity': severity,
-        'product': str(frontmatter.get('product') or ''),
-        'platform': str(frontmatter.get('platform') or ''),
-        'tags': [str(t) for t in tags],
-        'mitre': [str(m) for m in mitre],
-        'status': str(frontmatter.get('status') or 'stable'),
-        'created': created,
-        'kql': kql_body,
+        'name': str(name),
+        'description': str(data.get('description') or '').strip().strip("'"),
+        'product': derive_product(filepath, root),
+        'data_sources': data_sources,
+        'tactics': tactics,
+        'techniques': [str(t) for t in (data.get('relevantTechniques') or [])],
+        'tags': [str(t) for t in (data.get('tags') or [])],
+        'kind': str(data.get('kind') or 'Scheduled'),
+        'query': str(data.get('query') or '').rstrip(),
     }
 
 
 def main():
     if len(sys.argv) != 3:
-        print(f'Usage: {sys.argv[0]} <detections-repo-dir> <output.yml>', file=sys.stderr)
+        print(f'Usage: {sys.argv[0]} <detections-repo-dir> <output.yml>',
+              file=sys.stderr)
         sys.exit(1)
 
     repo_dir = sys.argv[1]
@@ -118,15 +102,13 @@ def main():
         sys.exit(1)
 
     detections = []
-    for kql_file in sorted(find_kql_files(repo_dir)):
-        entry = parse_kql_file(kql_file)
+    for yml_file in sorted(find_yml_files(repo_dir)):
+        entry = parse_yml_file(yml_file, repo_dir)
         if entry:
             detections.append(entry)
-            print(f'  parsed: {kql_file} → {entry["slug"]}')
+            print(f'  parsed: {yml_file} -> {entry["slug"]}')
 
-    # Sort: critical first, then high, medium, low, info; then by title
-    order = {'critical': 0, 'high': 1, 'medium': 2, 'low': 3, 'info': 4}
-    detections.sort(key=lambda d: (order.get(d['severity'], 9), d['title'].lower()))
+    detections.sort(key=lambda d: d['name'].lower())
 
     os.makedirs(os.path.dirname(output_path) or '.', exist_ok=True)
 
