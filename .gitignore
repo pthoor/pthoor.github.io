@@ -33,6 +33,7 @@ _asset_bundler_cache
 _site
 
 # Other
-docs
+docs/*
+!docs/detection-yamls/
 CLAUDE.*
 .claude/

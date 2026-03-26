@@ -1,0 +1,53 @@
+id: ace0bf22-c0f3-47b1-80dc-9f769fdd1b82
+name: Malicious Verdicts in Teams
+description: >
+  Find Teams messages that have already received Spam, Phish, or Malware verdicts
+  from Microsoft Defender for Office 365. Provides a fast triage queue of confirmed
+  malicious content delivered via Teams.
+severity: High
+requiredDataConnectors:
+  - connectorId: MicrosoftThreatProtection
+    dataTypes:
+      - MessageEvents
+queryFrequency: 1h
+queryPeriod: 1d
+triggerOperator: gt
+triggerThreshold: 0
+tactics:
+  - InitialAccess
+relevantTechniques:
+  - T1566
+tags:
+  - Teams
+  - MDO
+  - Malware
+  - Phishing
+  - Spam
+query: |
+  // Malicious Verdicts in Teams
+  // Find messages already carrying Spam/Phish/Malware verdicts for fastest triage queue
+  // Source: https://techcommunity.microsoft.com/blog/microsoftdefenderforoffice365blog/safeguarding-microsoft-teams-with-microsoft-defender-for-office-365/4464086
+  let lookback = 1d;
+  MessageEvents
+  | where Timestamp > ago(lookback)
+  | where ThreatTypes has "Phish" or ThreatTypes has "Malware" or ThreatTypes has "Spam"
+  | project Timestamp, SenderDisplayName, SenderEmailAddress,
+           RecipientDetails, IsOwnedThread, ThreadType, IsExternalThread, ReportId
+  | order by Timestamp desc
+kind: Scheduled
+entityMappings:
+  - entityType: Account
+    fieldMappings:
+      - identifier: FullName
+        columnName: SenderDisplayName
+  - entityType: Mailbox
+    fieldMappings:
+      - identifier: MailboxPrimaryAddress
+        columnName: SenderEmailAddress
+metadata:
+  source:
+    kind: Community
+  author:
+    name: Pierre Thoor
+  support:
+    tier: Community

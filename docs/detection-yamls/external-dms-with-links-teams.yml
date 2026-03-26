@@ -1,0 +1,56 @@
+id: 4e1aed9c-9a38-4f8c-aa9a-0515dc5b22fa
+name: External DMs with Links in Teams
+description: >
+  Identify top external domains sending links in Teams direct messages over the last 7 days.
+  Filters out common trusted Microsoft domains to reduce noise and highlights the most
+  prolific external link sources for investigation.
+severity: Medium
+requiredDataConnectors:
+  - connectorId: MicrosoftThreatProtection
+    dataTypes:
+      - MessageEvents
+      - MessageUrlInfo
+queryFrequency: 1d
+queryPeriod: 7d
+triggerOperator: gt
+triggerThreshold: 0
+tactics:
+  - InitialAccess
+relevantTechniques:
+  - T1566
+  - T1566.002
+tags:
+  - Teams
+  - MDO
+  - External Threats
+  - Phishing
+query: |
+  // External DMs with Links in Teams
+  // Identify top external domains sending links in Teams over last 7 days
+  // Source: https://techcommunity.microsoft.com/blog/microsoftdefenderforoffice365blog/safeguarding-microsoft-teams-with-microsoft-defender-for-office-365/4464086
+  // Improved: added Timestamp filter on MessageUrlInfo for better join performance
+  // and filtered out common trusted domains to reduce noise
+  let lookback = 7d;
+  let trustedDomains = dynamic(["microsoft.com", "sharepoint.com", "office.com", "live.com", "windows.net", "microsoftonline.com"]);
+  MessageEvents
+  | where Timestamp > ago(lookback) and IsExternalThread == true
+  | join kind=inner (
+      MessageUrlInfo
+      | where Timestamp > ago(lookback)
+    ) on TeamsMessageId
+  | where not(UrlDomain has_any (trustedDomains))
+  | summarize Links=dcount(Url), Senders=dcount(SenderEmailAddress) by UrlDomain
+  | top 10 by Links desc
+kind: Scheduled
+entityMappings:
+  - entityType: DNS
+    fieldMappings:
+      - identifier: DomainName
+        columnName: UrlDomain
+metadata:
+  source:
+    kind: Community
+  author:
+    name: Pierre Thoor
+  support:
+    tier: Community

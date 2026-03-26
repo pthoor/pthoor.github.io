@@ -1,0 +1,59 @@
+id: 676b04f5-2949-4703-8d77-af5212afd687
+name: IT Helpdesk Imposters in External DMs
+description: >
+  Surface social-engineering lures in Teams external direct messages that impersonate
+  IT helpdesk or support staff. Detects display names and recipient details containing
+  helpdesk, IT support, or work-from-home themed keywords commonly used in phishing attacks.
+severity: High
+requiredDataConnectors:
+  - connectorId: MicrosoftThreatProtection
+    dataTypes:
+      - MessageEvents
+queryFrequency: 1d
+queryPeriod: 5d
+triggerOperator: gt
+triggerThreshold: 0
+tactics:
+  - InitialAccess
+relevantTechniques:
+  - T1534
+tags:
+  - Teams
+  - MDO
+  - Social Engineering
+  - Helpdesk Impersonation
+query: |
+  // IT Helpdesk Imposters in External DMs
+  // Surface social-engineering lures impersonating support over last 5 days
+  // Source: https://techcommunity.microsoft.com/blog/microsoftdefenderforoffice365blog/safeguarding-microsoft-teams-with-microsoft-defender-for-office-365/4464086
+  let lookback = 5d;
+  MessageEvents
+  | where Timestamp > ago(lookback)
+  | where IsExternalThread == true
+  // Improved: use "helpdesk"/"help desk" patterns and case-sensitive "IT" to reduce false positives
+  | where (RecipientDetails has "helpdesk" or RecipientDetails has "help desk")
+     or (RecipientDetails has_cs "IT" and RecipientDetails has "support")
+     or (SenderDisplayName has "helpdesk" or SenderDisplayName has "help desk")
+     or (SenderDisplayName has_cs "IT" and SenderDisplayName has "support")
+  // Separated: "working from home" is a different social-engineering lure category
+     or (RecipientDetails has "working" and RecipientDetails has "home")
+     or (SenderDisplayName has "working" and SenderDisplayName has "home")
+  | project Timestamp, SenderDisplayName, SenderEmailAddress,
+           RecipientDetails, IsOwnedThread, ThreadType, ReportId
+kind: Scheduled
+entityMappings:
+  - entityType: Account
+    fieldMappings:
+      - identifier: FullName
+        columnName: SenderDisplayName
+  - entityType: Mailbox
+    fieldMappings:
+      - identifier: MailboxPrimaryAddress
+        columnName: SenderEmailAddress
+metadata:
+  source:
+    kind: Community
+  author:
+    name: Pierre Thoor
+  support:
+    tier: Community

@@ -1,0 +1,56 @@
+id: b34dc6bf-65ed-4a90-b2ca-e1855536db6c
+name: Who Clicked Links in Teams
+description: >
+  Exposure view showing Teams workload click activity over the last 7 days.
+  Extracts the URL domain for easier pivoting and includes NetworkMessageId
+  for correlation during investigations.
+severity: Informational
+requiredDataConnectors:
+  - connectorId: MicrosoftThreatProtection
+    dataTypes:
+      - UrlClickEvents
+queryFrequency: 1d
+queryPeriod: 7d
+triggerOperator: gt
+triggerThreshold: 0
+tactics:
+  - InitialAccess
+relevantTechniques:
+  - T1204
+tags:
+  - Teams
+  - MDO
+  - Click Tracking
+  - User Execution
+query: |
+  // Who Clicked Links in Teams
+  // Exposure view showing Teams workload click activity over last 7 days
+  // Source: https://techcommunity.microsoft.com/blog/microsoftdefenderforoffice365blog/safeguarding-microsoft-teams-with-microsoft-defender-for-office-365/4464086
+  let lookback = 7d;
+  UrlClickEvents
+  | where Timestamp > ago(lookback) and Workload == "Teams"
+  // Added: UrlDomain and NetworkMessageId for easier pivoting during investigations
+  | extend UrlDomain = tostring(parse_url(Url).Host)
+  | project Timestamp, AccountUpn, Url, UrlDomain, ActionType, NetworkMessageId
+  | order by Timestamp desc
+kind: Scheduled
+entityMappings:
+  - entityType: Account
+    fieldMappings:
+      - identifier: AadUserId
+        columnName: AccountUpn
+  - entityType: URL
+    fieldMappings:
+      - identifier: Url
+        columnName: Url
+  - entityType: DNS
+    fieldMappings:
+      - identifier: DomainName
+        columnName: UrlDomain
+metadata:
+  source:
+    kind: Community
+  author:
+    name: Pierre Thoor
+  support:
+    tier: Community
