@@ -475,18 +475,6 @@
   }
 }
 
-.related-detection-sev {
-  flex-shrink: 0;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-
-  &--critical { background: var(--accent-red, #f85149); }
-  &--high     { background: var(--accent-orange); }
-  &--medium   { background: #e3b341; }
-  &--low      { background: var(--accent-blue); }
-  &--info     { background: var(--accent-green); }
-}
 
 .related-detection-title {
   flex: 1;

@@ -198,7 +198,6 @@ layout: default
     <div class="related-detections-list">
       {% for det in _rel_dets limit:4 %}
       <a href="{{ '/detections/' | relative_url }}#det-{{ det.slug | escape }}" class="related-detection-chip">
-        <span class="related-detection-sev" aria-hidden="true"></span>
         <span class="related-detection-title">{{ det.name | escape }}</span>
         <span class="related-detection-product">{{ det.product | escape }}</span>
       </a>

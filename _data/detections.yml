@@ -4,7 +4,7 @@ detections:
   - slug: external-dms-with-links-teams
     name: External DMs with Links in Teams
     description: Identify top external domains sending links in Teams direct messages over the last 7 days. Filters out common trusted Microsoft domains to reduce noise and highlights the most prolific external link sources for investigation.
-    product: detection-yamls
+    product: Defender for Office 365
     data_sources:
       - MessageEvents
       - MessageUrlInfo
@@ -39,7 +39,7 @@ detections:
   - slug: helpdesk-imposters-external-dms
     name: IT Helpdesk Imposters in External DMs
     description: Surface social-engineering lures in Teams external direct messages that impersonate IT helpdesk or support staff. Detects display names and recipient details containing helpdesk, IT support, or work-from-home themed keywords commonly used in phishing attacks.
-    product: detection-yamls
+    product: Defender for Office 365
     data_sources:
       - MessageEvents
     tactics:
@@ -73,7 +73,7 @@ detections:
   - slug: malicious-verdicts-teams
     name: Malicious Verdicts in Teams
     description: Find Teams messages that have already received Spam, Phish, or Malware verdicts from Microsoft Defender for Office 365. Provides a fast triage queue of confirmed malicious content delivered via Teams.
-    product: detection-yamls
+    product: Defender for Office 365
     data_sources:
       - MessageEvents
     tactics:
@@ -101,7 +101,7 @@ detections:
   - slug: rare-external-domains-with-clicks-teams
     name: Rare External Domains with Clicks in Teams
     description: Surfaces rare external domains seen in Teams messages and correlates them with user click activity from UrlClickEvents. Designed for incident response to quickly identify when users have interacted with uncommon or potentially malicious links delivered via external Teams conversations.
-    product: detection-yamls
+    product: Defender for Office 365
     data_sources:
       - MessageEvents
       - MessageUrlInfo
@@ -164,7 +164,7 @@ detections:
   - slug: safe-links-click-events-teams
     name: Safe Links Click Events Telemetry for Teams
     description: Confirm Safe Links outcomes and adoption in Teams by summarizing click events from the last 24 hours. Groups clicks by action type to show how many clicks were allowed, blocked, or pending verdict, and how many unique users were involved.
-    product: detection-yamls
+    product: Defender for Office 365
     data_sources:
       - UrlClickEvents
     tactics:
@@ -189,7 +189,7 @@ detections:
   - slug: who-clicked-links-teams
     name: Who Clicked Links in Teams
     description: Exposure view showing Teams workload click activity over the last 7 days. Extracts the URL domain for easier pivoting and includes NetworkMessageId for correlation during investigations.
-    product: detection-yamls
+    product: Defender for Office 365
     data_sources:
       - UrlClickEvents
     tactics:

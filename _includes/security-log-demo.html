@@ -38,7 +38,7 @@
     <div class="log-demo-colheader" aria-hidden="true">
       <span>{% if use_live %}Kind{% else %}Timestamp{% endif %}</span>
       <span>{% if use_live %}Product{% else %}Severity{% endif %}</span>
-      <span>Product</span>
+      <span>{% if use_live %}Data Source{% else %}Product{% endif %}</span>
       <span>{% if use_live %}Rule{% else %}Event{% endif %}</span>
       <span>{% if use_live %}MITRE{% else %}Time{% endif %}</span>
       <span>{% if use_live %}Type{% else %}Status{% endif %}</span>
