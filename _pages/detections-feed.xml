@@ -16,18 +16,20 @@ permalink: /detections/feed.xml
   {% assign dets = site.data.detections.detections %}
   {% for det in dets %}
   <entry>
-    <title>{{ det.title | xml_escape }}</title>
+    <title>{{ det.name | xml_escape }}</title>
     <link href="{{ '/detections/#det-' | append: det.slug | absolute_url }}" rel="alternate" type="text/html"/>
     <id>{{ '/detections/#det-' | append: det.slug | absolute_url }}</id>
-    {% if det.created != "" %}
-    <updated>{{ det.created | date_to_xmlschema }}</updated>
-    {% else %}
     <updated>{{ site.time | date_to_xmlschema }}</updated>
-    {% endif %}
     <summary>{{ det.description | xml_escape }}</summary>
-    <category term="{{ det.severity | xml_escape }}" label="Severity: {{ det.severity | capitalize | xml_escape }}"/>
-    {% for m in det.mitre %}
-    <category term="{{ m | xml_escape }}" label="MITRE: {{ m | xml_escape }}"/>
+    <category term="{{ det.product | xml_escape }}" label="Product: {{ det.product | xml_escape }}"/>
+    {% for t in det.tactics %}
+    <category term="{{ t | xml_escape }}" label="Tactic: {{ t | xml_escape }}"/>
+    {% endfor %}
+    {% for t in det.techniques %}
+    <category term="{{ t | xml_escape }}" label="MITRE: {{ t | xml_escape }}"/>
+    {% endfor %}
+    {% for ds in det.data_sources %}
+    <category term="{{ ds | xml_escape }}" label="Data Source: {{ ds | xml_escape }}"/>
     {% endfor %}
     {% for t in det.tags %}
     <category term="{{ t | xml_escape }}" label="{{ t | xml_escape }}"/>

@@ -22,22 +22,26 @@
         <input id="log-search" class="log-demo-search" type="search" placeholder="Filter {% if use_live %}detections{% else %}events{% endif %}&hellip;" autocomplete="off" aria-label="Filter {% if use_live %}detection rules{% else %}security events{% endif %}">
       </div>
       <div class="log-demo-filters" role="group" aria-label="Filter by severity">
+        {% if use_live %}
+        <button class="log-filter-btn is-active" data-filter="all">All</button>
+        {% else %}
         <button class="log-filter-btn is-active" data-filter="all">All</button>
         <button class="log-filter-btn" data-filter="info">Info</button>
-        <button class="log-filter-btn" data-filter="warning">{% if use_live %}Medium{% else %}Warning{% endif %}</button>
+        <button class="log-filter-btn" data-filter="warning">Warning</button>
         <button class="log-filter-btn" data-filter="high">High</button>
         <button class="log-filter-btn" data-filter="critical">Critical</button>
+        {% endif %}
       </div>
     </div>
 
     <!-- Column headers -->
     <div class="log-demo-colheader" aria-hidden="true">
-      <span>{% if use_live %}Created{% else %}Timestamp{% endif %}</span>
-      <span>Severity</span>
+      <span>{% if use_live %}Kind{% else %}Timestamp{% endif %}</span>
+      <span>{% if use_live %}Product{% else %}Severity{% endif %}</span>
       <span>Product</span>
       <span>{% if use_live %}Rule{% else %}Event{% endif %}</span>
       <span>{% if use_live %}MITRE{% else %}Time{% endif %}</span>
-      <span>Status</span>
+      <span>{% if use_live %}Type{% else %}Status{% endif %}</span>
       <span></span>
     </div>
 
@@ -49,24 +53,20 @@
     {% assign shown = 0 %}
     {% for det in live_detections limit:5 %}
     {% assign shown = shown | plus: 1 %}
-    {% assign sev_class = det.severity | default: "info" %}
-    {% assign mitre_first = det.mitre | first | default: "--" %}
-    {% assign status_label = "Stable" %}
-    {% assign status_class = "resolved" %}
-    {% if det.status == "testing" %}{% assign status_label = "Testing" %}{% assign status_class = "investigating" %}{% endif %}
-    {% if det.status == "deprecated" %}{% assign status_label = "Deprecated" %}{% assign status_class = "" %}{% endif %}
+    {% assign prod_class = det.product | downcase | replace: " ", "-" | default: "unknown" %}
+    {% assign technique_first = det.techniques | first | default: "--" %}
+    {% assign kind_label = det.kind | default: "Scheduled" %}
 
     <div class="log-entry" role="listitem"
-         data-severity="{{ sev_class | escape }}"
          data-product="{{ det.product | downcase | escape }}"
-         data-message="{{ det.title | downcase | escape }} {{ det.description | downcase | truncate: 80 | escape }} {{ det.tags | join: ' ' | downcase | escape }}">
+         data-message="{{ det.name | downcase | escape }} {{ det.description | downcase | truncate: 80 | escape }} {{ det.tags | join: ' ' | downcase | escape }}">
       <div class="log-entry-main" role="button" tabindex="0" aria-expanded="false">
-        <span class="log-ts">{{ det.created | escape | default: "—" }}</span>
-        <span class="log-badge log-badge--{{ sev_class | escape }}">{{ sev_class | capitalize | escape }}</span>
+        <span class="log-ts">{{ kind_label | escape }}</span>
+        <span class="log-badge log-badge--{{ prod_class | escape }}">{{ det.product | escape | default: "—" }}</span>
         <span class="log-product">{{ det.product | escape | default: "—" }}</span>
-        <span class="log-message">{{ det.title | escape }}</span>
-        <span class="log-duration" title="MITRE ATT&CK">{{ mitre_first | escape }}</span>
-        <span class="log-status-badge{% if status_class != "" %} log-status-badge--{{ status_class }}{% endif %}">{{ status_label }}</span>
+        <span class="log-message">{{ det.name | escape }}</span>
+        <span class="log-duration" title="MITRE ATT&CK">{{ technique_first | escape }}</span>
+        <span class="log-status-badge">{{ kind_label | escape }}</span>
         <span class="log-entry-chevron" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
         </span>
@@ -79,15 +79,15 @@
           </div>
           <div class="log-detail-item">
             <span class="log-detail-label">MITRE ATT&amp;CK</span>
-            <span class="log-detail-value">{{ det.mitre | join: " · " | escape | default: "—" }}</span>
+            <span class="log-detail-value">{{ det.techniques | join: " · " | escape | default: "—" }}</span>
           </div>
           <div class="log-detail-item">
-            <span class="log-detail-label">Tags</span>
-            <span class="log-detail-value">{{ det.tags | join: ", " | escape | default: "—" }}</span>
+            <span class="log-detail-label">Data Sources</span>
+            <span class="log-detail-value">{{ det.data_sources | join: ", " | escape | default: "—" }}</span>
           </div>
         </div>
-        {% if det.kql != "" %}
-        <pre class="log-kql">{{ det.kql | escape }}</pre>
+        {% if det.query != "" %}
+        <pre class="log-kql">{{ det.query | escape }}</pre>
         {% endif %}
       </div>
     </div>
