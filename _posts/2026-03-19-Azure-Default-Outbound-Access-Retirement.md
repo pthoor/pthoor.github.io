@@ -16,8 +16,6 @@ I've spent a lot of time digging into the official docs, testing in lab environm
 
 The short answer for most PaaS-heavy organizations: **probably not.** But the devil is in the details, and there are a few gotchas that will absolutely bite you if you're not paying attention.
 
----
-
 ## Quick Assessment: Am I Affected?
 
 Before we go deep, here's the cheat sheet:
@@ -34,8 +32,6 @@ flowchart TD
 
 Now let's understand *why*.
 
----
-
 ## Azure Networking Fundamentals: It's All Software
 
 ### Does a VNet Actually "Exist"?
@@ -51,8 +47,6 @@ You don't need to know VFP exists to use Azure networking. But it helps to under
 ### What Is a Subnet?
 
 A subnet is a **logical partition** within a VNet — a range of IPs you use to organize and apply policy. What makes subnets meaningful is what you attach to them: NSGs, route tables, service endpoints, delegations, and — the star of this post — the `defaultOutboundAccess` property.
-
----
 
 ## How Azure Routing Works (and Which Route Wins)
 
@@ -90,8 +84,6 @@ Every subnet gets these automatically [3]:
 | 100.64.0.0/10 | None | Shared address space (RFC 6598 / CGNAT) is dropped |
 
 The `0.0.0.0/0 → Internet` system route is what gives VMs internet access. But *how* that access works depends on whether the VM has **explicit** outbound or relies on **default** outbound.
-
----
 
 ## What Default Outbound Access Actually Is
 
@@ -145,8 +137,6 @@ No safety net. No outbound. Period.
 
 There is one documented exception worth knowing about: VMs in a private subnet **can still reach Azure Storage accounts in the same region** without explicit outbound [4]. This is a platform-level behavior. Microsoft recommends using NSGs to control it. If your security posture requires *all* outbound through a firewall, you need to be aware that this path exists.
 
----
-
 ## What Changes on March 31, 2026
 
 Let's be precise [4]:
@@ -179,8 +169,6 @@ resource subnet 'Microsoft.Network/virtualNetworks/subnets@2024-05-01' = {
 }
 ```
 
----
-
 ## The Key Sentence Everyone Should Know
 
 Buried in the Microsoft Learn documentation for default outbound access [4], there's one critical sentence that should be the headline of every discussion about this change:
@@ -190,8 +178,6 @@ Buried in the Microsoft Learn documentation for default outbound access [4], the
 If your subnet is delegated to a PaaS service, the `defaultOutboundAccess` property **does not apply**. The PaaS service manages its own connectivity. This eliminates the concern for most PaaS-heavy organizations.
 
 But — and this is important — *"managed by the individual service"* doesn't mean the same thing for every service. Some services truly own their egress. Others expect you to provide it. Let me break this down.
-
----
 
 ## PaaS Services and Delegated Subnets — How They Actually Work
 
@@ -250,8 +236,6 @@ Quick clarification since these come up in every conversation:
 - **Service endpoints** modify the routing path at the platform level so traffic to Azure services stays on the backbone. They use the `VirtualNetworkServiceEndpoint` next-hop type, which is immune to UDR overrides [3]. No delegation, no injection, no impact from the default outbound change.
 - **Private endpoints** place a NIC in your subnet with a private IP mapped to a PaaS resource. Traffic is VNet-internal. Not affected by the default outbound change because the traffic never goes outbound.
 
----
-
 ## Service-by-Service Impact Table
 
 The "Egress Owner" column is the one that matters — if Microsoft owns egress, the retirement doesn't affect that service.
@@ -295,11 +279,10 @@ The "Egress Owner" column is the one that matters — if Microsoft owns egress, 
 | Virtual Machine Scale Sets | **Customer** | **YES** — Flexible VMSS already defaults to private [4] |
 | Azure Kubernetes Service | **Customer** (but AKS configures it) | **YES** — see next section |
 | Azure Batch | **Customer** | **YES** — use NAT Gateway |
+| Azure Update Manager | **Customer** (update downloads) / **Platform** (orchestration) | **PARTIAL** — orchestration works via WireServer, update downloads need explicit outbound [15] |
 | Azure Virtual Desktop | **Customer** | **YES** — use NAT Gateway or Azure Firewall |
 | Windows 365 (ANC) | **Customer** | **YES** — see dedicated section below |
 | Windows 365 (Microsoft-hosted) | **Microsoft** | **None** — but see the trade-offs |
-
----
 
 ## AKS — The One That Catches People Off Guard
 
@@ -344,8 +327,6 @@ flowchart TD
 </pre>
 
 **My recommendation (take it for what it's worth from a non-AKS-specialist):** for production, use BYO VNet with `userDefinedRouting` through your firewall. For dev/test, `managedNATGateway` is straightforward. And regardless — don't put non-AKS resources in AKS subnets.
-
----
 
 ## Windows 365 — Two Models, Very Different Security Postures
 
@@ -398,7 +379,77 @@ The trade-off in a table:
 
 If you're already running a hub-and-spoke with Azure Firewall, adding Windows 365 Cloud PCs via ANC is just another spoke. The pattern is the same. And if your organization requires that all outbound traffic is inspected and logged — and most regulated industries do — then Microsoft-hosted network simply doesn't meet the bar.
 
----
+## Azure Update Manager — It Half-Works in Private Subnets
+
+Azure Update Manager is a sneaky one because it spans **two distinct connectivity planes**, and they behave very differently when you cut off internet outbound.
+
+### The Orchestration Plane (Works Without Internet)
+
+Update Manager uses the Azure VM Agent to deploy its patch extensions (`Microsoft.CPlat.Core.WindowsPatchExtension` on Windows, `LinuxPatchExtension` on Linux). The VM Agent communicates with the Azure Fabric Controller via **WireServer at 168.63.129.16** — a virtual IP on the host node [13] [14].
+
+Here's what makes this special: **168.63.129.16 is not subject to UDRs or NSGs**. It's platform-internal traffic between the guest VM and the host node. It doesn't traverse the VNet at all. This means:
+
+- The Update Manager extension gets deployed successfully
+- Orchestration commands (trigger assessment, trigger patching) reach the VM
+- Results get reported back to Azure Resource Graph
+
+With a supported VM Agent version, extension packages are also downloaded through the **HostGAPlugin** feature over 168.63.129.16 — no separate Azure Storage access needed [13]. However, there's an important caveat: HostGAPlugin only handles extension *package* delivery. If the extension itself needs to reach external resources (a script from GitHub, a backup to Azure Storage), those connections still need their own network path.
+
+Ports **80/tcp** and **32526/tcp** must remain open in the **guest OS firewall** (Windows Firewall / iptables) for WireServer communication — but this is the guest firewall, not NSGs [14].
+
+### The Update Download Plane (Breaks Without Internet)
+
+Here's where it falls apart. **Azure Update Manager does not serve updates.** It orchestrates — it tells the VM *when* to patch and *what* to install — but the actual update content comes from somewhere else [15]:
+
+- **Windows:** The Windows Update Agent (WUA) downloads patches from Microsoft Update or your WSUS server
+- **Linux:** The native package manager (yum, apt, zypper) downloads from its configured repositories
+
+These are internet endpoints. In a private subnet with `defaultOutboundAccess = false` and no explicit outbound, these connections get silently dropped.
+
+And here's the part that surprises people: **assessment (scanning for available patches) also breaks**, not just installation. The WUA needs to contact its update source to get metadata about available patches. No connectivity to the update source = no scan results = Update Manager shows the VM as having no data, or assessments time out.
+
+<pre class="mermaid">
+sequenceDiagram
+    participant VM as VM (Private Subnet)
+    participant Agent as VM Agent / Extension
+    participant WS as WireServer (168.63.129.16)
+    participant Azure as Azure Resource Graph
+    participant WUA as Windows Update Agent
+    participant MU as Microsoft Update / WSUS
+
+    Note over VM,Azure: Orchestration Plane — Works ✅
+    Azure->>WS: Trigger assessment
+    WS->>Agent: Execute patch extension
+    Agent->>WS: Report orchestration status
+    WS->>Azure: Results → Resource Graph
+
+    Note over VM,MU: Update Download Plane — Fails ❌
+    Agent->>WUA: Scan for available updates
+    WUA-xMU: GET update metadata<br/>(*.update.microsoft.com)<br/>🚫 No outbound path — DROPPED
+    WUA->>Agent: Scan failed / no data
+    Agent->>WS: Report: assessment incomplete
+</pre>
+
+### Practical Result
+
+| Operation | Needs Internet? | Works in Private Subnet? |
+| --------- | --------------- | ------------------------ |
+| Extension deployment | No — via HostGAPlugin / WireServer | ✅ Yes |
+| Triggering assessment/patching | No — via WireServer | ✅ Yes |
+| Assessment scan (getting update metadata) | Yes — WUA contacts update source | ❌ No |
+| Downloading update payloads | Yes — WUA/package manager downloads | ❌ No |
+| Reporting results to Azure | No — via WireServer | ✅ Yes |
+
+So you'll see the extension installed, the VM shows up in Update Manager, orchestration commands succeed — but actual patch data is empty or stale, and installations fail silently or time out. It *looks* like it's working until you notice nothing is actually getting patched.
+
+### Fix Options
+
+- **NAT Gateway** on the subnet — simplest if you just need it to work
+- **UDR to Azure Firewall** with application rules for update endpoints — gives you visibility and control
+- **For Windows: point WUA at an internal WSUS server** — eliminates internet dependency entirely. This is the enterprise-grade answer
+- **For Linux: use a local repository mirror** — same idea, keep update traffic internal
+
+**Important gotcha:** the WUA and Linux package managers need specific FQDNs allowed, not just generic port 443. The Update Manager prerequisites page [15] links to the [Windows Update troubleshooting guide](https://learn.microsoft.com/en-us/troubleshoot/windows-client/installing-updates-features-roles/windows-update-issues-troubleshooting#issues-related-to-httpproxy) for the current FQDN list — endpoints like `*.update.microsoft.com`, `*.windowsupdate.com`, `*.dl.delivery.mp.microsoft.com`, and `emdl.ws.microsoft.com`. Some of these use HTTP (port 80), not HTTPS. Linux repos like `azure.archive.ubuntu.com` also use port 80. If you're writing Azure Firewall application rules, make sure you cover both ports and check the current endpoint list — Microsoft updates it periodically.
 
 ## Hub-and-Spoke with Azure Firewall — You're Already Fine
 
@@ -421,8 +472,6 @@ flowchart LR
 **Still, make subnets private as defense-in-depth.** If someone accidentally removes the route table, a non-private subnet falls back to default outbound — uncontrolled internet access through a random Microsoft IP. Private subnet = fail-closed.
 
 To clear the Azure Advisor alert, you need to make the subnet private AND stop/deallocate the VMs [4]. Even with a UDR, Azure may still *assign* the default outbound IP in non-private subnets — it just won't be *used* unless your explicit method is removed.
-
----
 
 ## The UDR "Internet" Next-Hop Trap
 
@@ -451,8 +500,6 @@ The docs are explicit that **this doesn't apply to Service Endpoints**, which us
 | UDR: `AzureActiveDirectory → Internet` | Route through the firewall, or use Service Endpoints |
 
 If you must keep the `Internet` next-hop type, attach a NAT Gateway to the subnet — it provides the explicit outbound that makes it work again.
-
----
 
 ## Practical Recommendations
 
@@ -522,8 +569,6 @@ If you must keep the `Internet` next-hop type, attach a NAT Gateway to the subne
 
 5. **Watch your Terraform provider version.** We don't know exactly when the AzureRM provider will adopt the new API version (likely `2025-07-01`), but when it does, new VNets will default to private subnets. Set `default_outbound_access_enabled` explicitly in your configs now so you're not caught off guard. For full API version control, use the AzAPI provider [4].
 
----
-
 ## Summary
 
 This retirement is a meaningful security improvement — it pushes Azure toward Zero Trust for network egress. But it's narrower than the announcements suggest:
@@ -539,8 +584,6 @@ The organizations most at risk are those spinning up new VNets for dev/test, PoC
 > **Update (March 24, 2026):** This post was reviewed by members of the Microsoft networking product team. Key corrections: AKS has never used default outbound access and already defaults to private subnets, the new API version is expected to be `2025-07-01`, and there are two separate Azure Advisor recommendations (VMs and VMSS uniform). Thanks to the PM team for the feedback.
 >
 > **Update (March 25, 2026):** Clarified that SQL MI still does not support private subnets — the [networking constraints docs](https://learn.microsoft.com/en-us/azure/azure-sql/managed-instance/connectivity-architecture-overview?view=azuresql#networking-constraints) confirm this. NAT Gateway is also not supported on SQL MI subnets. This remains the service to watch most closely.
-
----
 
 ## References
 
@@ -592,6 +635,18 @@ The organizations most at risk are those spinning up new VNets for dev/test, PoC
 
 [12] Microsoft Tech Community, "Azure Default Outbound Access Changes: Guidance for Windows 365 ANC Customers." [Tech Community post](https://techcommunity.microsoft.com/discussions/windows365discussions/azure-default-outbound-access-changes-guidance-for-windows-365-anc-customers/4494460) [Back to text](#azure-networking-fundamentals-its-all-software)
 
+### Ref 13
+
+[13] Microsoft Learn, "Virtual machine extensions and features for Windows." [Microsoft Learn article](https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/features-windows) [Back to text](#azure-update-manager--it-half-works-in-private-subnets)
+
+### Ref 14
+
+[14] Microsoft Learn, "What is IP address 168.63.129.16?" [Microsoft Learn article](https://learn.microsoft.com/en-us/azure/virtual-network/what-is-ip-address-168-63-129-16) [Back to text](#azure-update-manager--it-half-works-in-private-subnets)
+
+### Ref 15
+
+[15] Microsoft Learn, "Azure Update Manager prerequisites." [Microsoft Learn article](https://learn.microsoft.com/en-us/azure/update-manager/prerequisites) [Back to text](#azure-update-manager--it-half-works-in-private-subnets)
+
 [1]: #ref-1
 [2]: #ref-2
 [3]: #ref-3
@@ -604,6 +659,9 @@ The organizations most at risk are those spinning up new VNets for dev/test, PoC
 [10]: #ref-10
 [11]: #ref-11
 [12]: #ref-12
+[13]: #ref-13
+[14]: #ref-14
+[15]: #ref-15
 
 ---
 
