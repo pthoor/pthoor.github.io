@@ -148,6 +148,8 @@ footer:
 twitter:
   username: "PierreThoor"
 
+google_site_verification: "" # Add your Google Search Console verification code here
+
 # Analytics
 analytics:
   provider: "google-gtag"

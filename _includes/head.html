@@ -43,6 +43,10 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', '{{ site.analytics.google.tracking_id }}'{% if site.analytics.google.anonymize_ip %}, { 'anonymize_ip': true }{% endif %});
+  gtag('config', '{{ site.analytics.google.tracking_id }}', {
+    'send_page_view': true,
+    'page_path': '{{ page.url }}'{% if site.analytics.google.anonymize_ip %},
+    'anonymize_ip': true{% endif %}
+  });
 </script>
 {% endif %}
